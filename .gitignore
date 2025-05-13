@@ -1,5 +1,6 @@
 .DS_Store
-.images
-.images/*
-untitled_project/*
-untitled_project/
+backend/.DS_Store
+frontend/.DS_Store
+
+backend/.images/
+backend/untitled_project/
