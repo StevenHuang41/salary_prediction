@@ -16,8 +16,20 @@ const HomePage = () => {
     }
     forms.classList.add('was-validated');
 
-    console.log(forms)
-    console.log(forms.elements['genderSelectInput'])
+    let dataInput = {
+      'age': '',
+      'gender': '',
+      'education_level': '',
+      'job_title': '',
+      'years_of_experience': '',
+    }
+    dataInput['age'] = e.target.elements['ageSelectInput'].value
+    dataInput['gender'] = e.target.elements['genderSelectInput'].value
+    dataInput['education_level'] = e.target.elements['eduLevSelectInput'].value
+    dataInput['job_title'] = e.target.elements['jobTitleSelectInput'].value
+    dataInput['years_of_experience'] = e.target.elements['yearESelectInput'].value
+    console.log(dataInput)
+    // console.log(forms.elements['genderSelectInput'])
   };
 
   const ageOptions = Array.from({ length: 71 }, (_, i) => (
@@ -121,7 +133,6 @@ const HomePage = () => {
 
 // TODO: get option from database, instead of hard code
 // TODO: test (age substract year of experience >= 18)
-// TODO: get the submit value
 // TODO: 
 // TODO: 
 

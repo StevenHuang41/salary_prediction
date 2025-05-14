@@ -12,7 +12,9 @@ const SelectInput = ({
 
       <label htmlFor={id} className='form-label'>{labelText}</label>
       <select className='form-select' id={id} defaultValue='' required>
-        <option value='' disabled>Choose {labelText.toLowerCase()} ...</option>
+        <option value='' disabled>
+          Choose {labelText.toLowerCase()} ...
+        </option>
         {options.map(({ value, text }) => (
           <option key={value} value={value}>{text}</option>
         ))}
