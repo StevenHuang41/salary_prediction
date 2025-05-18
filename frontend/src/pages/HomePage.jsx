@@ -1,36 +1,49 @@
 import './HomePage.css';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TermsCheckbox from '../components/TermsCheckbox';
 import SelectInput from '../components/SelectInput';
+import { fetchData, getUniqJobTitle } from '../api/fetchData';
+import AgeYearsModal from '../components/AgeYearsModal';
 
 
 const HomePage = () => {
 
   const formRef = useRef(null);
 
+  const [dataInput, setDataInput] = useState({});
+  
   const handleSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const forms = formRef.current;
-    if (!forms.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    const form_elements = formRef.current.elements;
+    
     forms.classList.add('was-validated');
-
-    let dataInput = {
-      'age': '',
-      'gender': '',
-      'education_level': '',
-      'job_title': '',
-      'years_of_experience': '',
+    
+    if (!forms.checkValidity()) return;
+    
+    const ageYearModalTrigger = document.getElementById('ageYearModalTrigger');
+    if ((form_elements.ageSelectInput.value - 
+      form_elements.yearESelectInput.value) < 18) {
+        form_elements.ageSelectInput.value = '';
+        form_elements.yearESelectInput.value = '';
+        ageYearModalTrigger.click()
+      } else {
+      const form_elements = formRef.current.elements;
+      setDataInput(prev => ({
+        ...prev,
+        age: form_elements['ageSelectInput'].value,
+        gender: form_elements['genderSelectInput'].value,
+        education_level: form_elements['eduLevSelectInput'].value,
+        job_title: form_elements['jobTitleSelectInput'].value,
+        years_of_experience: form_elements['yearESelectInput'].value,
+      }))
     }
-    dataInput['age'] = e.target.elements['ageSelectInput'].value
-    dataInput['gender'] = e.target.elements['genderSelectInput'].value
-    dataInput['education_level'] = e.target.elements['eduLevSelectInput'].value
-    dataInput['job_title'] = e.target.elements['jobTitleSelectInput'].value
-    dataInput['years_of_experience'] = e.target.elements['yearESelectInput'].value
-    console.log(dataInput)
-    // console.log(forms.elements['genderSelectInput'])
   };
+
+  useEffect(() => {
+    console.log(dataInput)
+  }, [dataInput])
 
   const ageOptions = Array.from({ length: 71 }, (_, i) => (
     {value: i + 18, text: i + 18}
@@ -39,6 +52,25 @@ const HomePage = () => {
   const yearEOptions = Array.from({ length: 71 }, (_, i) => (
     {value: i, text: i}
   ));
+
+
+  // get job title options
+  const [jobOptions, setJobOptions] = useState([]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await getUniqJobTitle();
+        const options = data.value.map((val) => (
+          {value: val, text: val}
+        ));
+        // console.log(options);
+        setJobOptions(options);
+      } catch (err) {console.log(err);}
+    };
+    getData();
+  }, []);
+
+
 
   return (
     <>
@@ -86,16 +118,11 @@ const HomePage = () => {
             c_name={'col-auto'}
           />
 
+          {/* <JobSelectInput /> */}
           <SelectInput
             id='jobTitleSelectInput'
             labelText='Job Title'
-            options={[
-              {value: 'Data Scientist', text: 'Data Scientist'},
-              {value: 'Data Engineer', text: 'Data Engineer'},
-              {value: 'Data Analyst', text: 'Data Analyst'},
-              {value: 'Software Engineer', text: 'Software Engineer'},
-              {value: 'Sales Manager', text: 'Sales Manager'},
-            ]}
+            options={jobOptions}
             invalidFeedbackText='Please select a job title.'
             c_name={'col-auto'}
           />
@@ -109,7 +136,7 @@ const HomePage = () => {
           />
 
           <TermsCheckbox 
-            modalId='exampleModal'
+            modalId='termsModal'
             labelText='Agree to'
             btnText='terms and conditions'
             invalidFeedbackText='You must agree before submitting.'
@@ -123,6 +150,16 @@ const HomePage = () => {
               Submit form
             </button>
           </div>
+          <button
+            id='ageYearModalTrigger'
+            data-bs-toggle="modal"
+            data-bs-target={'#ageYearModal'}
+            style={{display: 'none'}}
+          />
+          <AgeYearsModal
+          // should close modal
+            handlePrimaryClick={() => {}}
+          />
 
         </form>
 
@@ -131,10 +168,11 @@ const HomePage = () => {
   )
 };
 
-// TODO: get option from database, instead of hard code
+// TODO: useQuery to get option from database, instead of hard code
+// TODO: understand how to use className of bootstrap
 // TODO: test (age substract year of experience >= 18)
-// TODO: 
-// TODO: 
+// TODO: modal show in center of view
+// TODO: separate Homepage and Form
 
 
 export default HomePage;

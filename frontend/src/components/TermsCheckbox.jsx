@@ -6,26 +6,8 @@ const TermsCheckbox = ({
   labelText,
   btnText,
   invalidFeedbackText,
-  // checkboxRef,
 }) => {
   const checkboxRef = useRef(null);
-
-  const handleModelAgree = () => {
-    if (checkboxRef.current) {
-      checkboxRef.current.checked = true;
-    }
-  }
-
-  const handleModelDisagree = () => {
-    if (checkboxRef.current) {
-      checkboxRef.current.checked = false;
-    }
-  }
-
-  const modelBodyText = ('If you agree with these terms and conditions,' +
-    ' you authorize our team to collect your data for future improvement.' +
-    ' Your data will be used to train backend machine learning models,' + 
-    ' and only for training purpose.')
 
   return (<>
     <div className="col2">
@@ -58,10 +40,9 @@ const TermsCheckbox = ({
 
     <TermsModal
       id={modalId}
-      modalHeaderText='Terms and Conditions'
-      modalBodyText={modelBodyText}
-      handleModelDisagree={handleModelDisagree}
-      handleModelAgree={handleModelAgree}
+      // handleModalSecondaryClick={handleModalDisagree}
+      handleModalSecondaryClick={() => checkboxRef.current.checked = false}
+      handleModalPrimaryClick={() => checkboxRef.current.checked = true}
     />
 
   </>)
