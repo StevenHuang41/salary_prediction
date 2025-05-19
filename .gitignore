@@ -4,3 +4,5 @@ frontend/.DS_Store
 
 backend/.images/
 backend/untitled_project/
+backend/__pycache__/
+*/__pycache__/

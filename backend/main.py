@@ -16,23 +16,38 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-@app.get('/')
-async def read():
-    return {}
+class RowData(BaseModel):
+    age: int
+    gender: str
+    education_level: str
+    job_title: str
+    years_of_experience: float
 
 
-df = pd.read_csv("Salary_Data.csv", nrows=10)
 
+## dataFrame needs cleansing
+df = pd.read_csv("Salary_Data.csv")
+df.dropna(inplace=True)
 
 @app.get('/api/get_uniq_job_title')
 async def get_data():
-    # return {i: i for i in get_uniq_job_title(df)}
-    return {'value': list(get_uniq_job_title(df))}
-    # return get_uniq_job_title(df)
+    result = get_uniq_job_title(df)
+    result.sort()
+    
+    return {'value': result}
 
+@app.post("/api/predict")
+async def get_predict_salary(data: RowData):
+    print(data)
+    return {'value': data.job_title}
 
 
 if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
+
+## TODO: separate ipynb file to python file of Backend
+## TODO: learn how to use pydantic and typing
+## TODO: setup splite database

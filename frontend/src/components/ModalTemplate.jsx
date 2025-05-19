@@ -11,6 +11,7 @@ const ModalTemplate = ({
 
   handleModalPrimaryClick,
   primaryText,
+  cName,
 }) => {
   return (
     <div
@@ -20,7 +21,11 @@ const ModalTemplate = ({
       // aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
-      <div className="modal-dialog">
+      <div className={
+        "modal-dialog " +
+        cName}// + 
+        // "modal-dialog-scrollable"}
+      >
         <div className="modal-content">
 
           <div className="modal-header">

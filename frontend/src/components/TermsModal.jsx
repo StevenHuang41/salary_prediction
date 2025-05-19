@@ -14,13 +14,13 @@ const TermsModal = ({
   return (<>
     <ModalTemplate
       id={id}
-      modalHeaderText={`Terms and Conditions`}
+      modalHeaderText="Terms and Conditions"
       modalBodyText={modalBodyText}
       hasSecondaryBtn={true}
       handleModalSecondaryClick={handleModalSecondaryClick}
-      secondaryText={'Disagree'}
+      secondaryText='Disagree'
       handleModalPrimaryClick={handleModalPrimaryClick}
-      primaryText={'Agree'}
+      primaryText='Agree'
     />
 
   </>)

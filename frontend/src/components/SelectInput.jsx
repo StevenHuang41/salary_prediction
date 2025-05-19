@@ -6,12 +6,18 @@ const SelectInput = ({
   options,
   invalidFeedbackText,
   c_name,
+  defaultValue,
 }) => {
   return (<>
     <div className={c_name}>
 
       <label htmlFor={id} className='form-label'>{labelText}</label>
-      <select className='form-select' id={id} defaultValue='' required>
+      <select
+        className='form-select'
+        id={id}
+        defaultValue={defaultValue} // ''
+        required
+      >
         <option value='' disabled>
           Choose {labelText.toLowerCase()} ...
         </option>

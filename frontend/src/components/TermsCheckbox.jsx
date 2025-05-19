@@ -10,7 +10,7 @@ const TermsCheckbox = ({
   const checkboxRef = useRef(null);
 
   return (<>
-    <div className="col2">
+    <div className="col-12">
       <div className="form-check">
         <input
           className="form-check-input"
@@ -23,13 +23,13 @@ const TermsCheckbox = ({
         <label className="form-check-label" htmlFor="invalidCheck">
           {labelText}
         </label>
-        <div
+        <button
           className='btn btn-link p-0 px-1 align-baseline'
           data-bs-toggle="modal"
           data-bs-target={`#${modalId}`}
         >
           {btnText}
-        </div>
+        </button>
 
         <div className="invalid-feedback">
           {invalidFeedbackText}
@@ -40,7 +40,6 @@ const TermsCheckbox = ({
 
     <TermsModal
       id={modalId}
-      // handleModalSecondaryClick={handleModalDisagree}
       handleModalSecondaryClick={() => checkboxRef.current.checked = false}
       handleModalPrimaryClick={() => checkboxRef.current.checked = true}
     />
