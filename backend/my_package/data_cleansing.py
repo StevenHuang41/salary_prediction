@@ -4,8 +4,7 @@ import numpy as np
 ## rename column
 def cleaning_rename_cols(df: pd.DataFrame) -> None:
     df.columns = [col.replace(' ', '_').lower() for col in df.columns]
-    print("Data Cleansing: rename columns - Successful")
-    print(f"[ Process 1/8 ]", end='\r')
+    # print("Data Cleansing: rename columns - Successful")
 
 
 ## col: salary
@@ -24,19 +23,19 @@ def cleaning_remove_salary_outlier(
 
 def cleaning_salary(df: pd.DataFrame) -> pd.DataFrame:
     df = cleaning_nan_salary(df)
-    print("Data Cleansing: clean NAN salary value - Successful")
-    print(f"[ Process 2/8 ]", end='\r')
+    # print("Data Cleansing: clean NAN salary value - Successful")
     df = cleaning_remove_salary_outlier(df)
-    print("Data Cleansing: clean salary outlier - Successful")
-    print(f"[ Process 3/8 ]", end='\r')
+    # print("Data Cleansing: clean salary outlier - Successful")
     return df
 
+## remove nan
+def cleaning_NaN(df: pd.DataFrame) -> None:
+    df.dropna(inplace=True)
 
 ## col: age
 def cleaning_age(df: pd.DataFrame) -> None:
     df['age'] = df['age'].astype('int32')
-    print("Data Cleansing: cleaning age - Successful")
-    print(f"[ Process 4/8 ]", end='\r')
+    # print("Data Cleansing: cleaning age - Successful")
 
 
 ## col: gender
@@ -56,8 +55,7 @@ def cleaning_gender(df: pd.DataFrame) -> None:
         categories=gender_order,
         ordered=True
     )
-    print("Data Cleansing: cleaning gender - Successful")
-    print(f"[ Process 5/8 ]", end='\r')
+    # print("Data Cleansing: cleaning gender - Successful")
 
 
 ## col: education level
@@ -86,8 +84,7 @@ def cleaning_edu(df: pd.DataFrame) -> None:
         categories=edu_order, 
         ordered=True
     )
-    print("Data Cleansing: cleaning education level - Successful")
-    print(f"[ Process 6/8 ]", end='\r')
+    # print("Data Cleansing: cleaning education level - Successful")
 
 
 ## col: job title
@@ -101,32 +98,33 @@ def cleaning_job(df: pd.DataFrame) -> None:
         .str.strip()
         .astype('str')
     )
-    print("Data Cleansing: cleaning job title - Successful")
-    print(f"[ Process 7/8 ]", end='\r')
+    # print("Data Cleansing: cleaning job title - Successful")
 
 
 ## col: years of experience
 def cleaning_exp(df: pd.DateOffset) -> None:
     df['years_of_experience'] = df['years_of_experience'].astype('float32')
-    print("Data Cleansing: cleaning years of experience - Successful")
-    print(f"[ Process 8/8 ]", end='    ')
+    # print("Data Cleansing: cleaning years of experience - Successful")
 
 
 ## Whole Cleansing process
-def data_cleaning(
+def cleaning_data(
     df: pd.DataFrame,
-    has_target_columns=False
+    has_target_columns: bool = False
 ) -> pd.DataFrame:
     cleaning_rename_cols(df)
     if has_target_columns:
         df = cleaning_salary(df)
+    else :
+        cleaning_NaN(df)
     cleaning_age(df)
     cleaning_gender(df)
     cleaning_edu(df)
     cleaning_job(df)
     cleaning_exp(df)
 
-    print("... Finishing Cleansing Process ...")
+    # print("... Finishing Cleansing Process ...", end='\n\n')
+
     return df
 
 
@@ -137,4 +135,7 @@ if __name__ == "__main__":
     FILE_NAME = "../Salary_Data.csv"
     df = pd.read_csv(FILE_NAME, delimiter=',')
 
-    print(f"{data_cleaning(df, has_target_columns=True)}")
+    df = cleaning_data(df, has_target_columns=True)
+    # df = cleaning_data(df.iloc[:, :-1])
+
+    print(df)

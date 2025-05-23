@@ -20,10 +20,10 @@ from sklearn import set_config
 def preprocess_data(
     X_train: pd.DataFrame,
     y_train: pd.DataFrame | pd.Series,
-    X_test: pd.DataFrame,
+    data: pd.DataFrame,
     *,
     use_polynomial: bool = False,
-) -> tuple[pd.DataFrame, ...]:
+) -> tuple[pd.DataFrame, ...] | pd.DataFrame:
 
     numeric_cols = ['age', 'years_of_experience']
     onehot_cols = ['gender']
@@ -68,7 +68,8 @@ def preprocess_data(
     )
 
     X_train_ = preprocessor.fit_transform(X_train, y_train)
-    X_test_ = preprocessor.transform(X_test)
+
+    data_ = preprocessor.transform(data)
 
     if use_polynomial:
         poly_cols = X_train_.columns.difference([
@@ -92,25 +93,41 @@ def preprocess_data(
         )
 
         X_train_ = poly_transformer.fit_transform(X_train_, y_train)
-        X_test_ = poly_transformer.transform(X_test_)
+        data_ = poly_transformer.transform(data_)
 
+    return X_train_, data_
 
-    return X_train_, X_test_
 
 
 
 if __name__ == "__main__":
-    from data_cleansing import data_cleaning
+    from data_cleansing import cleaning_data
     from data_spliting import spliting_data
 
     ## load csv 
     FILE_NAME = "../Salary_Data.csv"
     df = pd.read_csv(FILE_NAME, delimiter=',')
-    df = data_cleaning(df, has_target_columns=True)
+    df = cleaning_data(df, has_target_columns=True)
 
-    X_train, X_test, y_train, y_test = \
-        spliting_data(df)
+    X_train, X_test, y_train, y_test = spliting_data(df)
+    print(X_train)
+    print(X_test)
 
-    X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=True)
+    X_train_, X_test_ = preprocess_data(X_train, y_train,
+                                        X_test, use_polynomial=True)
+    X_train_, X_test_ = preprocess_data(X_train, y_train,
+                                        X_test, use_polynomial=False)
     print(X_train_)
     print(X_test_)
+    
+
+    exam = pd.DataFrame([{
+        'age': 20,
+        'gender': 'female',
+        'education_level': 'PhD',
+        'job_title': 'Data Engineer',
+        'years_of_experience': 1,
+    }])
+    _, exam_ = preprocess_data(X_train, y_train, exam, use_polynomial=False)
+    _, exam_ = preprocess_data(X_train, y_train, exam, use_polynomial=True)
+    print(exam_)

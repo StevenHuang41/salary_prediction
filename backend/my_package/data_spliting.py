@@ -19,12 +19,13 @@ def spliting_data(
 
 
 if __name__ == "__main__":
-    from data_cleansing import data_cleaning
+    from data_cleansing import cleaning_data
 
     ## load csv 
     FILE_NAME = "../Salary_Data.csv"
     df = pd.read_csv(FILE_NAME, delimiter=',')
-    df = data_cleaning(df, has_target_columns=True)
+    df = cleaning_data(df, has_target_columns=True)
 
-    X_train, X_test, y_train, y_test = \
-        spliting_data(df)
+    X_train, X_test, y_train, y_test = spliting_data(df)
+    # print(X_train)
+    # print(X_test)
