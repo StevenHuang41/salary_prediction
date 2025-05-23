@@ -3,16 +3,19 @@ import os
 import shutil
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-from data_cleansing import cleaning_data
-from data_spliting import spliting_data
-from data_preprocessing import preprocess_data
-from data_training import model_select, save_model
+from .data_cleansing import cleaning_data
+from .data_spliting import spliting_data
+from .data_preprocessing import preprocess_data
+from .data_training import model_select, save_model
 
 def predict_salary(data: dict,
                    poly_state: bool = False,
-                   restart: bool = False) -> float:
+                   restart: bool = False) -> dict:
     ## load csv 
-    FILE_NAME = "../Salary_Data.csv"
+    abs_path = os.getcwd()
+    abs_path = abs_path.split('/my_package')[0]
+    FILE_NAME = os.path.join(abs_path, "Salary_Data.csv")
+    # print(FILE_NAME)
     df = pd.read_csv(FILE_NAME, delimiter=',')
     df = cleaning_data(df, has_target_columns=True)
 
@@ -44,8 +47,8 @@ def predict_salary(data: dict,
         model_path = os.path.join(best_performance_dir, model_file)
         model_name = model_file.split('.')[0]
         if 'NN' in model_name: # keras load
-            from tensorflow import keras
-            model = keras.saving.load_model(model_path)
+            from keras.models import load_model
+            model = load_model(model_path)
         else : # sklearn model load
             import joblib
             model = joblib.load(model_path)
@@ -60,7 +63,7 @@ def predict_salary(data: dict,
 
 
     ## transform data to df
-    example_df = pd.DataFrame(data)
+    example_df = pd.DataFrame([data])
 
     ## cleanse df
     example_df = cleaning_data(example_df)
@@ -74,21 +77,22 @@ def predict_salary(data: dict,
     
 
     return {
-        'value': model.predict(example_df_)[0],
-        'mae': mean_absolute_error(y_test, y_pred),
-        'mse': mean_squared_error(y_test, y_pred),
-        'num_train_dataset': X_train.shape[0],
-        'num_test_dataset': X_test.shape[0]
+        "model_name": model_name,
+        "value": model.predict(example_df_)[0],
+        "mae": mean_absolute_error(y_test, y_pred),
+        "mse": mean_squared_error(y_test, y_pred),
+        "num_train_dataset": X_train.shape[0],
+        "num_test_dataset": X_test.shape[0]
     }
 
 if __name__ == "__main__":
 
-    print(predict_salary([{
-        'age': 20,
-        'gender': 'female',
-        'education_level': 'Bachelor',
-        'job_title': 'Data Engineer',
-        'years_of_experience': 1,
-    }], poly_state=True))
+    print(predict_salary({
+        "age": 20,
+        "gender": "female",
+        "education_level": "Bachelor",
+        "job_title": "Data Engineer",
+        "years_of_experience": 1,
+    }, poly_state=True))
 
     # shutil.rmtree('best_performance')

@@ -132,10 +132,19 @@ if __name__ == "__main__":
     pd.set_option('display.width', 1000)
 
     ## load csv 
-    FILE_NAME = "../Salary_Data.csv"
-    df = pd.read_csv(FILE_NAME, delimiter=',')
+    # FILE_NAME = "../Salary_Data.csv"
+    # df = pd.read_csv(FILE_NAME, delimiter=',')
 
-    df = cleaning_data(df, has_target_columns=True)
+    # df = cleaning_data(df, has_target_columns=True)
     # df = cleaning_data(df.iloc[:, :-1])
+    data = pd.DataFrame([{
+        'age': 20,
+        'gender': 'female',
+        'education_level': 'PhD',
+        'job_title': 'Data Engineer',
+        'years_of_experience': 1,
+    }])
 
-    print(df)
+    data = cleaning_data(data)
+
+    print(data)

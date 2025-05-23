@@ -5,6 +5,7 @@ from typing import Optional
 import pandas as pd
 
 from my_package.data_extract_func import get_uniq_job_title
+from my_package.data_predict import predict_salary
 
 app = FastAPI()
 
@@ -33,13 +34,12 @@ df.dropna(inplace=True)
 async def get_data():
     result = get_uniq_job_title(df)
     result.sort()
-    
+
     return {'value': result}
 
 @app.post("/api/predict")
 async def get_predict_salary(data: RowData):
-    print(data)
-    return {'value': data.job_title}
+    return predict_salary(data.model_dump())
 
 
 if __name__ == "__main__":
@@ -48,6 +48,5 @@ if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
 
 
-## TODO: separate ipynb file to python file of Backend
 ## TODO: learn how to use pydantic and typing
 ## TODO: setup splite database
