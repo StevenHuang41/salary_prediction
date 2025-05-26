@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 import pandas as pd
+import os
+import shutil
 
 from my_package.data_extract_func import get_uniq_job_title
 from my_package.data_predict import predict_salary
@@ -11,7 +13,11 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://192.168.1.3:3000", # mac
+        "http://192.168.1.2:3000", # mobile
+        "http://localhost:3000",
+    ],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
@@ -30,6 +36,13 @@ class RowData(BaseModel):
 df = pd.read_csv("Salary_Data.csv")
 df.dropna(inplace=True)
 
+## file path
+current_dir_path = os.getcwd()
+best_performance_dir = os.path.join(current_dir_path,
+                                    'best_performance')
+
+
+
 @app.get('/api/get_uniq_job_title')
 async def get_data():
     result = get_uniq_job_title(df)
@@ -41,6 +54,16 @@ async def get_data():
 async def get_predict_salary(data: RowData):
     return predict_salary(data.model_dump())
 
+@app.delete("/api/refresh_model")
+async def del_best_performance_dir() -> None:
+
+    if os.path.isdir(best_performance_dir):
+        shutil.rmtree('best_performance')
+        return {'status': 'success',
+                'message': 'best_performance dir has been deleted.'}
+
+    return {'status': 'not found',
+            'message': 'file not found.'}
 
 if __name__ == "__main__":
     import uvicorn

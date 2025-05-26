@@ -128,7 +128,7 @@ const InputForm = ({ getSubmitData }) => {
         labelText='Years of Experience'
         options={yearEOptions}
         invalidFeedbackText='Please select a valid number'
-        c_name={'col-xxl-3 col-md-6'}
+        c_name={'col-xxl-2 col-md-6'}
         defaultValue={'0'}
       />
 
@@ -143,8 +143,9 @@ const InputForm = ({ getSubmitData }) => {
         <button
           className="btn btn-primary"
           type="submit"
+          id="predictSalaryBtn"
         >
-          Submit form
+          Predict Salary
         </button>
       </div>
 

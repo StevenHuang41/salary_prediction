@@ -27,6 +27,7 @@ const TermsCheckbox = ({
           className='btn btn-link p-0 px-1 align-baseline'
           data-bs-toggle="modal"
           data-bs-target={`#${modalId}`}
+          onClick={(e) => {e.preventDefault()}}
         >
           {btnText}
         </button>
@@ -40,11 +41,15 @@ const TermsCheckbox = ({
 
     <TermsModal
       id={modalId}
-      handleModalSecondaryClick={() => checkboxRef.current.checked = false}
-      handleModalPrimaryClick={() => checkboxRef.current.checked = true}
+      handleModalSecondaryClick={() => (
+        checkboxRef.current.checked = false
+      )}
+      handleModalPrimaryClick={() => (
+        checkboxRef.current.checked = true
+      )}
     />
 
   </>)
 }
 
-export default TermsCheckbox
+export default TermsCheckbox;

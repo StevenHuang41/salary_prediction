@@ -10,7 +10,8 @@ from .data_training import model_select, save_model
 
 def predict_salary(data: dict,
                    poly_state: bool = False,
-                   restart: bool = False) -> dict:
+                   restart: bool = False,
+                   n_iter: int = 2) -> dict:
     ## load csv 
     abs_path = os.getcwd()
     abs_path = abs_path.split('/my_package')[0]
@@ -20,7 +21,7 @@ def predict_salary(data: dict,
     df = cleaning_data(df, has_target_columns=True)
 
     ## spliting
-    X_train, X_test, y_train, y_test = spliting_data(df)
+    X_train, X_test, y_train, y_test = spliting_data(df, random_state=23)
 
     ## processing
     X_train_, X_test_ = preprocess_data(X_train, y_train,
@@ -38,8 +39,9 @@ def predict_salary(data: dict,
     if len(os.listdir(best_performance_dir)) != 1:
         shutil.rmtree('best_performance')
         model, model_name = model_select(X_train_, y_train,
-                                            X_test_, y_test,
-                                            use_poly=poly_state)
+                                         X_test_, y_test,
+                                         use_poly=poly_state,
+                                         n_iter=n_iter)
         save_model(model, model_name)
 
     else :
@@ -57,8 +59,9 @@ def predict_salary(data: dict,
     (poly_state is False and 'poly' in model_name):
         shutil.rmtree('best_performance')
         model, model_name = model_select(X_train_, y_train,
-                                            X_test_, y_test,
-                                            use_poly=poly_state)
+                                         X_test_, y_test,
+                                         use_poly=poly_state,
+                                         n_iter=n_iter)
         save_model(model, model_name)
 
 

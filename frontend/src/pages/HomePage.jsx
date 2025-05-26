@@ -33,7 +33,12 @@ const HomePage = () => {
           <InputForm getSubmitData={handleGetFormData}/>
           {errResult && <div className="text-danger">{errResult}</div>}
           {loadingResult ?
-            <div>Loading ...</div> :
+            <div
+              id='predict-loading'
+              className='text-center'
+            >
+              Loading ...
+            </div> :
             <OutputSection
               dataFromForm={formData}
               predictData={predictResult}
@@ -48,7 +53,6 @@ const HomePage = () => {
 // TODO: useQuery to get option from database, instead of hard code
 // TODO: understand how to use className of bootstrap
 
-// TODO: get prediction from backend
 
 
 

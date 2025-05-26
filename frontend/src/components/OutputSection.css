@@ -1,0 +1,35 @@
+#predict-div1 {
+  color: limegreen;
+  font-size: 4.5em;
+  line-height: 1.2;
+}
+
+@media (min-width: 568px) {
+  #predict-div1 {
+    font-size: 6em;
+  }
+}
+
+@media (min-width: 768px) {
+  #predict-div1 {
+    font-size: 8.5em;
+  }
+}
+
+@media (min-width: 992px) {
+  #predict-div1 {
+    font-size: 12em;
+  }
+}
+ 
+@media (min-width: 1200px) {
+  #predict-div1 {
+    font-size: 14em;
+  }
+}
+
+@media (min-width: 1400px) {
+  #predict-div1 {
+    font-size: 16em;
+  }
+}

@@ -3,11 +3,9 @@ import seaborn as sns
 import pandas as pd
 from typing import Literal
 
-
-def show_plot( df, col, *, group_method: Literal['mean',
-                                                 'median',
-                                                 'mode'] = 'mean'):
-## create images directory 
+def show_plot(df, col, *,
+              group_method: Literal['mean', 'median', 'mode'] = 'mean'):
+    ## create images directory 
     images_dir = os.path.join(os.getcwd(), 'images')
     os.makedirs(images_dir, exist_ok=True)
 
@@ -23,17 +21,22 @@ def show_plot( df, col, *, group_method: Literal['mean',
         job_counts = temp_df[col].value_counts()
         valid_jobs = job_counts[job_counts > threshold].index
 
-        temp_df.loc[:, col] = temp_df[col] \
+        # change jobs lower than threshold name to 'Other'
+        temp_df.loc[:, col] = (
+            temp_df[col]
             .where(temp_df[col].isin(valid_jobs), other='Other')
+        )
 
-        plot_df = temp_df \
-            .groupby([col], observed=False) \
-            .salary.agg(count='count',
-                        mean='mean',
-                        median=lambda x: x.median(),
-                        mode=lambda x: x.mode().mean(),)
+        plot_df = (
+            temp_df
+            .groupby([col], observed=True).salary
+            .agg(count='count',
+                 mean='mean',
+                 median=lambda x: x.median(),
+                 mode=lambda x: x.mode().mean(),)
+        )
 
-        # place col: Other at the end
+        # place row: Other at the end
         plot_df = pd.concat([
             plot_df.drop('Other'),
             plot_df.loc[['Other'], :]
@@ -76,50 +79,50 @@ def show_plot( df, col, *, group_method: Literal['mean',
                            for n_split in title_.split('_')])
 
     plt.xlabel('')
-    plt.title(f"{title_} histogram")
+    plt.ylabel('Count')
+    plt.title(f"{title_}")
     plt.tight_layout()
 
     ## save image
-    fig_fname = f'{col}_histogram.png'
-    plt.savefig(os.path.join(images_dir, fig_fname),
+    plt.savefig(os.path.join(images_dir, f'{col}_histogram.png'),
                 bbox_inches='tight')
 
     ## plot image
     plt.show()
 
     ################## Group Mean Salary ##################
+
     if col == 'salary':
         return
 
-    ### get feature mean|median|mode with target feature
-    ## mode
-    if group_method == 'mode':
-        d = df.groupby([col], observed=False)['salary'] \
-                .agg(mode=lambda x: x.mode().mean())
-    ## median
-    elif group_method == 'median':
-        d = df.groupby([col], observed=False)['salary'] \
-                .agg(median=lambda x: x.median())
-    ## mean
-    else :
-        d = df.groupby([col], observed=False)['salary'].mean()
+    ## get feature mean|median|mode with target feature
+    group_df = (
+        df
+        .groupby([col], observed=True).salary
+        .agg(mean='mean',
+             median=lambda x: x.median(),
+             mode=lambda x: x.mode().mean())
+    )
 
     if col == 'job_title':
         plt.xticks(rotation=90)
-        d = plot_df
+        group_df = plot_df
 
-    plt.bar(d.index, d[group_method], width=1, color=(0.9, 0.4, 0.9),
-            edgecolor='black', alpha=0.8)
+    plt.bar(group_df.index,
+            group_df[group_method],
+            width=1,
+            color=(0.9, 0.4, 0.9),
+            edgecolor='black',
+            alpha=0.8)
 
     plt.xlabel('')
-    plt.ylabel(f"{group_method.capitalize()} Salary")
+    plt.ylabel(f"Group {group_method} salary")
     plt.title(title_)
     plt.tight_layout()
 
     ## save image
-    fig_fname = f'{col}_salary_{group_method}_relation.png'
-    plt.savefig(os.path.join(images_dir, fig_fname),
-                bbox_inches='tight')
+    fig_name = f'{col}_group{group_method.capitalize()}_salary.png'
+    plt.savefig(os.path.join(images_dir, fig_name), bbox_inches='tight')
 
     ## plot image
     plt.show()
@@ -148,8 +151,12 @@ def show_heatmap(X_train: pd.DataFrame,
     
 
     ## save fig
-    plt.savefig(os.path.join(images_dir, 'features_heatmap.png'),
-                bbox_inches='tight')
+    fig_name = 'features_heatmap_poly.png' \
+                if use_poly \
+                else 'features_heatmap.png'
+
+    plt.savefig(os.path.join(images_dir, fig_name), bbox_inches='tight')
+
     ## show fig
     plt.show()
 
@@ -169,18 +176,20 @@ if __name__ == "__main__":
     images_dir = os.path.join(os.getcwd(), 'images')
     os.makedirs(images_dir, exist_ok=True)
 
-    # for col in df.columns:
-    #     show_plot(df, col, group_method='median')
+    # test 1
+    for col in df.columns:
+        show_plot(df, col, group_method='median')
 
 
     from data_spliting import spliting_data
-
-    X_train, X_test, y_train, y_test = spliting_data(df)
-
     from data_preprocessing import preprocess_data
 
+    X_train, X_test, y_train, y_test = spliting_data(df)
+    # test 2
     X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=True)
-
     show_heatmap(X_train_, y_train, use_poly=True)
+    # test 3
+    X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=False)
+    show_heatmap(X_train_, y_train, use_poly=False)
 
     shutil.rmtree(images_dir)

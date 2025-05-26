@@ -8,7 +8,7 @@ def cleaning_rename_cols(df: pd.DataFrame) -> None:
 
 
 ## col: salary
-def cleaning_nan_salary(df: pd.DataFrame) -> pd.DataFrame:
+def cleaning_NaN_salary(df: pd.DataFrame) -> pd.DataFrame:
     return df.dropna(subset=['salary']).reset_index(drop=True)
 
 def cleaning_remove_salary_outlier(
@@ -17,12 +17,11 @@ def cleaning_remove_salary_outlier(
     upper_bound=300000,
 ) -> pd.DataFrame:
     df['salary'] = df['salary'].astype('int32')
-    df = df[(df['salary'] > lower_bound) &
-            (df['salary'] < upper_bound)]
+    df = df[(df['salary'] > lower_bound) & (df['salary'] < upper_bound)]
     return df
 
 def cleaning_salary(df: pd.DataFrame) -> pd.DataFrame:
-    df = cleaning_nan_salary(df)
+    df = cleaning_NaN_salary(df)
     # print("Data Cleansing: clean NAN salary value - Successful")
     df = cleaning_remove_salary_outlier(df)
     # print("Data Cleansing: clean salary outlier - Successful")
@@ -31,6 +30,7 @@ def cleaning_salary(df: pd.DataFrame) -> pd.DataFrame:
 ## remove nan
 def cleaning_NaN(df: pd.DataFrame) -> None:
     df.dropna(inplace=True)
+
 
 ## col: age
 def cleaning_age(df: pd.DataFrame) -> None:
@@ -108,10 +108,8 @@ def cleaning_exp(df: pd.DateOffset) -> None:
 
 
 ## Whole Cleansing process
-def cleaning_data(
-    df: pd.DataFrame,
-    has_target_columns: bool = False
-) -> pd.DataFrame:
+def cleaning_data(df: pd.DataFrame,
+                  has_target_columns: bool = False) -> pd.DataFrame:
     cleaning_rename_cols(df)
     if has_target_columns:
         df = cleaning_salary(df)
@@ -129,22 +127,22 @@ def cleaning_data(
 
 
 if __name__ == "__main__":
-    pd.set_option('display.width', 1000)
+    # load csv 
+    FILE_NAME = "../Salary_Data.csv"
+    df = pd.read_csv(FILE_NAME, delimiter=',')
 
-    ## load csv 
-    # FILE_NAME = "../Salary_Data.csv"
-    # df = pd.read_csv(FILE_NAME, delimiter=',')
+    # test 1.1
+    print(cleaning_data(df, has_target_columns=True).info())
+    # test 1.2
+    print(cleaning_data(df.iloc[:, :-1]).info())
 
-    # df = cleaning_data(df, has_target_columns=True)
-    # df = cleaning_data(df.iloc[:, :-1])
+    # test 2
     data = pd.DataFrame([{
         'age': 20,
-        'gender': 'female',
+        'gender': 'Female',
         'education_level': 'PhD',
         'job_title': 'Data Engineer',
         'years_of_experience': 1,
     }])
 
-    data = cleaning_data(data)
-
-    print(data)
+    print(cleaning_data(data))

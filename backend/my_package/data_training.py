@@ -35,7 +35,8 @@ warnings.filterwarnings(
 
 def model_select(X_train, y_train,
                  X_test, y_test,
-                 use_poly=False) -> tuple[Model, str]:
+                 use_poly=False,
+                 *, n_iter: int = 2) -> tuple[Model, str]:
 
     models_storage = {}
 
@@ -79,7 +80,7 @@ def model_select(X_train, y_train,
         }
 
         common_params = {
-            'n_iter': 2,
+            'n_iter': n_iter,
             'cv': 5,
             'n_jobs': -1,
             'scoring': 'neg_mean_squared_error',
@@ -108,7 +109,7 @@ def model_select(X_train, y_train,
         }
 
         common_params = {
-            'n_iter': 1,
+            'n_iter': n_iter,
             'cv': 5,
             'n_jobs': -1,
             'scoring': 'neg_mean_squared_error',
@@ -136,7 +137,7 @@ def model_select(X_train, y_train,
         }
 
         common_params = {
-            'n_iter': 1,
+            'n_iter': n_iter,
             'cv': 5,
             'n_jobs': -1,
             'scoring': 'neg_mean_squared_error',
@@ -182,7 +183,7 @@ def model_select(X_train, y_train,
         ]
 
         common_params = {
-            'n_iter': 1,
+            'n_iter': n_iter,
             'cv': 5,
             'n_jobs': -1,
             'scoring': 'neg_mean_squared_error',
@@ -212,7 +213,7 @@ def model_select(X_train, y_train,
         }
 
         common_params = {
-            'n_iter': 1,
+            'n_iter': n_iter,
             'cv': 5,
             'scoring': 'neg_mean_squared_error',
             'n_jobs': -1,
@@ -245,7 +246,7 @@ def model_select(X_train, y_train,
         }
 
         common_params = {
-            'n_iter': 1,
+            'n_iter': n_iter,
             'cv': 5,
             'scoring': 'neg_mean_squared_error',
             'n_jobs': -1,
@@ -285,7 +286,7 @@ def model_select(X_train, y_train,
         }
 
         common_params = {
-            'n_iter': 1,
+            'n_iter': n_iter,
             'cv': 5,
             'scoring': 'neg_mean_squared_error',
             'n_jobs': -1,
@@ -362,7 +363,7 @@ def model_select(X_train, y_train,
         tuner = BTuner(
             hypermodel=build_model,
             objective=kt.Objective('val_loss', direction='min'),
-            max_trials=1,
+            max_trials=n_iter,
             project_name='bayesianOptimization_NN_model',
             overwrite=True,
         )

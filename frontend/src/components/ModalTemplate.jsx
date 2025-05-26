@@ -2,37 +2,28 @@ import React from 'react'
 
 const ModalTemplate = ({
   id,
+  cName,
   modalHeaderText,
   modalBodyText,
+
+  handleModalPrimaryClick,
+  primaryText,
 
   hasSecondaryBtn,
   handleModalSecondaryClick,
   secondaryText,
-
-  handleModalPrimaryClick,
-  primaryText,
-  cName,
 }) => {
   return (
     <div
       className="modal fade"
       id={id}
       tabIndex="-1"
-      // aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
-      <div className={
-        "modal-dialog " +
-        cName}// + 
-        // "modal-dialog-scrollable"}
-      >
+      <div className={`modal-dialog ${cName}`}>
         <div className="modal-content">
-
           <div className="modal-header">
-            <h1
-              className="modal-title fs-5"
-              // id="exampleModalLabel"
-            >
+            <h1 className="modal-title fs-5">
               {modalHeaderText}
             </h1>
             <button
