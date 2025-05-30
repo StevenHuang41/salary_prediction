@@ -1,6 +1,6 @@
 const deleteBestDir = async () => {
   const res = await fetch(
-    'http://192.168.1.3:8000/api/refresh_model',
+    'http://localhost:8000/api/refresh_model',
     {method: 'DELETE'}
   );
   if (!res.ok) {

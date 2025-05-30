@@ -1,4 +1,8 @@
-#predict-loading {
+/* .container-fluid {
+    margin: 100px 00px !important;
+} */
+
+.predict-loading {
     font-size: 5em;
     color: grey;
 }

@@ -6,11 +6,12 @@ const TermsCheckbox = ({
   labelText,
   btnText,
   invalidFeedbackText,
+  c_name,
 }) => {
   const checkboxRef = useRef(null);
 
   return (<>
-    <div className="col-12">
+    <div className={c_name}>
       <div className="form-check">
         <input
           className="form-check-input"

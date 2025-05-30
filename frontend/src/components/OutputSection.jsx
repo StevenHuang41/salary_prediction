@@ -18,67 +18,69 @@ const OutputSection = ({
       
     } catch (err) {
       alert(err.message);
-    }
-    
+    } 
   };
 
-
   return (<>
+    <div className="container p-0 mt-1">
 
-      {/* <div className="container">
-        <div
-          className={`
-            row
-            d-flex
-          `}
-          style={{height: "200px", fontSize: "200px"}}
-        >
-          <div className="col-12">
-            {(predictData.value).toFixed(2)}
-          </div>
-        </div>
-      </div> */}
-      <div className="container p-0">
-        <div
-          className={`
-            row d-flex justify-content-center
-            align-items-center
-          `}
-        >
-          <div
-            id="predict-div1"
-            className={`
-              col-12 fw-bold text-center w-100
-            `}
+      <div className="row">
+        <div className="col d-flex justify-content-end">
+          <button
+            className="btn btn-secondary"
+            onClick={handleRefresh}
           >
-            {(predictData.value).toFixed(2)}
-          </div>
-        </div>
-        <div className="row">
-
-          <div className="col-12">
-            Model Name: {predictData.model_name}
-          </div>
-          <div className="col-12">MAE: {(predictData.mae).toFixed(2)}</div>
-          <div className="col-12">MSE: {predictData.mse.toFixed(2)}</div>
-          <div className="col-12">
-            #Train dataset: {predictData.num_train_dataset}
-          </div>
-          <div className="col-12">
-            #Test dataset: {predictData.num_test_dataset}
-          </div>
-
-          <div className="col">
-            <button
-              className="btn btn-secondary"
-              onClick={handleRefresh}
-            >
-              refresh model
-            </button>
-          </div>
-
+            refresh model
+          </button>
         </div>
       </div>
+
+      <div
+        className={`
+          row
+          d-flex justify-content-center
+          align-items-center
+        `}
+      >
+        <div
+          id="predict-div1"
+          className={`
+            col-12 fw-bold text-center w-100
+          `}
+        >
+          {(predictData.value).toLocaleString('en-US', {
+            maximumFractionDigits: 2
+          })}
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-3 offset-9">
+          Model Name: {predictData.model_name}
+        </div>
+        <div className="col-3 offset-9">
+          MAE: {(predictData.params.mae).toFixed(2)}
+        </div>
+        <div className="col-3 offset-9">
+          MSE: {(predictData.params.mse).toFixed(2)}
+        </div>
+        <div className="col-3 offset-9">
+          #Train dataset: {predictData.num_train_dataset}
+        </div>
+        <div className="col-3 offset-9">
+          #Test dataset: {predictData.num_test_dataset}
+        </div>
+        {/* {predictData.params.alpha} */}
+        {predictData.use_polynomial && 
+          <div className="col-3 offset-9">
+            use polynomial feature
+          </div>
+        }
+
+
+      </div>
+    </div>
+
 
       {/* <div className="col-12"> </div> */}
 

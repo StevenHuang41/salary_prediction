@@ -5,26 +5,27 @@ const SelectInput = ({
   labelText,
   options,
   invalidFeedbackText,
-  c_name,
-  defaultValue,
+  className,
+  children,
+  ...props
 }) => {
   return (<>
-    <div className={c_name}>
+    <div className={`form-floating ${className || ''}`}>
 
-      <label htmlFor={id} className='form-label'>{labelText}</label>
       <select
         className='form-select'
         id={id}
-        defaultValue={defaultValue} // ''
+        defaultValue=''
         required
       >
         <option value='' disabled>
-          Choose {labelText.toLowerCase()} ...
+          {children}
         </option>
         {options.map(({ value, text }) => (
           <option key={value} value={value}>{text}</option>
         ))}
       </select>
+      <label htmlFor={id} className='mx-2'>{labelText}</label>
       <div className='invalid-feedback'>
        {invalidFeedbackText} 
       </div>

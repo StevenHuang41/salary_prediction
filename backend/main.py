@@ -5,6 +5,7 @@ from typing import Optional
 import pandas as pd
 import os
 import shutil
+import numpy as np
 
 from my_package.data_extract_func import get_uniq_job_title
 from my_package.data_predict import predict_salary
@@ -41,8 +42,6 @@ current_dir_path = os.getcwd()
 best_performance_dir = os.path.join(current_dir_path,
                                     'best_performance')
 
-
-
 @app.get('/api/get_uniq_job_title')
 async def get_data():
     result = get_uniq_job_title(df)
@@ -52,11 +51,20 @@ async def get_data():
 
 @app.post("/api/predict")
 async def get_predict_salary(data: RowData):
-    return predict_salary(data.model_dump())
+    result = predict_salary(data.model_dump())
+    # print(result)
+    """
+        "model_name": model_name_trim,
+        "use_polynomial": use_poly,
+        "value": float(model.predict(example_df_)[0]),
+        "num_train_dataset": X_train.shape[0],
+        "num_test_dataset": X_test.shape[0],
+        "params": model_params,
+    """
+    return result
 
 @app.delete("/api/refresh_model")
 async def del_best_performance_dir() -> None:
-
     if os.path.isdir(best_performance_dir):
         shutil.rmtree('best_performance')
         return {'status': 'success',
@@ -71,5 +79,5 @@ if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
 
 
-## TODO: learn how to use pydantic and typing
+## TODO: learn how to use pydantic and typing and use in my_package
 ## TODO: setup splite database

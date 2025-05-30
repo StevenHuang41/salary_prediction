@@ -6,5 +6,6 @@ backend/images/
 backend/untitled_project/
 backend/__pycache__/
 **/best_performance/
+**/models/
 **/__pycache__/
 **/bayesianOptimization_NN_model/

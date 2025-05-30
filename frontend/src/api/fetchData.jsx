@@ -1,6 +1,6 @@
 const fetchData = async (path) => {
   try {
-    const res = await fetch(`http://192.168.1.3:8000/api${path}`);
+    const res = await fetch(`http://localhost:8000/api${path}`);
     if (!res.ok) throw new Error(`Failed to fetch, path=${path}\n
                                   ${res.status} ${res.statusText}`);
     return await res.json();
@@ -16,7 +16,7 @@ const getUniqJobTitle = async () => {
 
 const predictSalary = async (formData) => {
   try {
-    const res = await fetch('http://192.168.1.3:8000/api/predict', {
+    const res = await fetch('http://localhost:8000/api/predict', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),

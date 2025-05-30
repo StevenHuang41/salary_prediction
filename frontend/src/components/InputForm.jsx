@@ -12,12 +12,12 @@ const InputForm = ({ getSubmitData }) => {
     e.stopPropagation();
 
     const forms = formRef.current;
-    const form_elements = formRef.current.elements;
     
     forms.classList.add('was-validated');
     
     if (!forms.checkValidity()) return;
     
+    const form_elements = formRef.current.elements;
     const ageYearModalTrigger = 
       document.getElementById('ageYearModalTrigger');
 
@@ -39,7 +39,6 @@ const InputForm = ({ getSubmitData }) => {
     getSubmitData(data);
   };
 
-
   const ageOptions = Array.from({ length: 71 }, (_, i) => (
     {value: i + 18, text: i + 18}
   ));
@@ -47,7 +46,6 @@ const InputForm = ({ getSubmitData }) => {
   const yearEOptions = Array.from({ length: 71 }, (_, i) => (
     {value: i, text: i}
   ));
-
 
   // get job title options
   const [jobOptions, setJobOptions] = useState([]);
@@ -67,10 +65,13 @@ const InputForm = ({ getSubmitData }) => {
   }, []);
 
   return (<>
-    <div>Salary Prediction</div>
+    <div className="row text-bg-secondary">Salary Prediction</div>
     <form
       id="InputForm"
-      className='row g-3 needs-validation'
+      className={`
+        row bg-danger needs-validation form-floating
+      `}
+        // d-flex justify-content-between
       noValidate
       ref={formRef}
       onSubmit={handleSubmit}
@@ -81,9 +82,10 @@ const InputForm = ({ getSubmitData }) => {
         labelText='Age'
         options={ageOptions}
         invalidFeedbackText='Please select a valid age.'
-        c_name={'col-xxl-auto col-md-6'}
-        defaultValue={'20'}
-      />
+        className="p-0 col-xxl-2 col-md-6"
+      >
+        Choose age ...
+      </SelectInput>
 
       <SelectInput
         id='genderSelectInput'
@@ -94,9 +96,11 @@ const InputForm = ({ getSubmitData }) => {
           {value: 'other', text: 'Other'},
         ]}
         invalidFeedbackText='Please select a gender.'
-        c_name={'col-xxl-auto col-md-6'}
-        defaultValue={'male'}
-      />
+        className="col-xxl-2 col-md-6"
+        defaultValue={''}
+      >
+        Choose gender ...
+      </SelectInput>
 
 
       <SelectInput
@@ -110,8 +114,8 @@ const InputForm = ({ getSubmitData }) => {
           {value: 'PhD', text: 'PhD'},
         ]}
         invalidFeedbackText='Please select an education level.'
-        c_name={'col-xxl-auto col-md-6'}
-        defaultValue={'Master'}
+        className="col-xxl-2 col-md-6"
+        defaultValue={''}
       />
 
       <SelectInput
@@ -119,8 +123,8 @@ const InputForm = ({ getSubmitData }) => {
         labelText='Job Title'
         options={jobOptions}
         invalidFeedbackText='Please select a job title.'
-        c_name={'col-xxl-auto col-md-6'}
-        defaultValue={'Data Scientist'}
+        className="col-xxl-auto col-md-6"
+        // defaultValue={'Data Scientist'}
       />
 
       <SelectInput
@@ -128,8 +132,8 @@ const InputForm = ({ getSubmitData }) => {
         labelText='Years of Experience'
         options={yearEOptions}
         invalidFeedbackText='Please select a valid number'
-        c_name={'col-xxl-2 col-md-6'}
-        defaultValue={'0'}
+        className="col-xxl-auto col-md-6"
+        defaultValue={''}
       />
 
       <TermsCheckbox 
@@ -137,11 +141,12 @@ const InputForm = ({ getSubmitData }) => {
         labelText='Agree to'
         btnText='terms and conditions'
         invalidFeedbackText='You must agree before submitting.'
+        c_name="col-12 col-md-8"
       />
 
-      <div className="col-12">
+      <div className="col-12 col-md-4 d-flex justify-content-md-end align-items-start">
         <button
-          className="btn btn-primary"
+          className="btn btn-primary "
           type="submit"
           id="predictSalaryBtn"
         >

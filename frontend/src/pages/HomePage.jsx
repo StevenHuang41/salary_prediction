@@ -1,7 +1,7 @@
 import './HomePage.css';
 import InputForm from '../components/InputForm';
 import OutputSection from '../components/OutputSection';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { predictSalary } from '../api/fetchData';
 
 const HomePage = () => {
@@ -26,23 +26,46 @@ const HomePage = () => {
 
   };
 
+  useEffect(() => {
+    console.log(predictResult);
+  }, [predictResult]);
+
   return (<>
     <div className="container">
       <div className="row">
         <div className="col">
+
           <InputForm getSubmitData={handleGetFormData}/>
-          {errResult && <div className="text-danger">{errResult}</div>}
-          {loadingResult ?
+
+          {errResult ? 
+          <div className="text-danger">{errResult}</div>
+          :
+          loadingResult ?
+          <div
+            className={`
+              d-flex
+              justify-content-center
+              align-items-center
+            `}
+            style={{height: "30vh"}}
+          >
             <div
-              id='predict-loading'
-              className='text-center'
-            >
-              Loading ...
-            </div> :
-            <OutputSection
-              dataFromForm={formData}
-              predictData={predictResult}
-            />}
+              className={`
+                spinner-border
+                text-secondary
+                predict-loading
+                spinner-css
+              `}
+              style={{width: "1em", height: "1em"}}
+              role='status'
+            ></div>
+            <span className="sr-only predict-loading">Loading ...</span>
+          </div>
+          :
+          <OutputSection
+            dataFromForm={formData}
+            predictData={predictResult}
+          />}
         </div>
       </div>
     </div>

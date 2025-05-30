@@ -167,6 +167,8 @@ if __name__ == "__main__":
     import shutil
 
     from data_cleansing import cleaning_data
+    from data_spliting import spliting_data
+    from data_preprocessing import preprocess_data
 
     ## load csv 
     FILE_NAME = "../Salary_Data.csv"
@@ -180,9 +182,6 @@ if __name__ == "__main__":
     for col in df.columns:
         show_plot(df, col, group_method='median')
 
-
-    from data_spliting import spliting_data
-    from data_preprocessing import preprocess_data
 
     X_train, X_test, y_train, y_test = spliting_data(df)
     # test 2

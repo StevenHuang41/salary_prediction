@@ -12,24 +12,24 @@
 
 @media (min-width: 768px) {
   #predict-div1 {
-    font-size: 8.5em;
+    font-size: 8em;
   }
 }
 
 @media (min-width: 992px) {
   #predict-div1 {
-    font-size: 12em;
+    font-size: 11em;
   }
 }
  
 @media (min-width: 1200px) {
   #predict-div1 {
-    font-size: 14em;
+    font-size: 13em;
   }
 }
 
 @media (min-width: 1400px) {
   #predict-div1 {
-    font-size: 16em;
+    font-size: 15em;
   }
 }
