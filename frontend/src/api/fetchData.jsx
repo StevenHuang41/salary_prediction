@@ -32,5 +32,33 @@ const predictSalary = async (formData) => {
   }
 };
 
+const fetchSalaryPlot = async (salary) => {
+  try {
+    const res = await fetch("http://localhost:8000/api/salary_avxline_plot", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ salary: salary })
+    });
 
-export { fetchData, getUniqJobTitle, predictSalary };
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message)
+    }
+
+    const blob = await res.blob();
+    const imageURL = URL.createObjectURL(blob);
+
+    return imageURL;
+  } catch (err) {
+    throw err;
+  }
+
+};
+
+
+export {
+  fetchData, getUniqJobTitle, predictSalary,
+  fetchSalaryPlot,
+};

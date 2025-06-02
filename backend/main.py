@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
@@ -9,6 +9,7 @@ import numpy as np
 
 from my_package.data_extract_func import get_uniq_job_title
 from my_package.data_predict import predict_salary
+from my_package.data_visualization import salary_avxline_images
 
 app = FastAPI()
 
@@ -31,6 +32,9 @@ class RowData(BaseModel):
     job_title: str
     years_of_experience: float
 
+class SalaryInput(BaseModel):
+    salary: float
+
 
 
 ## dataFrame needs cleansing
@@ -49,6 +53,7 @@ async def get_data():
 
     return {'value': result}
 
+
 @app.post("/api/predict")
 async def get_predict_salary(data: RowData):
     # result = predict_salary(data.dict())
@@ -64,8 +69,9 @@ async def get_predict_salary(data: RowData):
     """
     return result
 
+
 @app.delete("/api/refresh_model")
-async def del_best_performance_dir() -> None:
+async def del_best_performance_dir():
     if os.path.isdir(best_performance_dir):
         shutil.rmtree('best_performance')
         return {'status': 'success',
@@ -73,6 +79,13 @@ async def del_best_performance_dir() -> None:
 
     return {'status': 'not found',
             'message': 'file not found.'}
+
+
+@app.post("/api/salary_avxline_plot")
+async def get_salary_avxline_plot(data: SalaryInput):
+    image_byte = salary_avxline_images(data.salary)
+
+    return Response(content=image_byte, media_type="image/png")
 
 if __name__ == "__main__":
     import uvicorn

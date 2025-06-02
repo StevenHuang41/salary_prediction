@@ -1,3 +1,5 @@
+import io
+import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -160,35 +162,67 @@ def show_heatmap(X_train: pd.DataFrame,
     ## show fig
     plt.show()
 
+def salary_avxline_images(salary: float):
+    """
+    recv: salary and formData
+
+    create images dir for storing analytical images
+    """
+    from .data_cleansing import cleaning_data
+
+    ## load database 
+    abs_path = os.getcwd().split('/my_package')[0]
+    df = pd.read_csv(os.path.join(abs_path, 'Salary_Data.csv'))
+    df = cleaning_data(df, has_target_columns=True)
+
+    sns.set_theme('paper')
+    plt.figure(figsize=(8, 6), dpi=240)
+    sns.histplot(data=df, x='salary', bins=20, alpha=0.3, kde=True)
+    sns.kdeplot(data=df.salary, label='KDE')
+    plt.axvline(salary, color='lightgreen', linestyle='-',
+                label=f'predict salary: {salary}',
+                linewidth=3)
+    plt.xlabel('Salary', fontsize=12)
+    plt.ylabel('Count', fontsize=12)
+    plt.title('Salary Prediction v.s. Dataset', fontsize=18)
+    plt.legend(fontsize=8)
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    plt.close()
+    buf.seek(0)
+    return buf.getvalue()
 
 
 if __name__ == "__main__":
-    import os
-    import shutil
+    # import shutil
+    salary_avxline_images(100000)
 
-    from data_cleansing import cleaning_data
-    from data_spliting import spliting_data
-    from data_preprocessing import preprocess_data
+    # from data_cleansing import cleaning_data
+    # from data_spliting import spliting_data
+    # from data_preprocessing import preprocess_data
 
-    ## load csv 
-    FILE_NAME = "../Salary_Data.csv"
-    df = pd.read_csv(FILE_NAME, delimiter=',')
-    df = cleaning_data(df, has_target_columns=True)
+    # ## load csv 
+    # FILE_NAME = "../Salary_Data.csv"
+    # df = pd.read_csv(FILE_NAME, delimiter=',')
+    # df = cleaning_data(df, has_target_columns=True)
     
-    images_dir = os.path.join(os.getcwd(), 'images')
-    os.makedirs(images_dir, exist_ok=True)
+    # images_dir = os.path.join(os.getcwd(), 'images')
+    # os.makedirs(images_dir, exist_ok=True)
 
-    # test 1
-    for col in df.columns:
-        show_plot(df, col, group_method='median')
+    # # test 1
+    # for col in df.columns:
+    #     show_plot(df, col, group_method='median')
 
 
-    X_train, X_test, y_train, y_test = spliting_data(df)
-    # test 2
-    X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=True)
-    show_heatmap(X_train_, y_train, use_poly=True)
-    # test 3
-    X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=False)
-    show_heatmap(X_train_, y_train, use_poly=False)
+    # X_train, X_test, y_train, y_test = spliting_data(df)
+    # # test 2
+    # X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=True)
+    # show_heatmap(X_train_, y_train, use_poly=True)
+    # # test 3
+    # X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=False)
+    # show_heatmap(X_train_, y_train, use_poly=False)
 
-    shutil.rmtree(images_dir)
+    # shutil.rmtree(images_dir)
+    pass

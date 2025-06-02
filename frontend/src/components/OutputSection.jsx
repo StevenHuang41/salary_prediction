@@ -1,12 +1,48 @@
+import { useEffect, useState } from "react";
 import { deleteBestDir } from "../api/deleteData";
 import './OutputSection.css';
+import { fetchSalaryPlot } from "../api/fetchData";
 
 const OutputSection = ({
   dataFromForm,
   predictData,
   setErrFunc,
 }) => {
+
+
+  const [imgURL, setImgURL] = useState('');
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const getPlot = async () => {
+      try {
+        const url = await fetchSalaryPlot(predictData.value);
+        setImgURL(url);
+      } catch (err) {console.log(err);
+      }
+    };
+    getPlot();
+    return () => abortController.abort();
+  }, [predictData]);
+
   if (!predictData) return ;
+
+  //   const [jobOptions, setJobOptions] = useState([]);
+  // useEffect(() => {
+  //   const abortController = new AbortController();
+  //   const getData = async () => {
+  //     try {
+  //       const data = await getUniqJobTitle();
+  //       const options = data.value.map((val) => (
+  //         {value: val, text: val}
+  //       ));
+  //       setJobOptions(options);
+  //     } catch (err) {console.log(err);}
+  //   };
+  //   getData();
+  //   return () => abortController.abort()
+  // }, []);Vk
+  
 
   const handleRetrain = async () => {
     try {
@@ -75,6 +111,16 @@ const OutputSection = ({
           use polynomial feature
         </div>
       }
+    </div>
+    <div className="row">
+      <div className="col">
+        <img
+          className={`
+            img-fluid  
+          `}
+          src={imgURL}
+          alt="Salary Axvline Plot"/>
+      </div>
     </div>
 
       {/* <div className="col-12">Age:{dataFromForm.age}</div>
