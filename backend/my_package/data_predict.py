@@ -93,6 +93,5 @@ if __name__ == "__main__":
         "years_of_experience": 1,
     }, restart=True))
 
-    # TODO testing 
 
-    # shutil.rmtree('best_performance')
+    shutil.rmtree('best_performance')

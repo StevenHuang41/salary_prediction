@@ -6,12 +6,17 @@ const TermsCheckbox = ({
   labelText,
   btnText,
   invalidFeedbackText,
-  c_name,
+  className,
+        // modalId='termsModal'
+        // labelText='Agree to'
+        // btnText='terms and conditions'
+        // invalidFeedbackText='You must agree before submitting.'
+        // className="col "
 }) => {
   const checkboxRef = useRef(null);
 
   return (<>
-    <div className={c_name}>
+    <div className={`${className || ''}`}>
       <div className="form-check">
         <input
           className="form-check-input"

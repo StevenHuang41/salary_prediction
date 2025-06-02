@@ -18,6 +18,7 @@ const InputForm = ({ getSubmitData }) => {
     if (!forms.checkValidity()) return;
     
     const form_elements = formRef.current.elements;
+    
     const ageYearModalTrigger = 
       document.getElementById('ageYearModalTrigger');
 
@@ -65,107 +66,138 @@ const InputForm = ({ getSubmitData }) => {
   }, []);
 
   return (<>
-    <div className="row text-bg-secondary">Salary Prediction</div>
+    <div className="row"><div className="col">
+      <div className="text-primary fs-1">
+        Salary Prediction
+      </div>
+    </div></div>
+
     <form
       id="InputForm"
       className={`
-        row bg-danger needs-validation form-floating
+        needs-validation
       `}
-        // d-flex justify-content-between
       noValidate
       ref={formRef}
       onSubmit={handleSubmit}
     >
-
-      <SelectInput
-        id='ageSelectInput'
-        labelText='Age'
-        options={ageOptions}
-        invalidFeedbackText='Please select a valid age.'
-        className="p-0 col-xxl-2 col-md-6"
+      <div
+        className={`
+          row row-cols-1 row-cols-md-2 row-cols-l
+          g-2 
+        `}
       >
-        Choose age ...
-      </SelectInput>
 
-      <SelectInput
-        id='genderSelectInput'
-        labelText='Gender'
-        options={[
-          {value: 'male', text: 'Male'},
-          {value: 'female', text: 'Female'},
-          {value: 'other', text: 'Other'},
-        ]}
-        invalidFeedbackText='Please select a gender.'
-        className="col-xxl-2 col-md-6"
-        defaultValue={''}
-      >
-        Choose gender ...
-      </SelectInput>
-
-
-      <SelectInput
-        id='eduLevSelectInput'
-        labelText='Education Level'
-        options={[
-          {value: 'No specified', text: 'No specified'},
-          {value: 'High School', text: 'High School'},
-          {value: 'Bachelor', text: 'Bachelor'},
-          {value: 'Master', text: 'Master'},
-          {value: 'PhD', text: 'PhD'},
-        ]}
-        invalidFeedbackText='Please select an education level.'
-        className="col-xxl-2 col-md-6"
-        defaultValue={''}
-      />
-
-      <SelectInput
-        id='jobTitleSelectInput'
-        labelText='Job Title'
-        options={jobOptions}
-        invalidFeedbackText='Please select a job title.'
-        className="col-xxl-auto col-md-6"
-        // defaultValue={'Data Scientist'}
-      />
-
-      <SelectInput
-        id='yearESelectInput'
-        labelText='Years of Experience'
-        options={yearEOptions}
-        invalidFeedbackText='Please select a valid number'
-        className="col-xxl-auto col-md-6"
-        defaultValue={''}
-      />
-
-      <TermsCheckbox 
-        modalId='termsModal'
-        labelText='Agree to'
-        btnText='terms and conditions'
-        invalidFeedbackText='You must agree before submitting.'
-        c_name="col-12 col-md-8"
-      />
-
-      <div className="col-12 col-md-4 d-flex justify-content-md-end align-items-start">
-        <button
-          className="btn btn-primary "
-          type="submit"
-          id="predictSalaryBtn"
+        <SelectInput
+          className="col col-xl-2"
+          selectId='ageSelectInput'
+          options={ageOptions}
+          invalidFeedbackText='Please select a valid age.'
+          defaultValue=''
         >
-          Predict Salary
-        </button>
+          Age
+        </SelectInput>
+
+
+        <SelectInput
+          className="col col-xl-2"
+          selectId='genderSelectInput'
+          options={[
+            {value: 'male', text: 'Male'},
+            {value: 'female', text: 'Female'},
+            {value: 'other', text: 'Other'},
+          ]}
+          invalidFeedbackText='Please select a gender.'
+          defaultValue=''
+        >
+          Gender
+        </SelectInput>
+
+
+        <SelectInput
+          selectId='eduLevSelectInput'
+          options={[
+            {value: 'No specified', text: 'No specified'},
+            {value: 'High School', text: 'High School'},
+            {value: 'Bachelor', text: 'Bachelor'},
+            {value: 'Master', text: 'Master'},
+            {value: 'PhD', text: 'PhD'},
+          ]}
+          invalidFeedbackText='Please select an education level.'
+          className="col col-xl-3"
+          defaultValue=''
+        >
+          Education level
+        </SelectInput>
+
+        <SelectInput
+          selectId='jobTitleSelectInput'
+          options={jobOptions}
+          invalidFeedbackText='Please select a job title.'
+          className="col col-xl-3"
+          defaultValue=''
+        >
+          Job title
+        </SelectInput>
+
+        <SelectInput
+          selectId='yearESelectInput'
+          options={yearEOptions}
+          invalidFeedbackText='Please select a valid number'
+          className="col col-xl-2"
+          defaultValue=''
+        >
+          Years of experience
+        </SelectInput>
       </div>
 
-      <button
-        id='ageYearModalTrigger'
-        data-bs-toggle="modal"
-        data-bs-target={'#ageYearModal'}
-        style={{display: 'none'}}
-      />
+      <div
+        className={`
+          row row-cols-1 row-cols-md-2
+          mt- m-0 g-2
+          align-items-center
+        `}
+      >
+        <TermsCheckbox 
+          className="col-12 col-md-6 p-0"
+          modalId='termsModal'
+          labelText='Agree to'
+          btnText='terms and conditions'
+          invalidFeedbackText='You must agree before submitting.'
+        />
 
-      <AgeYearsModal
-        id="ageYearModal"
-      />
+        <div
+          className={`
+            col-12 col-md-6 p-0 
+            d-flex justify-content-md-end
+          `}
+        >
+          <button
+            className={`
+              btn btn-primary
+            `}
+            type="submit"
+            id="predictSalaryBtn"
+          >
+            Predict Salary
+          </button>
+        </div>
 
+      </div>
     </form>
+
+
+    <button
+      id='ageYearModalTrigger'
+      data-bs-toggle="modal"
+      data-bs-target={'#ageYearModal'}
+      style={{display: 'none'}}
+    />
+
+    <AgeYearsModal
+      id="ageYearModal"
+    />
+
 
 
   </>)

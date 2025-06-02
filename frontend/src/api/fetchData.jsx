@@ -1,8 +1,8 @@
 const fetchData = async (path) => {
   try {
     const res = await fetch(`http://localhost:8000/api${path}`);
-    if (!res.ok) throw new Error(`Failed to fetch, path=${path}\n
-                                  ${res.status} ${res.statusText}`);
+    if (!res.ok) throw new Error(`Failed to fetch, path=${path}`
+                                 `${res.status} ${res.statusText}`);
     return await res.json();
   } catch (err) {
     console.error(`Fetch failed for ${path}:`, err)

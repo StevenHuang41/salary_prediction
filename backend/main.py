@@ -51,9 +51,10 @@ async def get_data():
 
 @app.post("/api/predict")
 async def get_predict_salary(data: RowData):
+    # result = predict_salary(data.dict())
     result = predict_salary(data.model_dump())
-    # print(result)
     """
+    result:
         "model_name": model_name_trim,
         "use_polynomial": use_poly,
         "value": float(model.predict(example_df_)[0]),

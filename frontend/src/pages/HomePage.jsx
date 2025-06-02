@@ -1,8 +1,10 @@
 import './HomePage.css';
-import InputForm from '../components/InputForm';
-import OutputSection from '../components/OutputSection';
 import { useEffect, useState } from 'react';
 import { predictSalary } from '../api/fetchData';
+import InputForm from '../components/InputForm';
+import OutputSection from '../components/OutputSection';
+import ErrorPredict from '../components/ErrorPredict';
+import LoadingResult from '../components/LoadingResult';
 
 const HomePage = () => {
   const [formData, setFormData] = useState(null);
@@ -32,49 +34,25 @@ const HomePage = () => {
 
   return (<>
     <div className="container">
-      <div className="row">
-        <div className="col">
+      <InputForm getSubmitData={handleGetFormData}/>
 
-          <InputForm getSubmitData={handleGetFormData}/>
-
-          {errResult ? 
-          <div className="text-danger">{errResult}</div>
-          :
-          loadingResult ?
-          <div
-            className={`
-              d-flex
-              justify-content-center
-              align-items-center
-            `}
-            style={{height: "30vh"}}
-          >
-            <div
-              className={`
-                spinner-border
-                text-secondary
-                predict-loading
-                spinner-css
-              `}
-              style={{width: "1em", height: "1em"}}
-              role='status'
-            ></div>
-            <span className="sr-only predict-loading">Loading ...</span>
-          </div>
-          :
-          <OutputSection
-            dataFromForm={formData}
-            predictData={predictResult}
-          />}
-        </div>
-      </div>
+      {errResult ? 
+      <ErrorPredict data={errResult}/>
+      :
+      loadingResult ?
+      <LoadingResult />
+      :
+      <OutputSection
+        dataFromForm={formData}
+        predictData={predictResult}
+        setErrFunc={setErrResult}
+      />}
     </div>
   </>)
 };
 
 
 // TODO: useQuery to get option from database, instead of hard code
-// TODO: understand how to use className of bootstrap
 
 
 
