@@ -1,6 +1,8 @@
 const fetchData = async (path) => {
   try {
-    const res = await fetch(`http://localhost:8000/api${path}`);
+    // 192.168.1.3
+    const res = await fetch(`http://192.168.1.3:8000/api${path}`);
+    // const res = await fetch(`http://localhost:8000/api${path}`);
     if (!res.ok) throw new Error(`Failed to fetch, path=${path}`
                                  `${res.status} ${res.statusText}`);
     return await res.json();
@@ -16,7 +18,7 @@ const getUniqJobTitle = async () => {
 
 const predictSalary = async (formData) => {
   try {
-    const res = await fetch('http://localhost:8000/api/predict', {
+    const res = await fetch('http://192.168.1.3:8000/api/predict', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -34,7 +36,7 @@ const predictSalary = async (formData) => {
 
 const fetchSalaryPlot = async (salary) => {
   try {
-    const res = await fetch("http://localhost:8000/api/salary_avxline_plot", {
+    const res = await fetch("http://192.168.1.3:8000/api/salary_avxline_plot", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

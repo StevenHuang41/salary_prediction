@@ -25,6 +25,8 @@ const OutputSection = ({
     return () => abortController.abort();
   }, [predictData]);
 
+  const [showDetail, setShowDetail] = useState(false);
+
   if (!predictData) return ;
 
   //   const [jobOptions, setJobOptions] = useState([]);
@@ -58,6 +60,11 @@ const OutputSection = ({
     } 
   };
 
+  const handleSeeDetailClick = () => {
+    setShowDetail(!showDetail);
+  };
+  
+  
   return (<>
     <div className="row p-0 mt-1">
       <div className="col d-flex justify-content-end">
@@ -90,37 +97,48 @@ const OutputSection = ({
     </div>
 
     <div className="row">
-      <div className="col-3 offset-9">
-        Model Name: {predictData.model_name}
-      </div>
-      <div className="col-3 offset-9">
-        MAE: {(predictData.params.mae).toFixed(2)}
-      </div>
-      <div className="col-3 offset-9">
-        MSE: {(predictData.params.mse).toFixed(2)}
-      </div>
-      <div className="col-3 offset-9">
-        #Train dataset: {predictData.num_train_dataset}
-      </div>
-      <div className="col-3 offset-9">
-        #Test dataset: {predictData.num_test_dataset}
-      </div>
-      {/* {predictData.params.alpha} */}
-      {predictData.use_polynomial && 
-        <div className="col-3 offset-9">
-          use polynomial feature
+      <div className="col d-flex justify-content-end">
+        <div className="btn text-secondary" onClick={handleSeeDetailClick}>
+          see detail
         </div>
-      }
-    </div>
-    <div className="row">
-      <div className="col">
-        <img
-          className={`
-            img-fluid  
-          `}
-          src={imgURL}
-          alt="Salary Axvline Plot"/>
       </div>
+      {showDetail && 
+      <>
+        <div className="row">
+          <div className="col-12">
+            Model Name: {predictData.model_name}
+          </div>
+          <div className="col-12">
+            MAE: {(predictData.params.mae).toFixed(2)}
+          </div>
+          <div className="col-12">
+            MSE: {(predictData.params.mse).toFixed(2)}
+          </div>
+          <div className="col-12">
+            #Train dataset: {predictData.num_train_dataset}
+          </div>
+          <div className="col-12">
+            #Test dataset: {predictData.num_test_dataset}
+            {/* {predictData.params.alpha} */}
+          </div>
+          {predictData.use_polynomial && 
+          <div className="col-12">
+            use polynomial feature
+          </div>
+          }
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <img
+              className={`
+                img-fluid  
+              `}
+              src={imgURL}
+              alt="Salary Axvline Plot"/>
+          </div>
+        </div>
+      </>}
     </div>
 
       {/* <div className="col-12">Age:{dataFromForm.age}</div>

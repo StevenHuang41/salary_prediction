@@ -180,7 +180,7 @@ def salary_avxline_images(salary: float):
     sns.histplot(data=df, x='salary', bins=20, alpha=0.3, kde=True)
     sns.kdeplot(data=df.salary, label='KDE')
     plt.axvline(salary, color='lightgreen', linestyle='-',
-                label=f'predict salary: {salary}',
+                label=f'predict salary: {salary:.2f}',
                 linewidth=3)
     plt.xlabel('Salary', fontsize=12)
     plt.ylabel('Count', fontsize=12)
