@@ -9,14 +9,14 @@ import numpy as np
 
 from my_package.data_extract_func import get_uniq_job_title
 from my_package.data_predict import predict_salary
-from my_package.data_visualization import salary_avxline_images
+from my_package.data_visualization import salary_hist_image
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://192.168.1.3:3000", # mac
+        "http://192.168.1.16:3000", # mac
         "http://192.168.1.23:3000", # mobile
         "http://localhost:3000",
     ],
@@ -70,7 +70,7 @@ async def get_predict_salary(data: RowData):
     return result
 
 
-@app.delete("/api/refresh_model")
+@app.delete("/api/retrain_model")
 async def del_best_performance_dir():
     if os.path.isdir(best_performance_dir):
         shutil.rmtree('best_performance')
@@ -82,8 +82,8 @@ async def del_best_performance_dir():
 
 
 @app.post("/api/salary_avxline_plot")
-async def get_salary_avxline_plot(data: SalaryInput):
-    image_byte = salary_avxline_images(data.salary)
+async def get_salary_hist_plot(data: SalaryInput):
+    image_byte = salary_hist_image(data.salary)
 
     return Response(content=image_byte, media_type="image/png")
 

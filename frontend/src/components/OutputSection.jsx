@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { deleteBestDir } from "../api/deleteData";
 import './OutputSection.css';
-import { fetchSalaryPlot } from "../api/fetchData";
+import { deleteBestDir } from "../api/dataService";
+import { fetchSalaryPlot } from "../api/dataService";
 
 const OutputSection = ({
   dataFromForm,
@@ -9,17 +9,17 @@ const OutputSection = ({
   setErrFunc,
 }) => {
 
-
   const [imgURL, setImgURL] = useState('');
 
   useEffect(() => {
+    if (!predictData) return ;
+
     const abortController = new AbortController();
     const getPlot = async () => {
       try {
         const url = await fetchSalaryPlot(predictData.value);
         setImgURL(url);
-      } catch (err) {console.log(err);
-      }
+      } catch (err) {console.log(err)};
     };
     getPlot();
     return () => abortController.abort();
@@ -28,23 +28,6 @@ const OutputSection = ({
   const [showDetail, setShowDetail] = useState(false);
 
   if (!predictData) return ;
-
-  //   const [jobOptions, setJobOptions] = useState([]);
-  // useEffect(() => {
-  //   const abortController = new AbortController();
-  //   const getData = async () => {
-  //     try {
-  //       const data = await getUniqJobTitle();
-  //       const options = data.value.map((val) => (
-  //         {value: val, text: val}
-  //       ));
-  //       setJobOptions(options);
-  //     } catch (err) {console.log(err);}
-  //   };
-  //   getData();
-  //   return () => abortController.abort()
-  // }, []);Vk
-  
 
   const handleRetrain = async () => {
     try {

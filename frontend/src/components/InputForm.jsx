@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getUniqJobTitle } from "../api/fetchData";
+import { getUniqJobTitle } from "../api/dataService";
 import SelectInput from "./SelectInput";
 import TermsCheckbox from "./TermsCheckbox";
 import AgeYearsModal from "./AgeYearsModal";
@@ -7,36 +7,48 @@ import AgeYearsModal from "./AgeYearsModal";
 const InputForm = ({ getSubmitData }) => {
   const formRef = useRef(null);
 
+  const [yearValid, setYearValid] = useState(true);
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [educationLevel, setEducationLevel] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [yearE, setYearE] = useState('');
+  // const [age, setAge] = useState('26');
+  // const [gender, setGender] = useState('female');
+  // const [educationLevel, setEducationLevel] = useState('Master');
+  // const [jobTitle, setJobTitle] = useState('Data Scientist');
+  // const [yearE, setYearE] = useState('9');
+  const [jobOptionsLoading, setJobOptionsLoading] = useState(true);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     const forms = formRef.current;
-    
     forms.classList.add('was-validated');
     
+    // check form has select value
     if (!forms.checkValidity()) return;
-    
-    const form_elements = formRef.current.elements;
     
     const ageYearModalTrigger = 
       document.getElementById('ageYearModalTrigger');
 
-    if ((form_elements.ageSelectInput.value - 
-      form_elements.yearESelectInput.value) < 18) {
-      form_elements.yearESelectInput.value = '';
-      ageYearModalTrigger.click()
+    // check age - year is not lower than 18
+    if ((age - yearE) < 18) {
+      setYearE('');
+      ageYearModalTrigger.click();
+      setYearValid(false);
       return 
     }
 
+    // set data
     const data = {
-      age: form_elements['ageSelectInput'].value,
-      gender: form_elements['genderSelectInput'].value,
-      education_level: form_elements['eduLevSelectInput'].value,
-      job_title: form_elements['jobTitleSelectInput'].value,
-      years_of_experience: form_elements['yearESelectInput'].value,
+      age: age,
+      gender: gender,
+      education_level: educationLevel,
+      job_title: jobTitle,
+      years_of_experience: yearE,
     } 
-    
     getSubmitData(data);
   };
 
@@ -59,41 +71,41 @@ const InputForm = ({ getSubmitData }) => {
           {value: val, text: val}
         ));
         setJobOptions(options);
+        setJobOptionsLoading(false);
       } catch (err) {console.log(err);}
     };
     getData();
     return () => abortController.abort()
   }, []);
 
+
   return (<>
-    <div className="row"><div className="col">
-      <div className="text-primary fs-1">
-        Salary Prediction
+    <div className="row">
+      <div className="col">
+        <div className="text-primary fs-1">
+          Salary Prediction
+        </div>
       </div>
-    </div></div>
+    </div>
 
     <form
       id="InputForm"
-      className={`
-        needs-validation
-      `}
+      className={`needs-validation`}
       noValidate
       ref={formRef}
       onSubmit={handleSubmit}
     >
-      <div
-        className={`
-          row row-cols-1 row-cols-md-2 row-cols-l
-          g-2 
-        `}
-      >
+      <div className={`row row-cols-1 row-cols-md-2 row-cols-l g-2`} >
 
         <SelectInput
           className="col col-xl-2"
           selectId='ageSelectInput'
           options={ageOptions}
           invalidFeedbackText='Please select a valid age.'
-          defaultValue=''
+          // defaultValue=''
+          value={age}
+          onChange={e => setAge(e.target.value)}
+          isLoadingOptions={false}
         >
           Age
         </SelectInput>
@@ -108,7 +120,10 @@ const InputForm = ({ getSubmitData }) => {
             {value: 'other', text: 'Other'},
           ]}
           invalidFeedbackText='Please select a gender.'
-          defaultValue=''
+          // defaultValue=''
+          value={gender}
+          onChange={e => setGender(e.target.value)}
+          isLoadingOptions={false}
         >
           Gender
         </SelectInput>
@@ -125,7 +140,10 @@ const InputForm = ({ getSubmitData }) => {
           ]}
           invalidFeedbackText='Please select an education level.'
           className="col col-xl-3"
-          defaultValue=''
+          // defaultValue=''
+          value={educationLevel}
+          onChange={e => setEducationLevel(e.target.value)}
+          isLoadingOptions={false}
         >
           Education level
         </SelectInput>
@@ -135,7 +153,10 @@ const InputForm = ({ getSubmitData }) => {
           options={jobOptions}
           invalidFeedbackText='Please select a job title.'
           className="col col-xl-3"
-          defaultValue=''
+          // defaultValue=''
+          value={jobTitle}
+          onChange={e => setJobTitle(e.target.value)}
+          isLoadingOptions={jobOptionsLoading}
         >
           Job title
         </SelectInput>
@@ -143,9 +164,15 @@ const InputForm = ({ getSubmitData }) => {
         <SelectInput
           selectId='yearESelectInput'
           options={yearEOptions}
-          invalidFeedbackText='Please select a valid number'
+          invalidFeedbackText={
+            yearValid ? 'Please select a valid number.' :
+            `The years of experience should not exceed ${age - 18}.`
+          }
           className="col col-xl-2"
-          defaultValue=''
+          // defaultValue=''
+          value={yearE}
+          onChange={e => setYearE(e.target.value)}
+          isLoadingOptions={false}
         >
           Years of experience
         </SelectInput>

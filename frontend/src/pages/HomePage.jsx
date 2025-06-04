@@ -1,6 +1,5 @@
-import './HomePage.css';
 import { useEffect, useState } from 'react';
-import { predictSalary } from '../api/fetchData';
+import { predictSalary } from '../api/dataService';
 import InputForm from '../components/InputForm';
 import OutputSection from '../components/OutputSection';
 import ErrorPredict from '../components/ErrorPredict';
@@ -29,7 +28,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    console.log(predictResult);
+    // console.log(predictResult);
   }, [predictResult]);
 
   return (<>
@@ -40,7 +39,14 @@ const HomePage = () => {
       <ErrorPredict data={errResult}/>
       :
       loadingResult ?
-      <LoadingResult />
+      <div className="loading-container">
+        <LoadingResult
+          loadingText="Loading ..."
+          setStyle={{fontSize: "5em"}}
+          setClass="mt-5 mt-sm-3"
+          setTextClass="d-none d-sm-flex"
+        />
+      </div>
       :
       <OutputSection
         dataFromForm={formData}

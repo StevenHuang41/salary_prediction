@@ -1,25 +1,29 @@
+// import "./LoadingResult.css"
 
-const LoadingResult = () => {
+const LoadingResult = ({ loadingText, setStyle={}, ...props}) => {
   return (<>
     <div
       className={`
-        d-flex
-        justify-content-center
-        align-items-center
+        d-flex justify-content-center align-items-center
+        ${props.setClass}
       `}
-      style={{height: "20vh"}}
+      style={{color: "#A9A9A9", ...setStyle}}
     >
       <div
-        className={`
-          spinner-border
-          text-secondary
-          predict-loading
-          spinner-css
-        `}
-        style={{width: "1em", height: "1em"}}
+        id="loading-spinner"
+        className={`spinner-border`}
+        style={{
+          height: "0.6em",
+          width: "0.6em",
+          borderWidth: "3px",
+        }}
         role='status'
       ></div>
-      <span className="sr-only predict-loading">Loading ...</span>
+
+      <div id="loading-text" className={props.setTextClass}>
+        {loadingText}
+      </div>
+
     </div>
   </>)
 };

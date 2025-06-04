@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 from typing import Literal
+from .data_cleansing import cleaning_data
 
 def show_plot(df, col, *,
               group_method: Literal['mean', 'median', 'mode'] = 'mean'):
@@ -162,13 +163,11 @@ def show_heatmap(X_train: pd.DataFrame,
     ## show fig
     plt.show()
 
-def salary_avxline_images(salary: float):
+def salary_hist_image(salary: float):
     """
     recv: salary and formData
-
-    create images dir for storing analytical images
+    output: byte hist image
     """
-    from .data_cleansing import cleaning_data
 
     ## load database 
     abs_path = os.getcwd().split('/my_package')[0]
@@ -194,10 +193,37 @@ def salary_avxline_images(salary: float):
     buf.seek(0)
     return buf.getvalue()
 
+def salary_box_image(salary: float):
+    """
+    recv: salary and formData
+    output: byte box image
+    """
+
+    ## load database 
+    abs_path = os.getcwd().split('/my_package')[0]
+    df = pd.read_csv(os.path.join(abs_path, 'Salary_Data.csv'))
+    df = cleaning_data(df, has_target_columns=True)
+
+    sns.set_theme('paper')
+    plt.figure(figsize=(8, 6), dpi=240)
+    sns.violinplot(data=df.salary)
+    plt.scatter(salary, 0, color='lightgreen', zorder=10,
+                label=f'predict salary: {salary:.2f}')
+    plt.xlabel('Salary', fontsize=12)
+    plt.title('Salary Box Plot', fontsize=18)
+    plt.legend(fontsize=8)
+    plt.tight_layout()
+
+    plt.show()
+    # buf = io.BytesIO()
+    # plt.savefig(buf, format='png', bbox_inches='tight')
+    # plt.close()
+    # buf.seek(0)
+    # return buf.getvalue()
+
 
 if __name__ == "__main__":
     # import shutil
-    salary_avxline_images(100000)
 
     # from data_cleansing import cleaning_data
     # from data_spliting import spliting_data
@@ -225,4 +251,10 @@ if __name__ == "__main__":
     # show_heatmap(X_train_, y_train, use_poly=False)
 
     # shutil.rmtree(images_dir)
+
+    # test 4
+    # salary_hist_image(100000)
+
+    # test 5
+    salary_box_image(100000)
     pass
