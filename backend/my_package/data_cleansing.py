@@ -17,7 +17,8 @@ def cleaning_remove_salary_outlier(
     upper_bound=300000,
 ) -> pd.DataFrame:
     df['salary'] = df['salary'].astype('int32')
-    df = df[(df['salary'] > lower_bound) & (df['salary'] < upper_bound)]
+    df = df[(df['salary'] > lower_bound) &
+            (df['salary'] < upper_bound)]
     return df
 
 def cleaning_salary(df: pd.DataFrame) -> pd.DataFrame:
@@ -127,22 +128,35 @@ def cleaning_data(df: pd.DataFrame,
 
 
 if __name__ == "__main__":
-    # load csv 
-    FILE_NAME = "../Salary_Data.csv"
-    df = pd.read_csv(FILE_NAME, delimiter=',')
 
-    # test 1.1
-    print(cleaning_data(df, has_target_columns=True).info())
-    # test 1.2
-    print(cleaning_data(df.iloc[:, :-1]).info())
+    ## test 1
+    # data1 = pd.DataFrame([{
+    #     'Age': 20,
+    #     'gender': 'Female',
+    #     'education level': 'PhD',
+    #     'Job title': 'Data Engineer',
+    #     'years of experience': 1,
+    # }])
+    # print(cleaning_data(data1))
 
     # test 2
-    data = pd.DataFrame([{
-        'age': 20,
-        'gender': 'Female',
-        'education_level': 'PhD',
-        'job_title': 'Data Engineer',
-        'years_of_experience': 1,
-    }])
+    # data2 = pd.DataFrame({
+    #     'Age': [20, 19],
+    #     'gender': ['Female', 'male'],
+    #     'education level': ["master's degree", 'PhD'],
+    #     'Job title': ['Data Engineer', 'Data Analyst'],
+    #     'years of experience': [2, 1]
+    # })
+    # print(cleaning_data(data2))
 
-    print(cleaning_data(data))
+    ## test 3
+    # data3 = pd.DataFrame({
+    #     'Age': [20, 19, 28],
+    #     'gender': ['Female', 'male', 'other'],
+    #     'education level': ["master's degree", 'other', 'PhD'],
+    #     'Job title': ['Data Scientist', 'Data Engineer', 'Data Analyst'],
+    #     'years of experience': [2, 1, 3],
+    #     'salary': [9_000, 300_000, 100_000]
+    # })
+    # print(cleaning_data(data3, has_target_columns=True))
+    pass

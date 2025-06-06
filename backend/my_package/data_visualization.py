@@ -256,5 +256,5 @@ if __name__ == "__main__":
     # salary_hist_image(100000)
 
     # test 5
-    salary_box_image(100000)
+    # salary_box_image(100000)
     pass

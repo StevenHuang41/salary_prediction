@@ -7,6 +7,7 @@ import os
 import shutil
 import numpy as np
 
+from my_package.data_cleansing import cleaning_data
 from my_package.data_extract_func import get_uniq_job_title
 from my_package.data_predict import predict_salary
 from my_package.data_visualization import salary_hist_image
@@ -38,8 +39,14 @@ class SalaryInput(BaseModel):
 
 
 ## dataFrame needs cleansing
-df = pd.read_csv("Salary_Data.csv")
-df.dropna(inplace=True)
+df = pd.read_csv("database/Salary_Data.csv")
+df = cleaning_data(df, has_target_columns=True)
+
+## sql
+root_dir_path = os.getcwd().split('/backend')[0]
+backend_dir_path = os.path.join(root_dir_path, 'backend')
+database_dir_path = os.path.join(backend_dir_path, 'database')
+db_file_path = os.path.join(database_dir_path, 'salary_prediction.db')
 
 ## file path
 current_dir_path = os.getcwd()
@@ -47,9 +54,12 @@ best_performance_dir = os.path.join(current_dir_path,
                                     'best_performance')
 
 @app.get('/api/get_uniq_job_title')
-async def get_data():
-    result = get_uniq_job_title(df)
-    result.sort()
+async def get_job_title_data():
+    ## dataframe
+    # result = get_uniq_job_title(df)
+
+    ## sql
+    result = get_uniq_job_title(db_file_path)
 
     return {'value': result}
 
