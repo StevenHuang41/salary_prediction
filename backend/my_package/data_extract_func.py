@@ -3,25 +3,25 @@ import numpy as np
 import sqlite3
 
 ## sql
-def get_uniq_job_title(db: str='salary_prediction.db',
-                       table: str='salary',
-                       col: str='job_title') -> list[str]:
-    with sqlite3.connect(db) as conn:
-        c = conn.cursor()
+# def get_uniq_job_title(db: str='salary_prediction.db',
+#                        table: str='salary',
+#                        col: str='job_title') -> list[str]:
+#     with sqlite3.connect(db) as conn:
+#         c = conn.cursor()
 
-        c.execute(f"""
-            select distinct {col} from {table}
-            order by {col};
-        """)
+#         c.execute(f"""
+#             select distinct {col} from {table}
+#             order by {col};
+#         """)
 
-        result = [row[0] for row in c]
+#         result = [row[0] for row in c]
 
-    return result
+#     return result
 
 ## dataframe
-# def get_uniq_job_title(df: pd.DataFrame) -> list[str]:
-#     result = np.sort(df['job_title'].unique())
-#     return result.tolist()
+def get_uniq_job_title(df: pd.DataFrame) -> list[str]:
+    result = np.sort(df['job_title'].unique())
+    return result.tolist()
     
 if __name__ == "__main__":
 

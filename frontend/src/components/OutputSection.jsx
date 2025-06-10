@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import './OutputSection.css';
-import { deleteBestDir } from "../api/dataService";
-import { fetchSalaryPlot } from "../api/dataService";
+import { deleteBestDir, fetchSalaryBoxPlot } from "../api/dataService";
+import { fetchSalaryHistPlot } from "../api/dataService";
 
 const OutputSection = ({
   dataFromForm,
@@ -9,19 +9,27 @@ const OutputSection = ({
   setErrFunc,
 }) => {
 
-  const [imgURL, setImgURL] = useState('');
+  const [img1URL, setImg1URL] = useState('');
+  const [img2URL, setImg2URL] = useState('');
 
   useEffect(() => {
     if (!predictData) return ;
 
     const abortController = new AbortController();
-    const getPlot = async () => {
+    const getPlot1 = async () => {
       try {
-        const url = await fetchSalaryPlot(predictData.value);
-        setImgURL(url);
+        const url = await fetchSalaryHistPlot(predictData.value);
+        setImg1URL(url);
       } catch (err) {console.log(err)};
     };
-    getPlot();
+    const getPlot2 = async () => {
+      try {
+        const url = await fetchSalaryBoxPlot(predictData.value);
+        setImg2URL(url);
+      } catch (err) {console.log(err)};
+    };
+    getPlot1();
+    getPlot2();
     return () => abortController.abort();
   }, [predictData]);
 
@@ -50,7 +58,7 @@ const OutputSection = ({
   
   return (<>
     <div className="row p-0 mt-1">
-      <div className="col d-flex justify-content-end">
+      <div className="col d-flex justify-content-md-end">
         <button
           className="btn btn-secondary"
           onClick={handleRetrain}
@@ -79,8 +87,21 @@ const OutputSection = ({
       </div>
     </div>
 
-    <div className="row">
-      <div className="col d-flex justify-content-end">
+    <div className="row align-items-center justify-content-between">
+      <div className="col-auto">
+        <div className="row">
+          <div className="col">
+            Model Name: {predictData.model_name}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            MAE: {(predictData.params.mae).toFixed(2)}
+          </div>
+        </div>
+      </div>
+
+      <div className="col-auto d-flex justify-content-end">
         <div className="btn text-secondary" onClick={handleSeeDetailClick}>
           see detail
         </div>
@@ -88,12 +109,6 @@ const OutputSection = ({
       {showDetail && 
       <>
         <div className="row">
-          <div className="col-12">
-            Model Name: {predictData.model_name}
-          </div>
-          <div className="col-12">
-            MAE: {(predictData.params.mae).toFixed(2)}
-          </div>
           <div className="col-12">
             MSE: {(predictData.params.mse).toFixed(2)}
           </div>
@@ -112,13 +127,23 @@ const OutputSection = ({
         </div>
 
         <div className="row">
-          <div className="col">
+          <div className="col d-flex justify-content-center">
             <img
               className={`
                 img-fluid  
               `}
-              src={imgURL}
+              src={img1URL}
               alt="Salary Axvline Plot"/>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col d-flex justify-content-center">
+            <img
+              className={`
+                img-fluid  
+              `}
+              src={img2URL}
+              alt="Salary Box Plot"/>
           </div>
         </div>
       </>}

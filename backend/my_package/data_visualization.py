@@ -3,11 +3,16 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import numpy as np
 from typing import Literal
-from .data_cleansing import cleaning_data
+# from .data_cleansing import cleaning_data
 
-def show_plot(df, col, *,
-              group_method: Literal['mean', 'median', 'mode'] = 'mean'):
+def show_plot(
+    df: pd.DataFrame,
+    col: str,
+    *,
+    group_method: Literal['mean', 'median', 'mode'] = 'mean'
+):
     ## create images directory 
     images_dir = os.path.join(os.getcwd(), 'images')
     os.makedirs(images_dir, exist_ok=True)
@@ -15,6 +20,7 @@ def show_plot(df, col, *,
     title_ = col
 
     ## show distribution
+    plt.figure(figsize=(10, 5), dpi=100)
     if col == 'job_title':
         plt.xticks(rotation=90)
 
@@ -63,15 +69,15 @@ def show_plot(df, col, *,
 
     ## indicate number on bar
     for bar in bars.patches:
-        bbox = bar.get_bbox()
-        x0 = bbox.x0
-        width = bbox.width
-        height = bbox.y1 - bbox.y0
-        x_position = x0 + width / 2
-        bars.text(x=x_position, y=height + 10,
-                  s=f"{int(height)}",
-                  ha='center',
-                  fontsize=6)
+        height = bar.get_height()
+        bars.text(
+            bar.get_x() + bar.get_width() / 2,
+            height,
+            int(height),
+            ha='center',
+            va='bottom',
+            fontsize=6,
+        )
 
     if '_' not in title_:
         title_ = title_[0].upper() + title_[1:]
@@ -101,12 +107,14 @@ def show_plot(df, col, *,
     ## get feature mean|median|mode with target feature
     group_df = (
         df
-        .groupby([col], observed=True).salary
+        .groupby([col], observed=True)
+        .salary
         .agg(mean='mean',
              median=lambda x: x.median(),
              mode=lambda x: x.mode().mean())
     )
 
+    plt.figure(figsize=(12, 5), dpi=100)
     if col == 'job_title':
         plt.xticks(rotation=90)
         group_df = plot_df
@@ -117,6 +125,9 @@ def show_plot(df, col, *,
             color=(0.9, 0.4, 0.9),
             edgecolor='black',
             alpha=0.8)
+
+    for x, y in  zip(group_df.index, group_df[group_method]):
+        plt.text(x, y, str(int(y)), ha='center', va='bottom', fontsize=6)
 
     plt.xlabel('')
     plt.ylabel(f"Group {group_method} salary")
@@ -163,29 +174,38 @@ def show_heatmap(X_train: pd.DataFrame,
     ## show fig
     plt.show()
 
-def salary_hist_image(salary: float):
+def salary_hist_image(salary: float, df: pd.DataFrame):
     """
-    recv: salary and formData
+    recv: salary and pd.DataFrame
     output: byte hist image
     """
+    from math import floor
 
-    ## load database 
-    abs_path = os.getcwd().split('/my_package')[0]
-    df = pd.read_csv(os.path.join(abs_path, 'Salary_Data.csv'))
-    df = cleaning_data(df, has_target_columns=True)
+    percentile = (df.salary < salary).mean() * 100
+    bins = np.arange(
+        floor(df.salary.min()/10_000) * 10_000,
+        df.salary.max() + 10_000,
+        10_000
+    )
 
     sns.set_theme('paper')
-    plt.figure(figsize=(8, 6), dpi=240)
-    sns.histplot(data=df, x='salary', bins=20, alpha=0.3, kde=True)
+    plt.figure(figsize=(10, 6), dpi=100)
+
+    sns.histplot(data=df, x='salary', bins=bins, kde=True)
     sns.kdeplot(data=df.salary, label='KDE')
+
     plt.axvline(salary, color='lightgreen', linestyle='-',
                 label=f'predict salary: {salary:.2f}',
                 linewidth=3)
+
+    plt.plot([],[],' ', label=f"percentile: {percentile:.2f}%")
+
     plt.xlabel('Salary', fontsize=12)
     plt.ylabel('Count', fontsize=12)
     plt.title('Salary Prediction v.s. Dataset', fontsize=18)
-    plt.legend(fontsize=8)
+    plt.legend(fontsize=12)
     plt.tight_layout()
+    # plt.show()
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight')
@@ -193,49 +213,65 @@ def salary_hist_image(salary: float):
     buf.seek(0)
     return buf.getvalue()
 
-def salary_box_image(salary: float):
+def salary_box_image(salary: float, df: pd.DataFrame):
     """
     recv: salary and formData
     output: byte box image
     """
 
-    ## load database 
-    abs_path = os.getcwd().split('/my_package')[0]
-    df = pd.read_csv(os.path.join(abs_path, 'Salary_Data.csv'))
-    df = cleaning_data(df, has_target_columns=True)
-
     sns.set_theme('paper')
-    plt.figure(figsize=(8, 6), dpi=240)
-    sns.violinplot(data=df.salary)
-    plt.scatter(salary, 0, color='lightgreen', zorder=10,
-                label=f'predict salary: {salary:.2f}')
-    plt.xlabel('Salary', fontsize=12)
-    plt.title('Salary Box Plot', fontsize=18)
-    plt.legend(fontsize=8)
-    plt.tight_layout()
+    plt.figure(figsize=(10, 6), dpi=100)
+    # print(df)
 
-    plt.show()
-    # buf = io.BytesIO()
-    # plt.savefig(buf, format='png', bbox_inches='tight')
-    # plt.close()
-    # buf.seek(0)
-    # return buf.getvalue()
+    # sns.violinplot(data=df.salary)
+    sns.boxplot(data=df.salary, orient='h', color='skyblue')
+    plt.axvline(salary, color='lightgreen', linestyle='-',
+                linewidth=3,
+                label=f"predict salary: {salary:.2f}")
+    plt.xlabel('Salary', fontsize=14)
+    plt.ylabel('')
+    plt.title('Salary Box Plot', fontsize=18)
+    plt.legend(
+        fontsize=12,
+        loc="upper right",
+        # bbox_to_anchor=(1.2, 1),
+        # borderaxespad=0.5
+    )
+    plt.tight_layout()
+    # plt.show()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    plt.close()
+    buf.seek(0)
+    return buf.getvalue()
 
 
 if __name__ == "__main__":
-    # import shutil
+    import shutil
 
+    ### load csv 
+    ## dataFrame
     # from data_cleansing import cleaning_data
     # from data_spliting import spliting_data
     # from data_preprocessing import preprocess_data
 
-    # ## load csv 
-    # FILE_NAME = "../Salary_Data.csv"
+    # FILE_NAME = "../database/Salary_Data.csv"
     # df = pd.read_csv(FILE_NAME, delimiter=',')
     # df = cleaning_data(df, has_target_columns=True)
+
+    ## sql
+    import sys
+    from data_cleansing import cleaning_data
+    p_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    sys.path.append(p_dir)
+    from database.database import query_2_df
+
+    df = query_2_df("select * from salary;")
+    df = cleaning_data(df)
     
-    # images_dir = os.path.join(os.getcwd(), 'images')
-    # os.makedirs(images_dir, exist_ok=True)
+    images_dir = os.path.join(os.getcwd(), 'images')
+    os.makedirs(images_dir, exist_ok=True)
 
     # # test 1
     # for col in df.columns:
@@ -243,18 +279,23 @@ if __name__ == "__main__":
 
 
     # X_train, X_test, y_train, y_test = spliting_data(df)
-    # # test 2
-    # X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=True)
+    ## test 2
+    # X_train_, X_test_ = preprocess_data(
+    #     X_train, y_train, X_test, use_polynomial=True
+    # )
     # show_heatmap(X_train_, y_train, use_poly=True)
-    # # test 3
-    # X_train_, X_test_ = preprocess_data(X_train, y_train, X_test, use_polynomial=False)
+
+    ## test 3
+    # X_train_, X_test_ = preprocess_data(
+    #     X_train, y_train, X_test, use_polynomial=False
+    # )
     # show_heatmap(X_train_, y_train, use_poly=False)
 
-    # shutil.rmtree(images_dir)
-
     # test 4
-    # salary_hist_image(100000)
+    # salary_hist_image(salary=100000, df=df)
 
     # test 5
-    # salary_box_image(100000)
+    salary_box_image(100000, df)
+
+    shutil.rmtree(images_dir)
     pass

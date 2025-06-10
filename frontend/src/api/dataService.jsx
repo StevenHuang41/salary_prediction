@@ -19,10 +19,25 @@ const predictSalary = async (formData) => {
   }
 };
 
-const fetchSalaryPlot = async (salary) => {
+const fetchSalaryHistPlot = async (salary) => {
   try {
     const res = await api.post(
       "/salary_avxline_plot",
+      { salary },
+      { responseType: "blob" },
+    );
+
+    const imgURL = URL.createObjectURL(res.data);
+    return imgURL;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const fetchSalaryBoxPlot = async (salary) => {
+  try {
+    const res = await api.post(
+      "/salary_boxplot",
       { salary },
       { responseType: "blob" },
     );
@@ -45,5 +60,6 @@ const deleteBestDir = async () => {
 
 export {
   getUniqJobTitle, predictSalary,
-  fetchSalaryPlot, deleteBestDir,
+  fetchSalaryHistPlot, fetchSalaryBoxPlot,
+  deleteBestDir,
 };

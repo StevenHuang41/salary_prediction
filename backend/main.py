@@ -10,7 +10,9 @@ import numpy as np
 from my_package.data_cleansing import cleaning_data
 from my_package.data_extract_func import get_uniq_job_title
 from my_package.data_predict import predict_salary
-from my_package.data_visualization import salary_hist_image
+from my_package.data_visualization import (
+    salary_hist_image, salary_box_image
+)
 
 app = FastAPI()
 
@@ -41,33 +43,33 @@ class SalaryInput(BaseModel):
 ## dataFrame needs cleansing
 df = pd.read_csv("database/Salary_Data.csv")
 df = cleaning_data(df, has_target_columns=True)
+# print(df)
 
 ## sql
-root_dir_path = os.getcwd().split('/backend')[0]
-backend_dir_path = os.path.join(root_dir_path, 'backend')
-database_dir_path = os.path.join(backend_dir_path, 'database')
-db_file_path = os.path.join(database_dir_path, 'salary_prediction.db')
+# root_dir_path = os.getcwd().split('/backend')[0]
+# backend_dir_path = os.path.join(root_dir_path, 'backend')
+# database_dir_path = os.path.join(backend_dir_path, 'database')
+# db_file_path = os.path.join(database_dir_path, 'salary_prediction.db')
 
 ## file path
 current_dir_path = os.getcwd()
-best_performance_dir = os.path.join(current_dir_path,
-                                    'best_performance')
+store_file_name = 'best_performance'
+model_store_file = os.path.join(current_dir_path, store_file_name)
 
 @app.get('/api/get_uniq_job_title')
 async def get_job_title_data():
     ## dataframe
-    # result = get_uniq_job_title(df)
+    result = get_uniq_job_title(df)
 
     ## sql
-    result = get_uniq_job_title(db_file_path)
+    # result = get_uniq_job_title(db_file_path)
 
     return {'value': result}
 
 
 @app.post("/api/predict")
 async def get_predict_salary(data: RowData):
-    # result = predict_salary(data.dict())
-    result = predict_salary(data.model_dump())
+    result = predict_salary(data.model_dump(), df, model_store_file)
     """
     result:
         "model_name": model_name_trim,
@@ -81,9 +83,9 @@ async def get_predict_salary(data: RowData):
 
 
 @app.delete("/api/retrain_model")
-async def del_best_performance_dir():
-    if os.path.isdir(best_performance_dir):
-        shutil.rmtree('best_performance')
+async def del_model_store_file():
+    if os.path.isdir(model_store_file):
+        shutil.rmtree(model_store_file)
         return {'status': 'success',
                 'message': 'best_performance dir has been deleted.'}
 
@@ -93,7 +95,13 @@ async def del_best_performance_dir():
 
 @app.post("/api/salary_avxline_plot")
 async def get_salary_hist_plot(data: SalaryInput):
-    image_byte = salary_hist_image(data.salary)
+    image_byte = salary_hist_image(data.salary, df)
+
+    return Response(content=image_byte, media_type="image/png")
+
+@app.post("/api/salary_boxplot")
+async def get_salary_boxplot(data: SalaryInput):
+    image_byte = salary_box_image(data.salary, df)
 
     return Response(content=image_byte, media_type="image/png")
 

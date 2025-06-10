@@ -157,8 +157,13 @@ model_configurations = [
     },
 ]
 
-def NN_model_training(X_train, y_train, *, n_layers: int = 3,
-                      n_iter: int = 2) -> tuple[Model, dict]:
+def NN_model_training(
+    X_train,
+    y_train,
+    *,
+    n_layers: int = 3,
+    n_iter: int = 2
+) -> tuple[Model, dict]:
 
     class BTuner(kt.BayesianOptimization):
         def run_trial(self, trial, *args, **kwargs):
@@ -242,7 +247,7 @@ class NumpyEncoder(json.JSONEncoder):
 
         return super().default(object)
 
-def model_select(X_train, y_train, X_test, y_test) -> str:
+def model_select(X_train, y_train, X_test, y_test, store_file) -> str:
     """
     receive: splited data
     store the best model and its data into best_performance dir
@@ -312,7 +317,7 @@ def model_select(X_train, y_train, X_test, y_test) -> str:
                           key=lambda x: models_storage[x]['mae'])
 
     # if best_performance dir exist, remove it
-    best_performance_dir = os.path.join(os.getcwd(), 'best_performance')
+    best_performance_dir = os.path.join(os.getcwd(), f'{store_file}')
     try :
         if os.path.exists(best_performance_dir):
             shutil.rmtree(best_performance_dir)
@@ -320,7 +325,7 @@ def model_select(X_train, y_train, X_test, y_test) -> str:
         pass 
 
     # create best_performance dir
-    os.makedirs(name='best_performance', mode=0o755, exist_ok=True)
+    os.makedirs(name=f'{store_file}', mode=0o755, exist_ok=True)
 
     ## store best model into best_performance dir
     if 'NN' in best_model_name:
@@ -344,14 +349,18 @@ if __name__ == "__main__":
     from data_spliting import spliting_data
 
     ## load csv 
-    FILE_NAME = "../Salary_Data.csv"
-    df = pd.read_csv(FILE_NAME, delimiter=',')
+    p_dir = os.path.abspath(os.path.join(os.getcwd(), '..'))
+    FILE_PATH = os.path.join(p_dir, 'database/Salary_Data.csv')
+    df = pd.read_csv(FILE_PATH, delimiter=',')
     df = cleaning_data(df, has_target_columns=True)
 
     X_train, X_test, y_train, y_test = spliting_data(df)
 
     # test 
-    model_name, model = model_select(X_train, y_train, X_test, y_test)
+    store_file_name = 'best'
+
+    model_name, model = \
+        model_select(X_train, y_train, X_test, y_test, store_file_name)
     print(model_name, model)
 
-    shutil.rmtree('best_performance')
+    shutil.rmtree(store_file_name)

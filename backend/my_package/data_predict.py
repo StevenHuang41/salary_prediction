@@ -12,29 +12,28 @@ import joblib
 from keras.models import load_model
 
 
-def predict_salary(data: dict, restart: bool = False) -> dict:
-    ## load csv 
-    current_path = os.getcwd()
-    abs_path = current_path.split('/my_package')[0]
-    FILE_NAME = os.path.join(abs_path, "Salary_Data.csv")
-    # print(FILE_NAME)
-    df = pd.read_csv(FILE_NAME, delimiter=',')
-    df = cleaning_data(df, has_target_columns=True)
-
+def predict_salary(
+    data: dict,
+    df: pd.DataFrame,
+    store_file: str,
+    restart: bool = False,
+) -> dict:
     ## spliting
     X_train, X_test, y_train, y_test = spliting_data(df, random_state=23)
 
-    best_performance_dir = os.path.join(current_path, 'best_performance')
+    best_performance_dir = store_file
 
     if restart:
         try :
-            shutil.rmtree('best_performance')
+            shutil.rmtree(f'{store_file}')
         except FileNotFoundError:
             pass
 
     if not os.path.exists(best_performance_dir):
         # missing best performance, process model selection
-        model_name, model = model_select(X_train, y_train, X_test, y_test)
+        model_name, model = model_select(
+            X_train, y_train, X_test, y_test, best_performance_dir
+        )
 
     else :
         best_performance_dir_list = os.listdir(best_performance_dir)
@@ -75,6 +74,15 @@ def predict_salary(data: dict, restart: bool = False) -> dict:
 
 if __name__ == "__main__":
 
+    from data_cleansing import cleaning_data
+
+    p_dir = os.path.abspath(os.path.join(os.getcwd(), '..'))
+    FILE_PATH = os.path.join(p_dir, 'database/Salary_Data.csv')
+    df = pd.read_csv(FILE_PATH)
+    df = cleaning_data(df)
+
+    store_file = 'best'
+
     # test 1
     # print(predict_salary({
     #     "age": 20,
@@ -82,7 +90,7 @@ if __name__ == "__main__":
     #     "education_level": "PhD",
     #     "job_title": "Data Engineer",
     #     "years_of_experience": 1,
-    # }))
+    # }, df, store_file))
 
     # test 2
     print(predict_salary({
@@ -91,7 +99,7 @@ if __name__ == "__main__":
         "education_level": "Bachelor",
         "job_title": "Data Engineer",
         "years_of_experience": 1,
-    }, restart=True))
+    }, df, store_file=store_file, restart=True))
 
 
-    shutil.rmtree('best_performance')
+    shutil.rmtree(store_file)
