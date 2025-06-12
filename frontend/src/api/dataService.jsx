@@ -49,9 +49,9 @@ const fetchSalaryBoxPlot = async (salary) => {
   }
 };
 
-const deleteBestDir = async () => {
+const retrainModel = async (data) => {
   try {
-    const res = await api.delete('/retrain_model');
+    const res = await api.post('/retrain_model', data);
     return res.data;
   } catch (err) {
     throw err;
@@ -61,5 +61,5 @@ const deleteBestDir = async () => {
 export {
   getUniqJobTitle, predictSalary,
   fetchSalaryHistPlot, fetchSalaryBoxPlot,
-  deleteBestDir,
+  retrainModel,
 };

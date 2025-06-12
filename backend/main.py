@@ -6,6 +6,7 @@ import pandas as pd
 import os
 import shutil
 import numpy as np
+import sqlite3
 
 from my_package.data_cleansing import cleaning_data
 from my_package.data_extract_func import get_uniq_job_title
@@ -35,21 +36,33 @@ class RowData(BaseModel):
     job_title: str
     years_of_experience: float
 
+class FullData(BaseModel):
+    age: int
+    gender: str
+    education_level: str
+    job_title: str
+    years_of_experience: float
+    salary: float
+
 class SalaryInput(BaseModel):
     salary: float
 
 
 
 ## dataFrame needs cleansing
-df = pd.read_csv("database/Salary_Data.csv")
-df = cleaning_data(df, has_target_columns=True)
+# df = pd.read_csv("database/Salary_Data.csv")
+# df = cleaning_data(df, has_target_columns=True)
 # print(df)
 
 ## sql
-# root_dir_path = os.getcwd().split('/backend')[0]
-# backend_dir_path = os.path.join(root_dir_path, 'backend')
-# database_dir_path = os.path.join(backend_dir_path, 'database')
-# db_file_path = os.path.join(database_dir_path, 'salary_prediction.db')
+from database.database import query_2_df, insert_record
+root_dir_path = os.getcwd().split('/backend')[0]
+backend_dir_path = os.path.join(root_dir_path, 'backend')
+database_dir_path = os.path.join(backend_dir_path, 'database')
+db_file_path = os.path.join(database_dir_path, 'salary_prediction.db')
+df = query_2_df("select * from salary", db_file_path)
+# print(df)
+    
 
 ## file path
 current_dir_path = os.getcwd()
@@ -58,18 +71,21 @@ model_store_file = os.path.join(current_dir_path, store_file_name)
 
 @app.get('/api/get_uniq_job_title')
 async def get_job_title_data():
+    df = query_2_df("select * from salary;", db_file_path)
+
     ## dataframe
     result = get_uniq_job_title(df)
-
-    ## sql
-    # result = get_uniq_job_title(db_file_path)
 
     return {'value': result}
 
 
 @app.post("/api/predict")
 async def get_predict_salary(data: RowData):
-    result = predict_salary(data.model_dump(), df, model_store_file)
+    df = query_2_df("select * from salary;", db_file_path)
+
+    data_df = pd.DataFrame([data.model_dump()])
+    data_df = cleaning_data(data_df)
+    result = predict_salary(data_df, df, model_store_file)
     """
     result:
         "model_name": model_name_trim,
@@ -82,25 +98,49 @@ async def get_predict_salary(data: RowData):
     return result
 
 
-@app.delete("/api/retrain_model")
-async def del_model_store_file():
-    if os.path.isdir(model_store_file):
-        shutil.rmtree(model_store_file)
-        return {'status': 'success',
-                'message': 'best_performance dir has been deleted.'}
+@app.post("/api/retrain_model")
+async def retrain(data: FullData):
+    df = query_2_df("select * from salary;", db_file_path)
 
-    return {'status': 'not found',
-            'message': 'file not found.'}
+    data_df = pd.DataFrame([data.model_dump()])
+    data_df = cleaning_data(data_df, has_target_columns=True)
+    data_dict = data_df.to_dict(orient="records")
+
+    if data_dict == []:
+        return {'status': 'fail',
+                'message': 'Input data does not add into database.'}
+
+    data_dict = data_dict[0]
+
+    ## insert data into database, and upate df
+    insert_record(data_dict, 'salary', db_file_path)
+    df = query_2_df("select * from salary;", db_file_path)
+
+    ## restart the model
+    result = predict_salary(
+        data_df, df, model_store_file, restart=True
+    )
+
+    return {
+        'status': 'success',
+        'message': ('Input data stored in database, '
+                    'and retrain model successfully.'),
+        'result': result,
+    }
 
 
 @app.post("/api/salary_avxline_plot")
 async def get_salary_hist_plot(data: SalaryInput):
+    df = query_2_df("select * from salary;", db_file_path)
+
     image_byte = salary_hist_image(data.salary, df)
 
     return Response(content=image_byte, media_type="image/png")
 
 @app.post("/api/salary_boxplot")
 async def get_salary_boxplot(data: SalaryInput):
+    df = query_2_df("select * from salary;", db_file_path)
+
     image_byte = salary_box_image(data.salary, df)
 
     return Response(content=image_byte, media_type="image/png")

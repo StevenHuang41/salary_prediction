@@ -161,7 +161,7 @@ def NN_model_training(
     X_train,
     y_train,
     *,
-    n_layers: int = 3,
+    n_layers: int = 2,
     n_iter: int = 2
 ) -> tuple[Model, dict]:
 

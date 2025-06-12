@@ -24,7 +24,6 @@ const HomePage = () => {
     } finally {
       setLoadingResult(false)
     }
-
   };
 
   useEffect(() => {
@@ -33,7 +32,10 @@ const HomePage = () => {
 
   return (<>
     <div className="container">
-      <InputForm getSubmitData={handleGetFormData}/>
+      <InputForm
+        getSubmitData={handleGetFormData}
+        setPredictResult={setPredictResult}
+      />
 
       {errResult ? 
       <ErrorPredict data={errResult}/>
@@ -48,10 +50,13 @@ const HomePage = () => {
         />
       </div>
       :
+      predictResult &&
       <OutputSection
         dataFromForm={formData}
         predictData={predictResult}
+        setRetrainResult={setPredictResult}
         setErrFunc={setErrResult}
+        setLoadingFunc={setLoadingResult}
       />}
     </div>
   </>)

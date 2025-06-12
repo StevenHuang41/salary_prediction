@@ -13,7 +13,7 @@ from keras.models import load_model
 
 
 def predict_salary(
-    data: dict,
+    sample_df: pd.DataFrame,
     df: pd.DataFrame,
     store_file: str,
     restart: bool = False,
@@ -50,15 +50,9 @@ def predict_salary(
     with open(f'{best_performance_dir}/{model_name}.json', 'r') as f:
         model_params = json.load(f)
 
-    ## transform data to df
-    example_df = pd.DataFrame([data])
-
-    ## cleanse df
-    example_df = cleaning_data(example_df)
-
     ## preprocessing
     use_poly = True if 'poly' in model_name else False
-    _, example_df_ = preprocess_data(X_train, y_train, example_df,
+    _, example_df_ = preprocess_data(X_train, y_train, sample_df,
                                      use_polynomial=use_poly)
 
     model_name_trim = model_name.split('_')[0]
@@ -82,24 +76,19 @@ if __name__ == "__main__":
     df = cleaning_data(df)
 
     store_file = 'best'
-
-    # test 1
-    # print(predict_salary({
-    #     "age": 20,
-    #     "gender": "female",
-    #     "education_level": "PhD",
-    #     "job_title": "Data Engineer",
-    #     "years_of_experience": 1,
-    # }, df, store_file))
-
-    # test 2
-    print(predict_salary({
+    sample_df = pd.DataFrame([{
         "age": 20,
         "gender": "female",
         "education_level": "Bachelor",
         "job_title": "Data Engineer",
         "years_of_experience": 1,
-    }, df, store_file=store_file, restart=True))
+    }])
+
+    # test 1
+    # print(predict_salary(sample_df, df, store_file))
+
+    # test 2
+    # print(predict_salary(sample_df, df, store_file, restart=True))
 
 
     shutil.rmtree(store_file)

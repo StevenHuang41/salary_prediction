@@ -3,7 +3,7 @@ import sqlite3
 import pandas as pd
 
 def init_database(db: str='salary_prediction.db'):
-    db_path = os.path.join(os.path.dirname(__file__), db)
+    # db_path = os.path.join(os.path.dirname(__file__), db)
     schema = """
         age INTEGER,
         gender TEXT,
@@ -12,7 +12,7 @@ def init_database(db: str='salary_prediction.db'):
         years_of_experience REAL,
         salary REAL
     """
-    with sqlite3.connect(db_path) as conn:
+    with sqlite3.connect(db) as conn:
         c = conn.cursor()
 
         ## create tables in db
@@ -46,16 +46,6 @@ def init_database(db: str='salary_prediction.db'):
 
         conn.commit()
 
-# def import_dataset(
-#     file_name: str,
-#     insert_table: str='salary',
-#     db: str='salary_prediction.db'
-# ):
-
-#     db_path = os.path.join(os.path.dirname(__file__), db)
-
-#     with sqlite3.connect(db_path) as conn:
-
 
 def create_index(
     col: str,
@@ -63,8 +53,8 @@ def create_index(
     table: str='salary',
     db: str='salary_prediction.db',
 ):
-    db_path = os.path.join(os.path.dirname(__file__), db)
-    with sqlite3.connect(db_path) as conn:
+    # db_path = os.path.join(os.path.dirname(__file__), db)
+    with sqlite3.connect(db) as conn:
         c = conn.cursor()
 
         c.execute(f"""
@@ -82,8 +72,8 @@ def create_view(
     query: str,
     db: str='salary_prediction.db',
 ):
-    db_path = os.path.join(os.path.dirname(__file__), db)
-    with sqlite3.connect(db_path) as conn:
+    # db_path = os.path.join(os.path.dirname(__file__), db)
+    with sqlite3.connect(db) as conn:
         c = conn.cursor()
 
         c.execute(f"""
@@ -101,8 +91,8 @@ def query_show_r(
     query: str,
     db: str='salary_prediction.db'
 ):
-    db_path = os.path.join(os.path.dirname(__file__), db)
-    with sqlite3.connect(db_path) as conn:
+    # db_path = os.path.join(os.path.dirname(__file__), db)
+    with sqlite3.connect(db) as conn:
         c = conn.cursor()
 
         c.execute(f"{query}")
@@ -113,15 +103,15 @@ def query_show_r(
 
 
 def query_2_df(query: str, db: str='salary_prediction.db') -> pd.DataFrame:
-    db_path = os.path.join(os.path.dirname(__file__), db)
-    with sqlite3.connect(db_path) as conn:
+    # db_path = os.path.join(os.path.dirname(__file__), db)
+    with sqlite3.connect(db) as conn:
         df = pd.read_sql_query(query, conn)
 
     return df
 
 def insert_record(record: dict, table: str, db: str='salary_prediction.db'):
-    db_path = os.path.join(os.path.dirname(__file__), db)
-    with sqlite3.connect(db_path) as conn:
+    # db_path = os.path.join(os.path.dirname(__file__), db)
+    with sqlite3.connect(db) as conn:
         c = conn.cursor()
 
         c.execute(f"PRAGMA table_info({table})")
@@ -144,8 +134,8 @@ def insert_record(record: dict, table: str, db: str='salary_prediction.db'):
         conn.commit()
         
 def delete_record(rowid, db: str='salary_prediction.db') -> None:
-    db_path = os.path.join(os.path.dirname(__file__), db)
-    with sqlite3.connect(db_path) as conn:
+    # db_path = os.path.join(os.path.dirname(__file__), db)
+    with sqlite3.connect(db) as conn:
         c = conn.cursor()
 
         c.execute("delete from salary where rowid = (?)", (str(rowid),))

@@ -16,7 +16,7 @@ def cleaning_remove_salary_outlier(
     lower_bound=10000,
     upper_bound=300000,
 ) -> pd.DataFrame:
-    df['salary'] = df['salary'].astype('int32')
+    df['salary'] = df['salary'].astype('float64')
     df = df[(df['salary'] > lower_bound) &
             (df['salary'] < upper_bound)]
     return df

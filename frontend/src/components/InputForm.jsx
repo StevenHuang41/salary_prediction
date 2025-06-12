@@ -4,20 +4,20 @@ import SelectInput from "./SelectInput";
 import TermsCheckbox from "./TermsCheckbox";
 import AgeYearsModal from "./AgeYearsModal";
 
-const InputForm = ({ getSubmitData }) => {
+const InputForm = ({ getSubmitData, setPredictResult }) => {
   const formRef = useRef(null);
 
   const [yearValid, setYearValid] = useState(true);
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
-  const [educationLevel, setEducationLevel] = useState('');
-  const [jobTitle, setJobTitle] = useState('');
-  const [yearE, setYearE] = useState('');
-  // const [age, setAge] = useState('26');
-  // const [gender, setGender] = useState('female');
-  // const [educationLevel, setEducationLevel] = useState('Master');
-  // const [jobTitle, setJobTitle] = useState('Data Scientist');
-  // const [yearE, setYearE] = useState('9');
+  // const [age, setAge] = useState('');
+  // const [gender, setGender] = useState('');
+  // const [educationLevel, setEducationLevel] = useState('');
+  // const [jobTitle, setJobTitle] = useState('');
+  // const [yearE, setYearE] = useState('');
+  const [age, setAge] = useState('26');
+  const [gender, setGender] = useState('female');
+  const [educationLevel, setEducationLevel] = useState('Master');
+  const [jobTitle, setJobTitle] = useState('Data Scientist');
+  const [yearE, setYearE] = useState('8');
   const [jobOptionsLoading, setJobOptionsLoading] = useState(true);
 
   const handleSubmit = (e) => {
@@ -28,7 +28,10 @@ const InputForm = ({ getSubmitData }) => {
     forms.classList.add('was-validated');
     
     // check form has select value
-    if (!forms.checkValidity()) return;
+    if (!forms.checkValidity()) {
+      setPredictResult(false);
+      return;
+    }
     
     const ageYearModalTrigger = 
       document.getElementById('ageYearModalTrigger');
@@ -38,6 +41,7 @@ const InputForm = ({ getSubmitData }) => {
       setYearE('');
       ageYearModalTrigger.click();
       setYearValid(false);
+      setPredictResult(false);
       return 
     }
 

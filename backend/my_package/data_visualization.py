@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+from math import floor
 from typing import Literal
 # from .data_cleansing import cleaning_data
 
@@ -179,17 +180,16 @@ def salary_hist_image(salary: float, df: pd.DataFrame):
     recv: salary and pd.DataFrame
     output: byte hist image
     """
-    from math import floor
 
     percentile = (df.salary < salary).mean() * 100
     bins = np.arange(
         floor(df.salary.min()/10_000) * 10_000,
         df.salary.max() + 10_000,
-        10_000
+        20_000
     )
 
     sns.set_theme('paper')
-    plt.figure(figsize=(10, 6), dpi=100)
+    plt.figure(figsize=(10, 6), dpi=300)
 
     sns.histplot(data=df, x='salary', bins=bins, kde=True)
     sns.kdeplot(data=df.salary, label='KDE')
@@ -200,10 +200,12 @@ def salary_hist_image(salary: float, df: pd.DataFrame):
 
     plt.plot([],[],' ', label=f"percentile: {percentile:.2f}%")
 
-    plt.xlabel('Salary', fontsize=12)
-    plt.ylabel('Count', fontsize=12)
-    plt.title('Salary Prediction v.s. Dataset', fontsize=18)
-    plt.legend(fontsize=12)
+    plt.xlabel('', fontsize=15)
+    plt.ylabel('Count', fontsize=15)
+    plt.title('Salary Histogram with KDE Line', fontsize=30)
+    plt.legend(fontsize=15)
+    plt.xticks(bins, [f'{v//1000:.0f}k' for v in bins], fontsize=15)
+    plt.yticks(fontsize=15)
     plt.tight_layout()
     # plt.show()
 
@@ -219,24 +221,26 @@ def salary_box_image(salary: float, df: pd.DataFrame):
     output: byte box image
     """
 
-    sns.set_theme('paper')
-    plt.figure(figsize=(10, 6), dpi=100)
-    # print(df)
+    percentile = (df.salary < salary).mean() * 100
+    bins = np.arange(
+        floor(df.salary.min()/10_000) * 10_000,
+        df.salary.max() + 10_000,
+        20_000
+    )
 
-    # sns.violinplot(data=df.salary)
+    sns.set_theme('paper')
+    plt.figure(figsize=(10, 6), dpi=300)
+
     sns.boxplot(data=df.salary, orient='h', color='skyblue')
     plt.axvline(salary, color='lightgreen', linestyle='-',
                 linewidth=3,
                 label=f"predict salary: {salary:.2f}")
-    plt.xlabel('Salary', fontsize=14)
-    plt.ylabel('')
-    plt.title('Salary Box Plot', fontsize=18)
-    plt.legend(
-        fontsize=12,
-        loc="upper right",
-        # bbox_to_anchor=(1.2, 1),
-        # borderaxespad=0.5
-    )
+    plt.plot([],[],' ', label=f"percentile: {percentile:.2f}%")
+
+    plt.xlabel('')
+    plt.title('Salary Box Plot', fontsize=30)
+    plt.legend(fontsize=15)
+    plt.xticks(bins, [f'{v//1000:.0f}k' for v in bins], fontsize=15)
     plt.tight_layout()
     # plt.show()
 
