@@ -185,7 +185,7 @@ def NN_model_training(
         model.add(Input(shape=(X_train.shape[1],)))
 
         for i in range(1, n_layers + 1):
-            hp_units = hp.Choice(f'unit_{i}', [32, 64, 125, 256, 512, 1024])
+            hp_units = hp.Choice(f'unit_{i}', [32, 64, 125, 256])
             hp_actif = hp.Choice(f'acti_{i}',
                                  ['relu', 'tanh', 'leaky_relu', 'swish'])
             model.add(Dense(units=hp_units))

@@ -106,22 +106,13 @@ const OutputSection = ({
     setPredictSalary(e.target.value)
   };
   
+  // TODO: a toggle bar that can change the value of predict salary
+  // TODO: a btn that can reload model with original dataset
   return (<>
-    <div className="row p-0 mt-1">
-      <div className="col d-flex justify-content-md-end">
-        <button
-          className="btn btn-secondary"
-          onClick={handleRetrain}
-          disabled={!isValidInput}
-        >
-          Retrain Model
-        </button>
-      </div>
-    </div>
 
     <div
       className={`
-        row mx-0
+        row mx-0 mt-2
         d-flex justify-content-center
         align-items-center
       `}
@@ -146,13 +137,14 @@ const OutputSection = ({
       
         <div className="row">
           <div className="col">
-            Model Name: {predictData.model_name}
+            Model {showDetail && `Name`}: {predictData.model_name}
           </div>
         </div>
 
         <div className="row">
           <div className="col">
-            MAE: {(predictData.params.mae).toFixed(2)}
+            {showDetail ? `Mean Absolute Error` : `MAE`}
+            : {(predictData.params.mae).toFixed(2)}
           </div>
         </div>
 
@@ -160,11 +152,27 @@ const OutputSection = ({
 
       <div
         className={`
-          col-12 col-md-auto d-flex justify-content-md-end
+          col-12 col-md-auto
+          d-flex justify-content-md-end
+          align_items-center
           order-1 order-md-2
         `}
       >
-        <div className="btn text-secondary p-0" onClick={handleSeeDetailClick}>
+
+        {showDetail &&
+        <div className="row p-0">
+          <div className="col d-flex justify-content-md-end">
+            <button
+              className="btn btn-secondary"
+              onClick={handleRetrain}
+              disabled={!isValidInput}
+            >
+              Retrain Model
+            </button>
+          </div>
+        </div>
+        }
+        <div className="btn text-secondary " onClick={handleSeeDetailClick}>
           see detail
         </div>
       </div>
@@ -174,14 +182,13 @@ const OutputSection = ({
     {showDetail && <>
     <div className="row">
       <div className="col-12">
-        MSE: {(predictData.params.mse).toFixed(2)}
+        Mean Square Error: {(predictData.params.mse).toFixed(2)}
       </div>
       <div className="col-12">
         #Train dataset: {predictData.num_train_dataset}
       </div>
       <div className="col-12">
         #Test dataset: {predictData.num_test_dataset}
-        {/* {predictData.params.alpha} */}
       </div>
       {predictData.use_polynomial && 
       <div className="col-12">
