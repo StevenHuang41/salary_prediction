@@ -1,5 +1,9 @@
-.DS_Store
-.images
-.images/*
-untitled_project/*
-untitled_project/
+**/.DS_Store
+**/images/
+**/untitled_project/
+**/best_performance/
+**/models/
+**/__pycache__/
+**/bayesianOptimization_NN_model/
+
+backend/database/salary_prediction.db

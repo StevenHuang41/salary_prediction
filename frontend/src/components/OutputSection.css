@@ -1,0 +1,35 @@
+#predict-input {
+  color: limegreen;
+  font-size: 4em;
+  line-height: 1.2;
+}
+
+@media (min-width: 568px) {
+  #predict-input {
+    font-size: 5em;
+  }
+}
+
+@media (min-width: 768px) {
+  #predict-input {
+    font-size: 7em;
+  }
+}
+
+@media (min-width: 992px) {
+  #predict-input {
+    font-size: 10em;
+  }
+}
+ 
+@media (min-width: 1200px) {
+  #predict-input {
+    font-size: 12.5em;
+  }
+}
+
+@media (min-width: 1400px) {
+  #predict-input {
+    font-size: 14em;
+  }
+}
