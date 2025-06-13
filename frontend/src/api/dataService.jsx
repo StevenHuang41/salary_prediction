@@ -20,6 +20,7 @@ const predictSalary = async (formData) => {
 };
 
 const fetchSalaryHistPlot = async (salary) => {
+  if (salary === '') return ;
   try {
     const res = await api.post(
       "/salary_avxline_plot",
@@ -35,6 +36,7 @@ const fetchSalaryHistPlot = async (salary) => {
 };
 
 const fetchSalaryBoxPlot = async (salary) => {
+  if (salary === '') return ;
   try {
     const res = await api.post(
       "/salary_boxplot",
@@ -58,8 +60,17 @@ const retrainModel = async (data) => {
   }
 };
 
+const resetModel = async (data) => {
+  try {
+    const res = await api.post('/reset_model', data);
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export {
   getUniqJobTitle, predictSalary,
   fetchSalaryHistPlot, fetchSalaryBoxPlot,
-  retrainModel,
+  retrainModel, resetModel,
 };

@@ -17,7 +17,7 @@ const ModalTemplate = ({
       className="modal fade"
       id={id}
       tabIndex="-1"
-      // aria-hidden="true"
+      aria-hidden="true"
     >
       <div className={`modal-dialog ${cName}`}>
         <div className="modal-content">

@@ -55,12 +55,14 @@ class SalaryInput(BaseModel):
 # print(df)
 
 ## sql
-from database.database import query_2_df, insert_record
+from database.database import (
+    init_database, create_index, query_2_df, insert_record
+)
 root_dir_path = os.getcwd().split('/backend')[0]
 backend_dir_path = os.path.join(root_dir_path, 'backend')
 database_dir_path = os.path.join(backend_dir_path, 'database')
 db_file_path = os.path.join(database_dir_path, 'salary_prediction.db')
-df = query_2_df("select * from salary", db_file_path)
+# df = query_2_df("select * from salary", db_file_path)
 # print(df)
     
 
@@ -127,6 +129,16 @@ async def retrain(data: FullData):
                     'and retrain model successfully.'),
         'result': result,
     }
+
+@app.post("/api/reset_model")
+async def reset(data: RowData):
+    init_database(db_file_path)
+    create_index('job_title', 'idx_job_title', db_file_path)
+    create_index('education_level', 'idx_education_level', db_file_path)
+    create_index('salary', 'idx_salary', db_file_path)
+    df = query_2_df("select * from salary;", db_file_path)
+
+## TODO: finish this part
 
 
 @app.post("/api/salary_avxline_plot")

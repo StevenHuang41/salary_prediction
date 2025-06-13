@@ -2,18 +2,14 @@ import { useEffect, useState } from "react";
 import './OutputSection.css';
 import { retrainModel, fetchSalaryBoxPlot } from "../api/dataService";
 import { fetchSalaryHistPlot } from "../api/dataService";
+import { resetModel } from "../api/dataService";
 
 const OutputSection = ({
   dataFromForm,
   predictData,
-  setRetrainResult,
+  setPredictResult,
   setErrFunc,
   setLoadingFunc,
-        // dataFromForm={formData}
-        // predictData={predictResult}
-        // setRetrainResult={setPredictResult}
-        // setErrFunc={setErrResult}
-        // setLoadingFunc={setLoadingResult}
 }) => {
 
   const [predictSalary, setPredictSalary] = useState('');
@@ -25,75 +21,85 @@ const OutputSection = ({
 
   const [isValidInput, setIsValidInput] = useState(true);
 
+  // show predict salary, updates when predictData changes
   useEffect(() => {
     if (!predictData) return ;
 
-    // set predict salary value
+    // set ',' in salary string
     setPredictSalary(
       (predictData.value).toLocaleString('en-US', {
         maximumFractionDigits: 2
       })
     );
 
-    // fetch images
-    const abortController = new AbortController();
-    const getPlot1 = async () => {
-      try {
-        const url = await fetchSalaryHistPlot(predictData.value);
-        setImg1URL(url);
-      } catch (err) {console.log(err)};
-    };
-    const getPlot2 = async () => {
-      try {
-        const url = await fetchSalaryBoxPlot(predictData.value);
-        setImg2URL(url);
-      } catch (err) {console.log(err)};
-    };
-    getPlot1();
-    getPlot2();
-    return () => abortController.abort();
   }, [predictData]);
 
-  // check if input of predict salary is a number
+  // check if value is a valid number
   const isNumber = (value) => {
     if (value === "") return false;
-    const v = +(value.replace(/(\d),(\d)/g, "$1$2"))
+    const v = +(value.replace(/,(\d)(\d)(\d)/g, "$1$2$3"))
     return /^d+$/.test(value) || !isNaN(v);
   };
 
-  // set btn disability, if predict salary input is valid
+  // updates when predictSalary changes
   useEffect(() => {
-    setIsValidInput(isNumber(predictSalary))
+    // set retrain btn disability: if predictSalary is valid
+    const valid = isNumber(predictSalary);
+    const previousSalary = predictData.value.toFixed(2);
+    const changeSalary = (+(predictSalary.replace(/,/g, ""))).toFixed(2);
+    
+    // Input is valid when it is a number and previous != changed value
+    setIsValidInput(valid && (previousSalary !== changeSalary));
+    
+    // if input is valid, fetch plots
+    if (!valid) return ;
+
+    const numSalary = +(predictSalary.replace(/,/g, ""));
+
+    const timeout = setTimeout(() => {
+      // fetch images
+      const abortController = new AbortController();
+      const getPlot1 = async () => {
+        try {
+          const url = await fetchSalaryHistPlot(numSalary);
+          setImg1URL(url);
+        } catch (err) {console.log(err)};
+      };
+      const getPlot2 = async () => {
+        try {
+          const url = await fetchSalaryBoxPlot(numSalary);
+          setImg2URL(url);
+        } catch (err) {console.log(err)};
+      };
+      getPlot1();
+      getPlot2();
+      return () => abortController.abort();
+
+    }, 100);
+    return () => clearTimeout(timeout);
   }, [predictSalary]);
 
   if (!predictData) return ; //////////////////////////////////////////
 
-  // retrain if input predict salary is valid.
+  // handle retrain btn click
   const handleRetrain = async () => {
-    if (!isValidInput) return ;
-    
+    setLoadingFunc(true);
+    setErrFunc(null);
+
     const newData = {
       ...dataFromForm,
       salary: +(predictSalary.replace(/,/g, "")),
     }
-    // console.log(newData);
-
-    setLoadingFunc(true);
-    setErrFunc(null);
 
     try {
-
       const res = await retrainModel(newData);
-      setRetrainResult(res.result)
+      setPredictResult(res.result)
       console.log(res.message);
-      // console.log(res.result);
-
     } catch (err) {
       setErrFunc(err.message);
     } finally {
       setLoadingFunc(false);
     }
-
   };
 
   // handle see detail btn click
@@ -103,10 +109,33 @@ const OutputSection = ({
 
   // handle input of predict salary change
   const handlePredictChange = (e) => {
-    setPredictSalary(e.target.value)
+    setPredictSalary(e.target.value);
+  };
+
+  // handle range input of predict salary change
+  const handleRangeChange = (e) => {
+    setPredictSalary(
+      Number(e.target.value).toLocaleString('en-US', {
+        maximumFractionDigits: 2
+      })
+    );
   };
   
-  // TODO: a toggle bar that can change the value of predict salary
+  // handle reset database
+  const handleReset = async() => {
+    setLoadingFunc(true);
+    setErrFunc(null);
+    try {
+      const res = await resetModel(dataFromForm);
+      setPredictResult(res.re)
+
+    }
+    console.log(dataFromForm);
+    
+// TODO: finish this part
+    
+  };
+  
   // TODO: a btn that can reload model with original dataset
   return (<>
 
@@ -119,9 +148,6 @@ const OutputSection = ({
     >
       <input
         id="predict-input"
-        // type="text"
-        // pattern="\d*"
-        // inputMode="numeric"
         className={`
           form-control col-12 fw-bold text-center w-100
         `}
@@ -131,7 +157,23 @@ const OutputSection = ({
       </input>
     </div>
 
-    <div className="row mt-2 align-items-center justify-content-between">
+    {showDetail &&
+    <div className="row">
+      <div className="col my-2">
+        <input
+          type="range"
+          className="form-range"
+          min={(predictData.value - predictData.params.mae).toFixed(2)}
+          max={(predictData.value + predictData.params.mae).toFixed(2)}
+          step="0.01"
+          onChange={handleRangeChange}
+        />
+      </div>
+    </div>
+    }
+
+
+    <div className="row mt-0 align-items-center justify-content-between">
 
       <div className="col-12 col-md-auto order-2 order-md-1">
       
@@ -159,28 +201,44 @@ const OutputSection = ({
         `}
       >
 
-        {showDetail &&
         <div className="row p-0">
-          <div className="col d-flex justify-content-md-end">
-            <button
-              className="btn btn-secondary"
+
+          <div className="col d-flex justify-content-md-end gap-2">
+          {showDetail && <>
+            <div
+              className="btn btn-outline-danger"
+              onClick={handleReset}
+            >
+              Reset Database
+            </div>
+
+            <div
+              className={`
+                btn btn-warning 
+                ${!isValidInput && 'disabled'}
+              `}
               onClick={handleRetrain}
-              disabled={!isValidInput}
             >
               Retrain Model
-            </button>
+            </div>
+          </> }
+            <div
+              className={`
+                btn 
+                ${showDetail ? `btn-secondary` : `text-secondary`}
+              `}
+              onClick={handleSeeDetailClick}
+            >
+              see detail
+            </div>
           </div>
         </div>
-        }
-        <div className="btn text-secondary " onClick={handleSeeDetailClick}>
-          see detail
-        </div>
-      </div>
 
+      </div>
     </div>
 
     {showDetail && <>
-    <div className="row">
+    <div className="row collapse-show" id="detail-part">
       <div className="col-12">
         Mean Square Error: {(predictData.params.mse).toFixed(2)}
       </div>
@@ -218,7 +276,6 @@ const OutputSection = ({
       </div>
     </div>
     </>}
-    {/* </div> */}
 
       {/* <div className="col-12">Age:{dataFromForm.age}</div>
       <div className="col-12">Gender:{dataFromForm.gender}</div>

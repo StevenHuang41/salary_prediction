@@ -56,6 +56,13 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
     getSubmitData(data);
   };
 
+  const handleChange = (e) => {
+    // e.preventDefault();
+    // e.stopPropagation();
+    const forms = formRef.current;
+    if (!forms.checkValidity()) setPredictResult(false); 
+  };
+
   const ageOptions = Array.from({ length: 71 }, (_, i) => (
     {value: i + 18, text: i + 18}
   ));
@@ -98,6 +105,7 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
       noValidate
       ref={formRef}
       onSubmit={handleSubmit}
+      onChange={handleChange}
     >
       <div className={`row row-cols-1 row-cols-md-2 row-cols-l g-2`} >
 
@@ -195,6 +203,7 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
           labelText='Agree to'
           btnText='terms and conditions'
           invalidFeedbackText='You must agree before submitting.'
+          setPredictResult={setPredictResult}
         />
 
         <div

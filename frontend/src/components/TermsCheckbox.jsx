@@ -2,16 +2,12 @@ import React, { useRef } from 'react'
 import TermsModal from './TermsModal'
 
 const TermsCheckbox = ({
+  className,
   modalId,
   labelText,
   btnText,
   invalidFeedbackText,
-  className,
-        // modalId='termsModal'
-        // labelText='Agree to'
-        // btnText='terms and conditions'
-        // invalidFeedbackText='You must agree before submitting.'
-        // className="col "
+  setPredictResult
 }) => {
   const checkboxRef = useRef(null);
 
@@ -47,9 +43,10 @@ const TermsCheckbox = ({
 
     <TermsModal
       id={modalId}
-      handleModalSecondaryClick={() => (
-        checkboxRef.current.checked = false
-      )}
+      handleModalSecondaryClick={() => {
+        checkboxRef.current.checked = false;
+        setPredictResult(false);
+      }}
       handleModalPrimaryClick={() => (
         checkboxRef.current.checked = true
       )}

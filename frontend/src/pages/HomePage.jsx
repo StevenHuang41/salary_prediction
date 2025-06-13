@@ -54,7 +54,7 @@ const HomePage = () => {
       <OutputSection
         dataFromForm={formData}
         predictData={predictResult}
-        setRetrainResult={setPredictResult}
+        setPredictResult={setPredictResult}
         setErrFunc={setErrResult}
         setLoadingFunc={setLoadingResult}
       />}
