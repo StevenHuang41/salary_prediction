@@ -91,6 +91,7 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
 
 
   return (<>
+    {/* headline */}
     <div className="row">
       <div className="col">
         <div className="text-primary fs-1">
@@ -99,6 +100,7 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
       </div>
     </div>
 
+    {/* form */}
     <form
       id="InputForm"
       className={`needs-validation`}
@@ -107,14 +109,13 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
       onSubmit={handleSubmit}
       onChange={handleChange}
     >
-      <div className={`row row-cols-1 row-cols-md-2 row-cols-l g-2`} >
+      <div className={`row row-cols-1 row-cols-md-2 g-2`} >
 
         <SelectInput
           className="col col-xl-2"
           selectId='ageSelectInput'
           options={ageOptions}
           invalidFeedbackText='Please select a valid age.'
-          // defaultValue=''
           value={age}
           onChange={e => setAge(e.target.value)}
           isLoadingOptions={false}
@@ -132,7 +133,6 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
             {value: 'other', text: 'Other'},
           ]}
           invalidFeedbackText='Please select a gender.'
-          // defaultValue=''
           value={gender}
           onChange={e => setGender(e.target.value)}
           isLoadingOptions={false}
@@ -152,7 +152,6 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
           ]}
           invalidFeedbackText='Please select an education level.'
           className="col col-xl-3"
-          // defaultValue=''
           value={educationLevel}
           onChange={e => setEducationLevel(e.target.value)}
           isLoadingOptions={false}
@@ -165,7 +164,6 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
           options={jobOptions}
           invalidFeedbackText='Please select a job title.'
           className="col col-xl-3"
-          // defaultValue=''
           value={jobTitle}
           onChange={e => setJobTitle(e.target.value)}
           isLoadingOptions={jobOptionsLoading}
@@ -181,7 +179,6 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
             `The years of experience should not exceed ${age - 18}.`
           }
           className="col col-xl-2"
-          // defaultValue=''
           value={yearE}
           onChange={e => setYearE(e.target.value)}
           isLoadingOptions={false}
@@ -193,12 +190,17 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
       <div
         className={`
           row row-cols-1 row-cols-md-2
-          mt- m-0 g-2
+          mx-0 mt-1
+          d-flex
           align-items-center
         `}
       >
+
         <TermsCheckbox 
-          className="col-12 col-md-6 p-0"
+          className={`
+            col
+            p-0 my-2 
+          `}
           modalId='termsModal'
           labelText='Agree to'
           btnText='terms and conditions'
@@ -208,8 +210,10 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
 
         <div
           className={`
-            col-12 col-md-6 p-0 
-            d-flex justify-content-md-end
+            col
+            m-0 p-0 
+            d-flex
+            justify-content-md-end
           `}
         >
           <button

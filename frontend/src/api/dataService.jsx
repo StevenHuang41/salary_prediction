@@ -62,6 +62,8 @@ const retrainModel = async (data) => {
 
 const resetModel = async (data) => {
   try {
+    console.log(data);
+    
     const res = await api.post('/reset_model', data);
     return res.data;
   } catch (err) {

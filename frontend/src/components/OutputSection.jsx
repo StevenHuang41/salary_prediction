@@ -21,6 +21,7 @@ const OutputSection = ({
 
   const [isValidInput, setIsValidInput] = useState(true);
 
+  const [salaryInputSame, setSalaryInputSame] = useState(true);
   // show predict salary, updates when predictData changes
   useEffect(() => {
     if (!predictData) return ;
@@ -31,7 +32,6 @@ const OutputSection = ({
         maximumFractionDigits: 2
       })
     );
-
   }, [predictData]);
 
   // check if value is a valid number
@@ -47,6 +47,7 @@ const OutputSection = ({
     const valid = isNumber(predictSalary);
     const previousSalary = predictData.value.toFixed(2);
     const changeSalary = (+(predictSalary.replace(/,/g, ""))).toFixed(2);
+    setSalaryInputSame(previousSalary === changeSalary);
     
     // Input is valid when it is a number and previous != changed value
     setIsValidInput(valid && (previousSalary !== changeSalary));
@@ -127,44 +128,52 @@ const OutputSection = ({
     setErrFunc(null);
     try {
       const res = await resetModel(dataFromForm);
-      setPredictResult(res.re)
-
+      setPredictResult(res.result);
+      console.log(res.message);
+    } catch (err) {
+      setErrFunc(err.message);
+    } finally {
+      setLoadingFunc(false);
     }
-    console.log(dataFromForm);
-    
-// TODO: finish this part
-    
   };
   
-  // TODO: a btn that can reload model with original dataset
   return (<>
 
+    {/* predict salary value */}
     <div
       className={`
-        row mx-0 mt-2
-        d-flex justify-content-center
+        row
+        mx-0 mt-2
+        d-flex
+        justify-content-center
         align-items-center
       `}
     >
       <input
         id="predict-input"
         className={`
-          form-control col-12 fw-bold text-center w-100
+          col-12
+          form-control
+          fw-bold text-center w-100
         `}
         value={predictSalary}
         onChange={handlePredictChange}
-      >
-      </input>
+      />
     </div>
 
+    {/* salary input range */}
     {showDetail &&
-    <div className="row">
-      <div className="col my-2">
+    <div className="row mt-2">
+      <div className="col">
         <input
           type="range"
           className="form-range"
-          min={(predictData.value - predictData.params.mae).toFixed(2)}
-          max={(predictData.value + predictData.params.mae).toFixed(2)}
+          min={(
+            predictData.value - predictData.params.mae
+          ).toFixed(2)}
+          max={(
+            predictData.value + predictData.params.mae
+          ).toFixed(2)}
           step="0.01"
           onChange={handleRangeChange}
         />
@@ -172,110 +181,173 @@ const OutputSection = ({
     </div>
     }
 
-
-    <div className="row mt-0 align-items-center justify-content-between">
-
-      <div className="col-12 col-md-auto order-2 order-md-1">
-      
-        <div className="row">
-          <div className="col">
-            Model {showDetail && `Name`}: {predictData.model_name}
-          </div>
+    {/* see detial row */}
+    <div
+      className={`
+        row
+        mx-0 mt-2 gap-1
+        d-flex
+        align-items-center
+      `}
+    >
+      {isValidInput && !salaryInputSame && showDetail && <>
+      <div className="col order-2 order-md-1 px-0 ">
+          
+        <div
+          className={`
+            btn btn-outline-warning
+            p-2 py-1 me-1
+            text-nowrap
+          `}
+          onClick={handleRetrain}
+        >
+          Retrain Model
         </div>
+      {/* </div>
 
-        <div className="row">
-          <div className="col">
-            {showDetail ? `Mean Absolute Error` : `MAE`}
-            : {(predictData.params.mae).toFixed(2)}
-          </div>
+      <div className="col order-2 order-md-1 px-0"> */}
+        <div
+          className={`
+            btn btn-outline-info
+            p-2 py-1 me-1
+            text-nowrap
+          `}
+          onClick={handleRetrain}
+        >
+          Add Data
         </div>
+      {/* </div>
 
+      <div className="col order-2 order-md-1 px-0"> */}
+        <div
+          className={`
+            btn btn-outline-success
+            p-2 py-1
+            text-nowrap
+          `}
+          onClick={handleRetrain}
+        >
+          Return Input
+        </div>
       </div>
+      </>}
 
+      {!showDetail &&
+      <div className="col order-2 order-md-1 px-0">
+        <div className="row">
+          <div className="col-12">
+            Model: {predictData.model_name}
+          </div>
+          <div className="col-12">
+            MAE: {(predictData.params.mae).toFixed(2)}
+          </div>
+        </div>
+      </div>
+      }
+
+
+      {/* btn see detail */}
       <div
         className={`
           col-12 col-md-auto
-          d-flex justify-content-md-end
-          align_items-center
+          px-0
+          d-flex
+          justify-content-md-end
           order-1 order-md-2
         `}
       >
-
-        <div className="row p-0">
-
-          <div className="col d-flex justify-content-md-end gap-2">
-          {showDetail && <>
-            <div
-              className="btn btn-outline-danger"
-              onClick={handleReset}
-            >
-              Reset Database
-            </div>
-
-            <div
-              className={`
-                btn btn-warning 
-                ${!isValidInput && 'disabled'}
-              `}
-              onClick={handleRetrain}
-            >
-              Retrain Model
-            </div>
-          </> }
-            <div
-              className={`
-                btn 
-                ${showDetail ? `btn-secondary` : `text-secondary`}
-              `}
-              onClick={handleSeeDetailClick}
-            >
-              see detail
-            </div>
-          </div>
+        <div
+          className={`
+            btn
+            p-2 py-1
+            text-nowrap
+            ${showDetail ? `btn-secondary` :
+              `btn-outline-secondary`}
+          `}
+          onClick={handleSeeDetailClick}
+        >
+          see detail
         </div>
-
       </div>
+
     </div>
 
     {showDetail && <>
-    <div className="row collapse-show" id="detail-part">
-      <div className="col-12">
-        Mean Square Error: {(predictData.params.mse).toFixed(2)}
-      </div>
-      <div className="col-12">
-        #Train dataset: {predictData.num_train_dataset}
-      </div>
-      <div className="col-12">
-        #Test dataset: {predictData.num_test_dataset}
-      </div>
-      {predictData.use_polynomial && 
-      <div className="col-12">
-        use polynomial feature
-      </div>
-      }
-    </div>
-
-    <div className="row">
-      <div className="col d-flex justify-content-center">
+    <div className="row row-cols-1 mt-3 px-0">
+      {/* <div
+        className={`
+          col
+          d-flex
+          justify-content-center
+        `}
+      > */}
         <img
           className={`
+            col
             img-fluid  
           `}
           src={img1URL}
           alt="Salary Axvline Plot"/>
-      </div>
-    </div>
-    <div className="row">
-      <div className="col d-flex justify-content-center">
+      {/* </div> */}
+      {/* <div
+        className={`
+          col
+          d-flex
+          justify-content-center
+        `}
+      > */}
         <img
           className={`
+            col
             img-fluid  
           `}
           src={img2URL}
           alt="Salary Box Plot"/>
-      </div>
+      {/* </div> */}
     </div>
     </>}
+
+    {showDetail &&
+    
+    <div className={`row row-cols-1 mb-3`}
+    >
+      <div className="col-12">
+        Model Name: {predictData.model_name}<br/>
+        {predictData.use_polynomial && 
+          ` (use polynomial feature)`
+        }
+      </div>
+
+      <div className="col-">
+        Mean Absolute Error: {
+          (predictData.params.mae).toFixed(2)
+        }
+      </div>
+
+      <div className="col">
+        Mean Square Error: {(predictData.params.mse).toFixed(2)}
+      </div>
+
+      <div className="col">
+        #Train dataset: {predictData.num_train_dataset}
+      </div>
+
+      <div className="col">
+        #Test dataset: {predictData.num_test_dataset}
+      </div>
+
+      <div className="col">
+        <div
+          className="btn btn-outline-danger"
+          onClick={handleReset}
+        >
+          Reset Database
+        </div>
+      </div>
+    </div>
+    }
+
+
 
       {/* <div className="col-12">Age:{dataFromForm.age}</div>
       <div className="col-12">Gender:{dataFromForm.gender}</div>

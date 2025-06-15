@@ -17,7 +17,10 @@ const HomePage = () => {
     setErrResult(null);
 
     try {
+      console.log(dataFromForm);
       const data = await predictSalary(dataFromForm);
+      console.log(data);
+      
       setPredictResult(data);
     } catch (err) {
       setErrResult(err.message);

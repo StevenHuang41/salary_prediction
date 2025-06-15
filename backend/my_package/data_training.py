@@ -107,6 +107,7 @@ model_configurations = [
     },
     {
         'name': 'randomForestRegressor_model',
+        # 'estimator': RandomForestRegressor(),
         'estimator': RandomForestRegressor(n_jobs=-1),
         'search_space': {
             'n_estimators': Integer(50, 100),

@@ -13,7 +13,11 @@ const TermsCheckbox = ({
 
   return (<>
     <div className={`${className || ''}`}>
-      <div className="form-check">
+      <div
+        className={`
+          form-check
+        `}
+      >
         <input
           className="form-check-input"
           type="checkbox"
@@ -22,19 +26,30 @@ const TermsCheckbox = ({
           ref={checkboxRef}
           required
         />
-        <label className="form-check-label" htmlFor="invalidCheck">
-          {labelText}
-        </label>
-        <button
-          className='btn btn-link p-0 px-1 align-baseline'
-          data-bs-toggle="modal"
-          data-bs-target={`#${modalId}`}
-          onClick={(e) => {e.preventDefault()}}
-        >
-          {btnText}
-        </button>
 
-        <div className="invalid-feedback">
+        <label
+          className={`
+            form-check-label
+            d-flex
+            align-items-center
+          `}
+          htmlFor="invalidCheck"
+        >
+          {labelText}
+          <button
+            className={`
+              btn btn-link
+              col-auto
+              p-0 ps-1
+            `}
+            data-bs-toggle="modal"
+            data-bs-target={`#${modalId}`}
+            onClick={(e) => {e.preventDefault()}}
+          >
+            {btnText}
+          </button>
+        </label>
+        <div className="invalid-feedback m-0">
           {invalidFeedbackText}
         </div>
 
@@ -52,6 +67,10 @@ const TermsCheckbox = ({
       )}
     />
 
+           {/* row
+           m-0 
+           d-flex
+           align-items-center */}
   </>)
 }
 

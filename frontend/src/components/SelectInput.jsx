@@ -40,7 +40,7 @@ const SelectInput = ({
         ))}
       </select>
       <label htmlFor={selectId}>{children}</label>
-      <div className={`invalid-feedback`}>
+      <div className='invalid-feedback'>
         {invalidFeedbackText}
       </div>
       </>}

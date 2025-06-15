@@ -34,15 +34,18 @@ def init_database(db: str='salary_prediction.db'):
         8 salary REAL
         64B * 1_000_000 = 64MB
         """
-        import sys
-        sys.path.append(os.getcwd().split('/database')[0])
+        # import sys
+        # sys.path.append(os.getcwd().split('/database')[0])
         from my_package.data_cleansing import cleaning_data
 
-        for chunk in pd.read_csv('Salary_Data.csv', chunksize=1_000_000):
+        database_dir = db.split('salary_prediction.db')[0]
+        FILE_NAME = os.path.join(database_dir, 'Salary_Data.csv')
+
+        for chunk in pd.read_csv(FILE_NAME, chunksize=1_000_000):
             chunk = cleaning_data(chunk, has_target_columns=True)
             chunk.to_sql('salary', conn, if_exists='append', index=False)
 
-        sys.path = sys.path[:-1]
+        # sys.path = sys.path[:-1]
 
         conn.commit()
 

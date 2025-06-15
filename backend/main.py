@@ -20,13 +20,15 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://192.168.1.16:3000", # mac
-        "http://192.168.1.23:3000", # mobile
         "http://localhost:3000",
+        "http://172.20.10.2:3000",
+        "http://192.168.1.3:3000",
+        "http://192.168.1.16:3000", # mac
+        "http://192.168.1.19:3000", # mobile
     ],
     allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 class RowData(BaseModel):
@@ -62,6 +64,12 @@ root_dir_path = os.getcwd().split('/backend')[0]
 backend_dir_path = os.path.join(root_dir_path, 'backend')
 database_dir_path = os.path.join(backend_dir_path, 'database')
 db_file_path = os.path.join(database_dir_path, 'salary_prediction.db')
+init_database(db_file_path)
+create_index('job_title', 'idx_job_title',
+             db=db_file_path)
+create_index('education_level', 'idx_education_level',
+             db=db_file_path)
+create_index('salary', 'idx_salary', db=db_file_path)    
 # df = query_2_df("select * from salary", db_file_path)
 # print(df)
     
@@ -133,13 +141,22 @@ async def retrain(data: FullData):
 @app.post("/api/reset_model")
 async def reset(data: RowData):
     init_database(db_file_path)
-    create_index('job_title', 'idx_job_title', db_file_path)
-    create_index('education_level', 'idx_education_level', db_file_path)
-    create_index('salary', 'idx_salary', db_file_path)
+    create_index('job_title', 'idx_job_title',
+                db=db_file_path)
+    create_index('education_level', 'idx_education_level',
+                db=db_file_path)
+    create_index('salary', 'idx_salary', db=db_file_path)    
     df = query_2_df("select * from salary;", db_file_path)
+    data_df = pd.DataFrame([data.model_dump()])
+    data_df = cleaning_data(data_df)
+    # predict by restart the model
+    result = predict_salary(data_df, df, model_store_file, True)
 
-## TODO: finish this part
-
+    return {
+        'status': 'success',
+        'message': ('Reset the database, and restart the model.'),
+        'result': result,
+    }
 
 @app.post("/api/salary_avxline_plot")
 async def get_salary_hist_plot(data: SalaryInput):
@@ -156,6 +173,7 @@ async def get_salary_boxplot(data: SalaryInput):
     image_byte = salary_box_image(data.salary, df)
 
     return Response(content=image_byte, media_type="image/png")
+
 
 if __name__ == "__main__":
     import uvicorn
