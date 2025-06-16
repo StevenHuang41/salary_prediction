@@ -109,9 +109,55 @@ async def get_predict_salary(data: RowData):
 
 
 @app.post("/api/retrain_model")
-async def retrain(data: FullData):
+async def retrain(data: RowData):
     df = query_2_df("select * from salary;", db_file_path)
 
+    data_df = pd.DataFrame([data.model_dump()])
+    data_df = cleaning_data(data_df)
+    # # data_dict = data_df.to_dict(orient="records")
+
+    # if data_dict == []:
+    #     return {'status': 'fail',
+    #             'message': 'Input data does not add into database.'}
+
+    # data_dict = data_dict[0]
+
+    # ## insert data into database, and upate df
+    # insert_record(data_dict, 'salary', db_file_path)
+    # df = query_2_df("select * from salary;", db_file_path)
+
+    ## restart the model
+    result = predict_salary(
+        data_df, df, model_store_file, restart=True
+    )
+
+    return {
+        'status': 'success',
+        'message': 'Retrain model successfully.',
+        'result': result,
+    }
+
+@app.post("/api/reset_model")
+async def reset():
+    init_database(db_file_path)
+    create_index('job_title', 'idx_job_title',
+                db=db_file_path)
+    create_index('education_level', 'idx_education_level',
+                db=db_file_path)
+    create_index('salary', 'idx_salary', db=db_file_path)    
+    # df = query_2_df("select * from salary;", db_file_path)
+    # data_df = pd.DataFrame([data.model_dump()])
+    # data_df = cleaning_data(data_df)
+    # predict by restart the model
+    # result = predict_salary(data_df, df, model_store_file, True)
+
+    return {
+        'status': 'success',
+        'message': 'Reset the database.',
+    }
+
+@app.post("/api/add_data")
+async def add_record(data: FullData):
     data_df = pd.DataFrame([data.model_dump()])
     data_df = cleaning_data(data_df, has_target_columns=True)
     data_dict = data_df.to_dict(orient="records")
@@ -121,42 +167,15 @@ async def retrain(data: FullData):
                 'message': 'Input data does not add into database.'}
 
     data_dict = data_dict[0]
-
-    ## insert data into database, and upate df
+    ## insert data into database
     insert_record(data_dict, 'salary', db_file_path)
-    df = query_2_df("select * from salary;", db_file_path)
-
-    ## restart the model
-    result = predict_salary(
-        data_df, df, model_store_file, restart=True
-    )
-
+    print(data_dict)
     return {
         'status': 'success',
-        'message': ('Input data stored in database, '
-                    'and retrain model successfully.'),
-        'result': result,
+        'message': 'Input data stored in database.'
     }
 
-@app.post("/api/reset_model")
-async def reset(data: RowData):
-    init_database(db_file_path)
-    create_index('job_title', 'idx_job_title',
-                db=db_file_path)
-    create_index('education_level', 'idx_education_level',
-                db=db_file_path)
-    create_index('salary', 'idx_salary', db=db_file_path)    
-    df = query_2_df("select * from salary;", db_file_path)
-    data_df = pd.DataFrame([data.model_dump()])
-    data_df = cleaning_data(data_df)
-    # predict by restart the model
-    result = predict_salary(data_df, df, model_store_file, True)
 
-    return {
-        'status': 'success',
-        'message': ('Reset the database, and restart the model.'),
-        'result': result,
-    }
 
 @app.post("/api/salary_avxline_plot")
 async def get_salary_hist_plot(data: SalaryInput):

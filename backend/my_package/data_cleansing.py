@@ -103,10 +103,13 @@ def cleaning_job(df: pd.DataFrame) -> None:
 
 
 ## col: years of experience
-def cleaning_exp(df: pd.DateOffset) -> None:
+def cleaning_exp(df: pd.DataFrame) -> None:
     df['years_of_experience'] = df['years_of_experience'].astype('float32')
     # print("Data Cleansing: cleaning years of experience - Successful")
 
+## check age and years of experience validity
+def check_age_yearE(df: pd.DataFrame) -> None:
+    return df[(df['age'] - df['years_of_experience']) >= 18] 
 
 ## Whole Cleansing process
 def cleaning_data(df: pd.DataFrame,
@@ -121,6 +124,7 @@ def cleaning_data(df: pd.DataFrame,
     cleaning_edu(df)
     cleaning_job(df)
     cleaning_exp(df)
+    df = check_age_yearE(df)
 
     # print("... Finishing Cleansing Process ...", end='\n\n')
 

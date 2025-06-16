@@ -11,17 +11,15 @@ const HomePage = () => {
   const [loadingResult, setLoadingResult] = useState(false);
   const [errResult, setErrResult] = useState(null);
 
-  const handleGetFormData = async (dataFromForm) => {
-    setFormData(dataFromForm);
+  const handleInputFormSubmit = async (e) => {
     setLoadingResult(true);
     setErrResult(null);
 
     try {
-      console.log(dataFromForm);
-      const data = await predictSalary(dataFromForm);
-      console.log(data);
-      
-      setPredictResult(data);
+      // console.log(formData);
+      const res = await predictSalary(formData);
+      // console.log(res);
+      setPredictResult(res);
     } catch (err) {
       setErrResult(err.message);
     } finally {
@@ -29,14 +27,15 @@ const HomePage = () => {
     }
   };
 
-  useEffect(() => {
-    // console.log(predictResult);
-  }, [predictResult]);
+  // useEffect(() => {
+  //   console.log(predictResult);
+  // }, [predictResult]);
 
   return (<>
     <div className="container">
       <InputForm
-        getSubmitData={handleGetFormData}
+        getSubmitData={setFormData}
+        handleInputFormSubmit={handleInputFormSubmit}
         setPredictResult={setPredictResult}
       />
 
@@ -60,6 +59,8 @@ const HomePage = () => {
         setPredictResult={setPredictResult}
         setErrFunc={setErrResult}
         setLoadingFunc={setLoadingResult}
+        // showDetail={showDetail}
+        // setShowDetail={setShowDetail}
       />}
     </div>
   </>)

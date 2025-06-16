@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import './OutputSection.css';
-import { retrainModel, fetchSalaryBoxPlot } from "../api/dataService";
+import { retrainModel, fetchSalaryBoxPlot, addData } from "../api/dataService";
 import { fetchSalaryHistPlot } from "../api/dataService";
 import { resetModel } from "../api/dataService";
 
@@ -10,6 +10,8 @@ const OutputSection = ({
   setPredictResult,
   setErrFunc,
   setLoadingFunc,
+  // showDetail,
+  // setShowDetail,
 }) => {
 
   const [predictSalary, setPredictSalary] = useState('');
@@ -22,6 +24,14 @@ const OutputSection = ({
   const [isValidInput, setIsValidInput] = useState(true);
 
   const [salaryInputSame, setSalaryInputSame] = useState(true);
+
+  const [rangeValue, setRangeValue] = useState(0);
+
+  const [numAdd, setNumAdd] = useState(0);
+  
+  // TODO: does not work
+  // const originForm = {...dataFromForm};
+
   // show predict salary, updates when predictData changes
   useEffect(() => {
     if (!predictData) return ;
@@ -32,7 +42,19 @@ const OutputSection = ({
         maximumFractionDigits: 2
       })
     );
+    setRangeValue(predictData.value);
   }, [predictData]);
+
+  // TODO: does not work
+  // useEffect(() => {
+  //   console.log(dataFromForm);
+    
+  //   setSalaryInputSame(
+  //     Object.keys(originForm).every(
+  //       key => originForm[key] === dataFromForm[key]
+  //     )
+  //   );
+  // }, [dataFromForm]);
 
   // check if value is a valid number
   const isNumber = (value) => {
@@ -51,6 +73,8 @@ const OutputSection = ({
     
     // Input is valid when it is a number and previous != changed value
     setIsValidInput(valid && (previousSalary !== changeSalary));
+
+
     
     // if input is valid, fetch plots
     if (!valid) return ;
@@ -82,18 +106,22 @@ const OutputSection = ({
 
   if (!predictData) return ; //////////////////////////////////////////
 
+  // handle see detail btn click
+  const handleSeeDetailClick = () => {
+    setShowDetail(!showDetail);
+  };
+
   // handle retrain btn click
   const handleRetrain = async () => {
     setLoadingFunc(true);
     setErrFunc(null);
 
-    const newData = {
-      ...dataFromForm,
-      salary: +(predictSalary.replace(/,/g, "")),
-    }
-
+    // const newData = {
+    //   ...dataFromForm,
+    //   salary: +(predictSalary.replace(/,/g, "")),
+    // }
     try {
-      const res = await retrainModel(newData);
+      const res = await retrainModel(dataFromForm);
       setPredictResult(res.result)
       console.log(res.message);
     } catch (err) {
@@ -103,20 +131,29 @@ const OutputSection = ({
     }
   };
 
-  // handle see detail btn click
-  const handleSeeDetailClick = () => {
-    setShowDetail(!showDetail);
-  };
 
   // handle input of predict salary change
   const handlePredictChange = (e) => {
     setPredictSalary(e.target.value);
+    setRangeValue((e.target.value).replace(/,/g, ""))
   };
 
   // handle range input of predict salary change
-  const handleRangeChange = (e) => {
+  const handleRangeChange = (value) => {
+    setRangeValue(value);
+    
     setPredictSalary(
-      Number(e.target.value).toLocaleString('en-US', {
+      Number(value).toLocaleString('en-US', {
+        maximumFractionDigits: 2
+      })
+    );
+  };
+
+  // handle return btn click
+  const handleReturn = () => {
+    setRangeValue(predictData.value)
+    setPredictSalary(
+      (predictData.value).toLocaleString('en-US', {
         maximumFractionDigits: 2
       })
     );
@@ -124,16 +161,40 @@ const OutputSection = ({
   
   // handle reset database
   const handleReset = async() => {
-    setLoadingFunc(true);
+    // setLoadingFunc(true);
     setErrFunc(null);
     try {
-      const res = await resetModel(dataFromForm);
-      setPredictResult(res.result);
+      const res = await resetModel();
+      setNumAdd(1)
+      // setPredictResult(res.result);
       console.log(res.message);
     } catch (err) {
       setErrFunc(err.message);
     } finally {
-      setLoadingFunc(false);
+      // setLoadingFunc(false);
+    }
+  };
+
+  // handel add data btn click
+  const handleAddData = async (e) => {
+    // e.preventDefault();
+    // e.stopPropagation();
+    setErrFunc(null);
+
+    const newData = {
+      ...dataFromForm,
+      salary: +(predictSalary.replace(/,/g, ""))
+    };
+    // console.log(newData);
+
+    try {
+      const res = await addData(newData);
+      setNumAdd(numAdd + 1)
+      console.log(res.message);
+    } catch (err) {
+      setErrFunc(err.message);
+    } finally {
+      // setLoadingFunc(false);
     }
   };
   
@@ -143,7 +204,7 @@ const OutputSection = ({
     <div
       className={`
         row
-        mx-0 mt-2
+        mx-0 my-2
         d-flex
         justify-content-center
         align-items-center
@@ -163,7 +224,7 @@ const OutputSection = ({
 
     {/* salary input range */}
     {showDetail &&
-    <div className="row mt-2">
+    <div className="row">
       <div className="col">
         <input
           type="range"
@@ -175,7 +236,8 @@ const OutputSection = ({
             predictData.value + predictData.params.mae
           ).toFixed(2)}
           step="0.01"
-          onChange={handleRangeChange}
+          value={rangeValue}
+          onChange={e => handleRangeChange(e.target.value)}
         />
       </div>
     </div>
@@ -185,55 +247,57 @@ const OutputSection = ({
     <div
       className={`
         row
-        mx-0 mt-2 gap-1
+        mx-0 gap-1
         d-flex
         align-items-center
       `}
     >
-      {isValidInput && !salaryInputSame && showDetail && <>
-      <div className="col order-2 order-md-1 px-0 ">
-          
-        <div
-          className={`
-            btn btn-outline-warning
-            p-2 py-1 me-1
-            text-nowrap
-          `}
-          onClick={handleRetrain}
-        >
-          Retrain Model
-        </div>
-      {/* </div>
-
-      <div className="col order-2 order-md-1 px-0"> */}
-        <div
-          className={`
-            btn btn-outline-info
-            p-2 py-1 me-1
-            text-nowrap
-          `}
-          onClick={handleRetrain}
-        >
-          Add Data
-        </div>
-      {/* </div>
-
-      <div className="col order-2 order-md-1 px-0"> */}
+      {showDetail && !salaryInputSame && 
+      <div className="col-auto order-2 order-md-1 px-0">
         <div
           className={`
             btn btn-outline-success
             p-2 py-1
             text-nowrap
           `}
-          onClick={handleRetrain}
+          onClick={handleReturn}
         >
           Return Input
         </div>
       </div>
+      }
+      {isValidInput && !salaryInputSame && showDetail && <>
+      <div className="col-auto order-2 order-md-1 px-0">
+        <div
+          className={`
+            btn btn-outline-info
+            p-2 py-1 
+            text-nowrap
+          `}
+          onClick={handleAddData}
+        >
+          Add Data
+        </div>
+      </div>
       </>}
 
-      {!showDetail &&
+      {(numAdd !== 0) && showDetail &&
       <div className="col order-2 order-md-1 px-0">
+        <div
+          className={`
+            btn btn-outline-warning
+            p-2 py-1
+            text-nowrap
+          `}
+          onClick={handleRetrain}
+        >
+          Retrain Model
+        </div>
+      </div>
+      }
+
+      <div className="col order-2 order-md-1 px-0">
+      {!showDetail &&
         <div className="row">
           <div className="col-12">
             Model: {predictData.model_name}
@@ -242,8 +306,8 @@ const OutputSection = ({
             MAE: {(predictData.params.mae).toFixed(2)}
           </div>
         </div>
-      </div>
       }
+      </div>
 
 
       {/* btn see detail */}
@@ -274,38 +338,51 @@ const OutputSection = ({
 
     {showDetail && <>
     <div className="row row-cols-1 mt-3 px-0">
-      {/* <div
+      <img
         className={`
           col
-          d-flex
-          justify-content-center
+          img-fluid  
         `}
-      > */}
-        <img
-          className={`
-            col
-            img-fluid  
-          `}
-          src={img1URL}
-          alt="Salary Axvline Plot"/>
-      {/* </div> */}
-      {/* <div
+        src={img1URL}
+        alt="Salary Axvline Plot"/>
+
+      <img
         className={`
           col
-          d-flex
-          justify-content-center
+          img-fluid  
         `}
-      > */}
-        <img
-          className={`
-            col
-            img-fluid  
-          `}
-          src={img2URL}
-          alt="Salary Box Plot"/>
-      {/* </div> */}
+        src={img2URL}
+        alt="Salary Box Plot"/>
     </div>
     </>}
+    <div className="row">
+      <div className="col d-flex justify-content-center px-0">
+        <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
+          <ol className="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            {/* <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> */}
+          </ol>
+          <div className="carousel-inner">
+            <div className="carousel-item active">
+              <img className="d-block w-50" src={img1URL} alt="First slide"/>
+            </div>
+            <div className="carousel-item">
+              <img className="d-block w-50" src={img2URL} alt="Second slide"/>
+            </div>
+
+          </div>
+          <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="sr-only">Previous</span>
+          </a>
+          <a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
 
     {showDetail &&
     
@@ -338,12 +415,17 @@ const OutputSection = ({
 
       <div className="col">
         <div
-          className="btn btn-outline-danger"
+          className={`
+            btn btn-outline-danger
+            p-2 py-1
+            text-nowrap
+          `}
           onClick={handleReset}
         >
           Reset Database
         </div>
       </div>
+
     </div>
     }
 

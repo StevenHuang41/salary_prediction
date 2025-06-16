@@ -60,19 +60,30 @@ const retrainModel = async (data) => {
   }
 };
 
-const resetModel = async (data) => {
+const resetModel = async () => {
   try {
-    console.log(data);
-    
-    const res = await api.post('/reset_model', data);
+    const res = await api.post('/reset_model');
     return res.data;
   } catch (err) {
     throw err;
   }
 };
 
+const addData = async (data) => {
+  try {
+    const res = await api.post('/add_data', data);
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 export {
-  getUniqJobTitle, predictSalary,
-  fetchSalaryHistPlot, fetchSalaryBoxPlot,
-  retrainModel, resetModel,
+  getUniqJobTitle,
+  predictSalary,
+  fetchSalaryHistPlot,
+  fetchSalaryBoxPlot,
+  retrainModel,
+  resetModel,
+  addData,
 };

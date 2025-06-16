@@ -4,7 +4,11 @@ import SelectInput from "./SelectInput";
 import TermsCheckbox from "./TermsCheckbox";
 import AgeYearsModal from "./AgeYearsModal";
 
-const InputForm = ({ getSubmitData, setPredictResult }) => {
+const InputForm = ({
+  getSubmitData,
+  handleInputFormSubmit,
+  setPredictResult
+}) => {
   const formRef = useRef(null);
 
   const [yearValid, setYearValid] = useState(true);
@@ -54,11 +58,13 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
       years_of_experience: yearE,
     } 
     getSubmitData(data);
+    handleInputFormSubmit();
   };
 
   const handleChange = (e) => {
-    // e.preventDefault();
-    // e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
+
     const forms = formRef.current;
     if (!forms.checkValidity()) setPredictResult(false); 
   };
@@ -70,6 +76,17 @@ const InputForm = ({ getSubmitData, setPredictResult }) => {
   const yearEOptions = Array.from({ length: 71 }, (_, i) => (
     {value: i, text: i}
   ));
+
+  // update data when form changes
+  useEffect(() => {
+    getSubmitData({
+      age: age,
+      gender: gender,
+      education_level: educationLevel,
+      job_title: jobTitle,
+      years_of_experience: yearE,
+    });
+  }, [age, gender, educationLevel, jobTitle, yearE]);
 
   // get job title options
   const [jobOptions, setJobOptions] = useState([]);
