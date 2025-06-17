@@ -22,7 +22,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://172.20.10.2:3000",
-        "http://192.168.1.3:3000",
+        "http://192.168.1.20:3000",
         "http://192.168.1.16:3000", # mac
         "http://192.168.1.19:3000", # mobile
     ],

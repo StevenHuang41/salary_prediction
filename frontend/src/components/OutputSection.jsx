@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import './OutputSection.css';
-import { retrainModel, fetchSalaryBoxPlot, addData } from "../api/dataService";
-import { fetchSalaryHistPlot } from "../api/dataService";
-import { resetModel } from "../api/dataService";
+import {
+  retrainModel,
+  fetchSalaryBoxPlot,
+  addData,
+  fetchSalaryHistPlot,
+  resetModel,
+} from "../api/dataService";
+import MyCarousel from "./MyCarousel";
 
 const OutputSection = ({
   dataFromForm,
@@ -10,8 +15,6 @@ const OutputSection = ({
   setPredictResult,
   setErrFunc,
   setLoadingFunc,
-  // showDetail,
-  // setShowDetail,
 }) => {
 
   const [predictSalary, setPredictSalary] = useState('');
@@ -102,7 +105,7 @@ const OutputSection = ({
 
     }, 100);
     return () => clearTimeout(timeout);
-  }, [predictSalary]);
+  }, [predictSalary, predictData.value]);
 
   if (!predictData) return ; //////////////////////////////////////////
 
@@ -336,58 +339,24 @@ const OutputSection = ({
 
     </div>
 
-    {showDetail && <>
-    <div className="row row-cols-1 mt-3 px-0">
-      <img
-        className={`
-          col
-          img-fluid  
-        `}
-        src={img1URL}
-        alt="Salary Axvline Plot"/>
 
-      <img
-        className={`
-          col
-          img-fluid  
-        `}
-        src={img2URL}
-        alt="Salary Box Plot"/>
-    </div>
-    </>}
+    {/* Carousel */}
+    {!showDetail &&
     <div className="row">
-      <div className="col d-flex justify-content-center px-0">
-        <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
-          <ol className="carousel-indicators">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-            {/* <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> */}
-          </ol>
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img className="d-block w-50" src={img1URL} alt="First slide"/>
-            </div>
-            <div className="carousel-item">
-              <img className="d-block w-50" src={img2URL} alt="Second slide"/>
-            </div>
+      <div className="col d-flex justify-content-center px-0 ">
+        <MyCarousel
+          images={[img1URL, img2URL]}
+          alts={["Salary Axvline Plot", "Salary Box Plot"]}
+        >
+        </MyCarousel>
 
-          </div>
-          <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span className="sr-only">Previous</span>
-          </a>
-          <a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-            <span className="sr-only">Next</span>
-          </a>
-        </div>
       </div>
     </div>
+    }
 
+    {/* detail of model */}
     {showDetail &&
-    
-    <div className={`row row-cols-1 mb-3`}
-    >
+    <div className={`row row-cols-1 mb-3`}>
       <div className="col-12">
         Model Name: {predictData.model_name}<br/>
         {predictData.use_polynomial && 
@@ -429,6 +398,25 @@ const OutputSection = ({
     </div>
     }
 
+    {showDetail && <>
+    <div className="row row-cols-1 mt-3 px-0">
+      <img
+        className={`
+          col
+          img-fluid  
+        `}
+        src={img1URL}
+        alt="Salary Histogram Plot"/>
+
+      <img
+        className={`
+          col
+          img-fluid  
+        `}
+        src={img2URL}
+        alt="Salary Box Plot"/>
+    </div>
+    </>}
 
 
       {/* <div className="col-12">Age:{dataFromForm.age}</div>

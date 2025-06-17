@@ -27,9 +27,9 @@ const HomePage = () => {
     }
   };
 
-  // useEffect(() => {
+  useEffect(() => {
   //   console.log(predictResult);
-  // }, [predictResult]);
+  }, [predictResult]);
 
   return (<>
     <div className="container">

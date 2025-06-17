@@ -86,7 +86,7 @@ const InputForm = ({
       job_title: jobTitle,
       years_of_experience: yearE,
     });
-  }, [age, gender, educationLevel, jobTitle, yearE]);
+  }, [age, gender, educationLevel, jobTitle, yearE, getSubmitData]);
 
   // get job title options
   const [jobOptions, setJobOptions] = useState([]);
