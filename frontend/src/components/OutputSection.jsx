@@ -23,17 +23,15 @@ const OutputSection = ({
   const [img2URL, setImg2URL] = useState('');
 
   const [showDetail, setShowDetail] = useState(false);
-
   const [isValidInput, setIsValidInput] = useState(true);
-
   const [salaryInputSame, setSalaryInputSame] = useState(true);
 
   const [rangeValue, setRangeValue] = useState(0);
 
   const [numAdd, setNumAdd] = useState(0);
-  
-  // TODO: does not work
-  // const originForm = {...dataFromForm};
+  const [dataChanged, setDataChanged] = useState(false);
+
+  const [toasts, setToasts] = useState([]);
 
   // show predict salary, updates when predictData changes
   useEffect(() => {
@@ -106,8 +104,14 @@ const OutputSection = ({
     }, 100);
     return () => clearTimeout(timeout);
   }, [predictSalary, predictData.value]);
-
+  
+  // // TODO: detect data change
+  // console.log(dataFromForm);
+  // const originForm = {...dataFromForm};
+  // console.log(originForm);
   if (!predictData) return ; //////////////////////////////////////////
+
+  
 
   // handle see detail btn click
   const handleSeeDetailClick = () => {
@@ -116,19 +120,18 @@ const OutputSection = ({
 
   // handle retrain btn click
   const handleRetrain = async () => {
-    setLoadingFunc(true);
     setErrFunc(null);
-
-    // const newData = {
-    //   ...dataFromForm,
-    //   salary: +(predictSalary.replace(/,/g, "")),
-    // }
+    addToast("Retrain Model ...", "warning")
+    
     try {
+      setLoadingFunc(true);
       const res = await retrainModel(dataFromForm);
       setPredictResult(res.result)
       console.log(res.message);
+      addToast("Retrain model successfully!", "success")
     } catch (err) {
       setErrFunc(err.message);
+      addToast("Retrain model failed!", "danger")
     } finally {
       setLoadingFunc(false);
     }
@@ -166,13 +169,16 @@ const OutputSection = ({
   const handleReset = async() => {
     // setLoadingFunc(true);
     setErrFunc(null);
+    addToast("Reset database ...", "secondary")
     try {
       const res = await resetModel();
       setNumAdd(1)
       // setPredictResult(res.result);
       console.log(res.message);
+      addToast("Reset database successfully", "success")
     } catch (err) {
       setErrFunc(err.message);
+      addToast("Reset database failed", "danger")
     } finally {
       // setLoadingFunc(false);
     }
@@ -192,16 +198,42 @@ const OutputSection = ({
 
     try {
       const res = await addData(newData);
-      setNumAdd(numAdd + 1)
       console.log(res.message);
+
+      setNumAdd(numAdd + 1)
+
+      addToast("Data added successfully!", "success");
     } catch (err) {
       setErrFunc(err.message);
     } finally {
       // setLoadingFunc(false);
     }
   };
+
+  const addToast = (message, color) => {
+    const id = Date.now() + Math.random();
+      // set toast to show model
+      setToasts(prev => [
+        ...prev,
+        {id, message, showing: true, color}
+      ]);
+
+      setTimeout(() => {
+        // set toast to hide mode, after 3000ms
+        setToasts(prev => 
+          prev.map(toast => 
+            toast.id === id ? { ...toast, showing: false } : toast
+          )
+        );
+
+        // delete toast from toasts, after 500ms
+        setTimeout(() => {
+          setToasts(prev => prev.filter(toast => toast.id !== id));
+        }, 500);
+      }, 3000);
+  };
   
-  return (<>
+  return <>
 
     {/* predict salary value */}
     <div
@@ -418,18 +450,52 @@ const OutputSection = ({
     </div>
     </>}
 
-
-      {/* <div className="col-12">Age:{dataFromForm.age}</div>
-      <div className="col-12">Gender:{dataFromForm.gender}</div>
-      <div className="col-12">
-        Education Level:{dataFromForm.education_level}
+    {/* toasts */}
+    <div
+      className={`
+        toast-container position-fixed top-0 end-0 p-3
+      `}
+      style={{ zIndex: 9999 }}
+    >
+      {toasts.map(toast => (
+      <div
+        key={toast.id}
+        className={`
+          toast fade
+          ${toast.showing ? 'slide-in' : 'slide-out'}
+          text-bg-${toast.color}
+          d-flex
+          align-items-center
+          border-0
+        `}
+        role="alert"
+        aria-live="assertive"
+        aria-atomic='true'
+      >
+        <div className="toast-body">
+          {toast.message}
+        </div>
+        <button
+          className="btn-close btn-close-white m-auto me-2"
+          type="button"
+          onClick={() => setToasts(prev => prev.filter(t => t.id !== toast.id))}
+        ></button>
       </div>
-      <div className="col-12">Job Title:{dataFromForm.job_title}</div>
-      <div className="col-12">
-        Years of Experience:{dataFromForm.years_of_experience}
-      </div> */}
+      ))}
+    </div>
 
-  </>)
+
+    {/* <div className="col-12">Age:{dataFromForm.age}</div>
+    <div className="col-12">Gender:{dataFromForm.gender}</div>
+    <div className="col-12">
+      Education Level:{dataFromForm.education_level}
+    </div>
+    <div className="col-12">Job Title:{dataFromForm.job_title}</div>
+    <div className="col-12">
+      Years of Experience:{dataFromForm.years_of_experience}
+    </div> */}
+
+  </>
 
 };
 

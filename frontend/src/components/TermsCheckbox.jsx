@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useState } from 'react'
 import TermsModal from './TermsModal'
 
 const TermsCheckbox = ({
@@ -9,27 +9,23 @@ const TermsCheckbox = ({
   invalidFeedbackText,
   setPredictResult
 }) => {
-  const checkboxRef = useRef(null);
+  const [agree, setAgree] = useState(false);
 
   return (<>
     <div className={`${className || ''}`}>
-      <div
-        className={`
-          form-check
-        `}
-      >
+      <div className={`form-check`}>
         <input
           className="form-check-input"
           type="checkbox"
-          value=""
+          checked={agree}
           id="invalidCheck"
-          ref={checkboxRef}
+          onChange={(e) => setAgree(e.target.checked)}
           required
         />
-
         <label
           className={`
             form-check-label
+            col-auto ms-1
             d-flex
             align-items-center
           `}
@@ -49,7 +45,7 @@ const TermsCheckbox = ({
             {btnText}
           </button>
         </label>
-        <div className="invalid-feedback m-0">
+        <div className="invalid-feedback">
           {invalidFeedbackText}
         </div>
 
@@ -59,18 +55,13 @@ const TermsCheckbox = ({
     <TermsModal
       id={modalId}
       handleModalSecondaryClick={() => {
-        checkboxRef.current.checked = false;
+        setAgree(false);
         setPredictResult(false);
       }}
       handleModalPrimaryClick={() => (
-        checkboxRef.current.checked = true
+        setAgree(true)
       )}
     />
-
-           {/* row
-           m-0 
-           d-flex
-           align-items-center */}
   </>)
 }
 

@@ -24,22 +24,22 @@ const InputForm = ({
   const [yearE, setYearE] = useState('8');
   const [jobOptionsLoading, setJobOptionsLoading] = useState(true);
 
+  const ageYearModalTrigger = 
+    document.getElementById('ageYearModalTrigger');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const forms = formRef.current;
-    forms.classList.add('was-validated');
+    // const forms = formRef.current;
+    formRef.current.classList.add('was-validated');
     
     // check form has select value
-    if (!forms.checkValidity()) {
+    if (!formRef.current.checkValidity()) {
       setPredictResult(false);
       return;
     }
     
-    const ageYearModalTrigger = 
-      document.getElementById('ageYearModalTrigger');
-
     // check age - year is not lower than 18
     if ((age - yearE) < 18) {
       setYearE('');
@@ -62,11 +62,26 @@ const InputForm = ({
   };
 
   const handleChange = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    // e.preventDefault();
+    // e.stopPropagation();
 
-    const forms = formRef.current;
-    if (!forms.checkValidity()) setPredictResult(false); 
+    // TODO: change
+    const { name, value } = e.target;
+    if (name === 'yearE') {
+      if ((age - value) < 18) {
+        setYearE('');
+        ageYearModalTrigger.click();
+        setYearValid(false);
+        setPredictResult(false);
+        return;
+      }
+    }
+
+    // console.log(4);
+    // const forms = formRef.current;
+    // if (!forms.checkValidity()) setPredictResult(false); 
+    // console.log(5);
+    setPredictResult(false);
   };
 
   const ageOptions = Array.from({ length: 71 }, (_, i) => (
