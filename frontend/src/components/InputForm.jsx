@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getUniqJobTitle } from "../api/dataService";
+import { getUniqJobTitle, retrainModel } from "../api/dataService";
 import SelectInput from "./SelectInput";
 import TermsCheckbox from "./TermsCheckbox";
 import AgeYearsModal from "./AgeYearsModal";
@@ -7,7 +7,13 @@ import AgeYearsModal from "./AgeYearsModal";
 const InputForm = ({
   getSubmitData,
   handleInputFormSubmit,
-  setPredictResult
+  setPredictResult,
+  addToast,
+  loadingFunc,
+  setLoadingFunc,
+  setErrFunc,
+  dataAdded,
+  setDataAdded,
 }) => {
   const formRef = useRef(null);
 
@@ -62,13 +68,11 @@ const InputForm = ({
   };
 
   const handleChange = (e) => {
-    // e.preventDefault();
-    // e.stopPropagation();
-
-    // TODO: change
-    const { name, value } = e.target;
-    if (name === 'yearE') {
-      if ((age - value) < 18) {
+    const name = e.target.id;
+    
+    if (name === 'yearESelectInput') {
+      if ((age - e.target.value) < 18) {
+        formRef.current.classList.add('was-validated');
         setYearE('');
         ageYearModalTrigger.click();
         setYearValid(false);
@@ -76,11 +80,6 @@ const InputForm = ({
         return;
       }
     }
-
-    // console.log(4);
-    // const forms = formRef.current;
-    // if (!forms.checkValidity()) setPredictResult(false); 
-    // console.log(5);
     setPredictResult(false);
   };
 
@@ -121,6 +120,32 @@ const InputForm = ({
     return () => abortController.abort()
   }, []);
 
+
+  // handle retrain btn click
+  const handleRetrain = async () => {
+    setErrFunc(null);
+    addToast("Retrain Model ...", "warning")
+    
+    try {
+      setLoadingFunc(true);
+      const res = await retrainModel({
+        age: age,
+        gender: gender,
+        education_level: educationLevel,
+        job_title: jobTitle,
+        years_of_experience: yearE,
+      });
+      setPredictResult(res.result)
+      console.log(res.message);
+      addToast("Retrain model successfully!", "success")
+      setDataAdded(false);
+    } catch (err) {
+      setErrFunc(err.message);
+      addToast("Retrain model failed!", "danger")
+    } finally {
+      setLoadingFunc(false);
+    }
+  };
 
   return (<>
     {/* headline */}
@@ -245,12 +270,27 @@ const InputForm = ({
             col
             m-0 p-0 
             d-flex
+            align-items-center
             justify-content-md-end
           `}
         >
+          {dataAdded &&
+          <div
+            className={`
+              btn btn-outline-warning
+              /p-2 /py-1 me-1
+              text-nowrap
+              ${loadingFunc && `disabled`}
+            `}
+            onClick={handleRetrain}
+          >
+            Retrain Model
+          </div>
+          }
           <button
             className={`
               btn btn-primary
+              ${loadingFunc && `disabled`}
             `}
             type="submit"
             id="predictSalaryBtn"

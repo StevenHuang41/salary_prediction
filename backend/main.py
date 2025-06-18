@@ -70,7 +70,7 @@ create_index('job_title', 'idx_job_title',
 create_index('education_level', 'idx_education_level',
              db=db_file_path)
 create_index('salary', 'idx_salary', db=db_file_path)    
-# df = query_2_df("select * from salary", db_file_path)
+df = query_2_df("select * from salary", db_file_path)
 # print(df)
     
 
@@ -91,7 +91,7 @@ async def get_job_title_data():
 
 @app.post("/api/predict")
 async def get_predict_salary(data: RowData):
-    df = query_2_df("select * from salary;", db_file_path)
+    # df = query_2_df("select * from salary;", db_file_path)
 
     data_df = pd.DataFrame([data.model_dump()])
     data_df = cleaning_data(data_df)

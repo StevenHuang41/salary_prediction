@@ -15,7 +15,7 @@ const MyCarousel = ({
         <img
           className="d-block w-100"
           src={element || null}
-          alt={alts[idx]}
+          alt={alts[idx] || null}
         />
       </Carousel.Item>
       ))}

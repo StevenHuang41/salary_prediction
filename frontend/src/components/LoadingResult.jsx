@@ -1,13 +1,13 @@
 // import "./LoadingResult.css"
 
-const LoadingResult = ({ loadingText, setStyle={}, ...props}) => {
+const LoadingResult = (props) => {
   return (<>
     <div
       className={`
         d-flex justify-content-center align-items-center
         ${props.setClass}
       `}
-      style={{color: "#A9A9A9", ...setStyle}}
+      style={{color: "#A9A9A9", ...props.setStyle}}
     >
       <div
         id="loading-spinner"
@@ -18,10 +18,11 @@ const LoadingResult = ({ loadingText, setStyle={}, ...props}) => {
           borderWidth: "3px",
         }}
         role='status'
-      ></div>
+      >
+      </div>
 
       <div id="loading-text" className={props.setTextClass}>
-        {loadingText}
+        {props.loadingText}
       </div>
 
     </div>
