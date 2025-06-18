@@ -18,16 +18,16 @@ const InputForm = ({
   const formRef = useRef(null);
 
   const [yearValid, setYearValid] = useState(true);
-  // const [age, setAge] = useState('');
-  // const [gender, setGender] = useState('');
-  // const [educationLevel, setEducationLevel] = useState('');
-  // const [jobTitle, setJobTitle] = useState('');
-  // const [yearE, setYearE] = useState('');
-  const [age, setAge] = useState('26');
-  const [gender, setGender] = useState('female');
-  const [educationLevel, setEducationLevel] = useState('Master');
-  const [jobTitle, setJobTitle] = useState('Data Scientist');
-  const [yearE, setYearE] = useState('8');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [educationLevel, setEducationLevel] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [yearE, setYearE] = useState('');
+  // const [age, setAge] = useState('26');
+  // const [gender, setGender] = useState('female');
+  // const [educationLevel, setEducationLevel] = useState('Master');
+  // const [jobTitle, setJobTitle] = useState('Data Scientist');
+  // const [yearE, setYearE] = useState('8');
   const [jobOptionsLoading, setJobOptionsLoading] = useState(true);
 
   const ageYearModalTrigger = 

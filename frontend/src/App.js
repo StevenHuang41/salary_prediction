@@ -4,11 +4,11 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 function App() {
   return (<>
-    <div
+    {/* <div
       style={{ backgroundColor: "#dddddd", minHeight: "100vh" }}
-    >
+    > */}
       <HomePage></HomePage>
-    </div>
+    {/* </div> */}
   </>);
 }
 
