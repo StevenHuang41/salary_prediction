@@ -4,7 +4,11 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 function App() {
   return (<>
-    <HomePage></HomePage>
+    <div
+      style={{ backgroundColor: "#dddddd", minHeight: "100vh" }}
+    >
+      <HomePage></HomePage>
+    </div>
   </>);
 }
 

@@ -316,7 +316,7 @@ const OutputSection = ({
       setStyle={{fontSize: "2em", height: "15vh"}}
     />
     :
-    <div className="row">
+    <div className="row mx-0">
       <div className="col d-flex justify-content-center px-0 ">
         <MyCarousel
           images={[img1URL, img2URL]}
