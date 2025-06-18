@@ -139,7 +139,6 @@ const HomePage = () => {
 };
 
 
-// TODO: backend add a svm regressor
 // TODO: make frontend test
 // TODO: learn to use docker
 // TODO: make github profolio
