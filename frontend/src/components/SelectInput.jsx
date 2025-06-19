@@ -5,7 +5,6 @@ const SelectInput = ({
   options,
   invalidFeedbackText,
   className,
-  defaultValue,
   value,
   onChange,
   children,

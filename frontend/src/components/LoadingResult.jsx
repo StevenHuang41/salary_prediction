@@ -11,7 +11,7 @@ const LoadingResult = (props) => {
     >
       <div
         id="loading-spinner"
-        className={`spinner-border`}
+        className="spinner-border"
         style={{
           height: "0.6em",
           width: "0.6em",
