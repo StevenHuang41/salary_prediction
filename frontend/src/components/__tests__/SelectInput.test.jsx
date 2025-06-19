@@ -9,9 +9,7 @@ import { vi, describe, expect, it } from 'vitest';
 
 vi.mock('../LoadingResult', () => ({
   default: () => (
-    <div data-testid="loading-container">
-      loading
-    </div>
+    <div data-testid="loading-container">loading</div>
   )
 }));
 
