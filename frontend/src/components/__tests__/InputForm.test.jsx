@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi, describe, expect, it, beforeEach } from 'vitest';
 import InputForm from '../InputForm';
 
@@ -162,6 +162,7 @@ describe("InputForm", () => {
     });
   });
 
+
   it('shows error when retrainModal fails', async () => {
     retrainModel.mockRejectedValue(new Error('Retrain model failed'));
     render(<InputForm {...baseProps} dataAdded={true} />);
@@ -193,5 +194,7 @@ describe("InputForm", () => {
 
     expect(submitBtn).toHaveClass('disabled');
     expect(retrainBtn).toHaveClass('disabled');
+
+
   });
 });
