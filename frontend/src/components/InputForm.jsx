@@ -47,13 +47,15 @@ const InputForm = ({
     }
     
     // check age - year is not lower than 18
-    if ((age - yearE) < 18) {
-      setYearE('');
-      ageYearModalTrigger.click();
-      setYearValid(false);
-      setPredictResult(false);
-      return 
-    }
+    // if ((age - yearE) < 18) {
+    //   console.log('18!!!');
+      
+    //   setYearE('');
+    //   ageYearModalTrigger.click();
+    //   setYearValid(false);
+    //   setPredictResult(false);
+    //   return 
+    // }
 
     // set data
     const data = {
@@ -76,7 +78,7 @@ const InputForm = ({
         setYearE('');
         ageYearModalTrigger.click();
         setYearValid(false);
-        setPredictResult(false);
+        // setPredictResult(false);
         return;
       }
     }
@@ -136,7 +138,7 @@ const InputForm = ({
         years_of_experience: yearE,
       });
       setPredictResult(res.result)
-      console.log(res.message);
+      // console.log(res.message);
       addToast("Retrain model successfully!", "success")
       setDataAdded(false);
     } catch (err) {
