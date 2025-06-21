@@ -1,9 +1,4 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-} from '@testing-library/react';
+import { render, screen, fireEvent, } from '@testing-library/react';
 import SelectInput from '../SelectInput'
 import { vi, describe, expect, it } from 'vitest';
 
@@ -48,6 +43,12 @@ describe('SelectInput', () => {
     expect(container).toHaveClass('custom-class');
   });
 
+  it('apply null className', () => {
+    render(<SelectInput {...baseProps} className="" />);
+    const container = document.querySelector('.form-floating');
+    expect(container).not.toHaveClass('custom-class');
+  });
+
   it('call onChange when selecting option', () => {
     render(<SelectInput {...baseProps} />);
     const select = screen.getByLabelText(baseProps.children);
@@ -86,5 +87,4 @@ describe('SelectInput', () => {
     const select = document.querySelector('.form-select')
     expect(select).toHaveAttribute('id', baseProps.selectId);
   });
-
 });

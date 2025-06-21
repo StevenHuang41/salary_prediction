@@ -9,7 +9,6 @@ const SelectInput = ({
   onChange,
   children,
   isLoadingOptions,
-  ...props
 }) => {
 
   return (<>

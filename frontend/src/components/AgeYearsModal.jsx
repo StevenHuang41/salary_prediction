@@ -2,7 +2,6 @@ import ModalTemplate from "./ModalTemplate";
 
 const AgeYearsModal = ({
   id,
-  handlePrimaryClick,
 }) => {
   return (
     <ModalTemplate
@@ -15,7 +14,6 @@ const AgeYearsModal = ({
         experience must not less than 18.
       `}
       hasSecondaryBtn={false}
-      // handleModalPrimaryClick={handlePrimaryClick}
       primaryText={'Ok'}
       cName={'modal-dialog-centered'}
 

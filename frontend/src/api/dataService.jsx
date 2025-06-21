@@ -21,61 +21,42 @@ const predictSalary = async (formData) => {
 
 const fetchSalaryHistPlot = async (salary) => {
   if (salary === '') return ;
-  try {
-    const res = await api.post(
-      "/salary_avxline_plot",
-      { salary },
-      { responseType: "blob" },
-    );
 
-    const imgURL = URL.createObjectURL(res.data);
-    return imgURL;
-  } catch (err) {
-    throw err;
-  }
+  const res = await api.post(
+    "/salary_avxline_plot",
+    { salary },
+    { responseType: "blob" },
+  );
+
+  return URL.createObjectURL(res.data);
 };
 
 const fetchSalaryBoxPlot = async (salary) => {
   if (salary === '') return ;
-  try {
-    const res = await api.post(
-      "/salary_boxplot",
-      { salary },
-      { responseType: "blob" },
-    );
+  
+  const res = await api.post(
+    "/salary_boxplot",
+    { salary },
+    { responseType: "blob" },
+  );
 
-    const imgURL = URL.createObjectURL(res.data);
-    return imgURL;
-  } catch (err) {
-    throw err;
-  }
+  const imgURL = URL.createObjectURL(res.data);
+  return imgURL;
 };
 
 const retrainModel = async (data) => {
-  try {
-    const res = await api.post('/retrain_model', data);
-    return res.data;
-  } catch (err) {
-    throw err;
-  }
+  const res = await api.post('/retrain_model', data);
+  return res.data;
 };
 
 const resetModel = async () => {
-  try {
-    const res = await api.post('/reset_model');
-    return res.data;
-  } catch (err) {
-    throw err;
-  }
+  const res = await api.post('/reset_model');
+  return res.data;
 };
 
 const addData = async (data) => {
-  try {
-    const res = await api.post('/add_data', data);
-    return res.data;
-  } catch (err) {
-    throw err;
-  }
+  const res = await api.post('/add_data', data);
+  return res.data;
 }
 
 export {

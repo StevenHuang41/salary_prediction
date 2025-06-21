@@ -1,10 +1,8 @@
 import {
   render,
   screen,
-  fireEvent,
-  waitFor,
 } from '@testing-library/react';
-import { vi, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import LoadingResult from '../LoadingResult';
 
 describe('LoadingResult', () => {
@@ -17,7 +15,7 @@ describe('LoadingResult', () => {
 
   it('apply className on container', () => {
     render(<LoadingResult {...baseProps}/>);
-    const container = document.querySelector('div[style');
+    const container = document.querySelector('div[style]');
     expect(container).toHaveClass(baseProps.setClass);
   });
 

@@ -1,21 +1,21 @@
-import React from "react";
 import { Carousel } from 'react-bootstrap';
-// import { useState } from "react";
 import './MyCarousel.css';
 
 const MyCarousel = ({
   images,
   alts,
 }) => {
+  const checkImages = images || [];
+  const checkAlts = alts || [];
 
   return (<>
     <Carousel interval={7000} controls={true} indicators={true}>
-      {images.map((element, idx) => (
+      {checkImages.map((element, idx) => (
       <Carousel.Item key={`img${idx}`}>
         <img
           className="d-block w-100"
           src={element || null}
-          alt={alts[idx] || null}
+          alt={checkAlts[idx] || null}
         />
       </Carousel.Item>
       ))}
