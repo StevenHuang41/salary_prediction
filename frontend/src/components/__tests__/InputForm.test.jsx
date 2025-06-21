@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi, describe, expect, it, beforeEach } from 'vitest';
 import InputForm from '../InputForm';
 
@@ -130,5 +130,32 @@ describe("InputForm", () => {
       expect(screen.getByText(modalText)).toBeInTheDocument();
       expect(baseProps.handleInputFormSubmit).not.toHaveBeenCalled();
     })
+  });
+
+  it('retrain button visiable when data added', async () => {
+    render(<InputForm {...baseProps} dataAdded={true} />);
+    expect(await screen.findByText('Retrain Model')).toBeInTheDocument();
+  });
+
+  it('calls retrainModel when clicking retrain button', async () => {
+    render(<InputForm {...baseProps} dataAdded={true} />);
+    const retrainBtn = await screen.findByText('Retrain Model');
+    fireEvent.click(retrainBtn);
+
+    await waitFor(() => {
+      expect(baseProps.setLoadingFunc).toHaveBeenCalled();
+      expect(baseProps.addToast)
+      .toHaveBeenCalledWith('Retrain Model ...', 'warning');
+    });
+
+    await waitFor(() => {
+      expect(baseProps.addToast)
+      .toHaveBeenCalledWith('Retrain model successfully!', 'success');
+      expect(baseProps.setLoadingFunc).toHaveBeenCalledWith(false);
+    });
+  });
+
+  it('shows error when retrainModal fails', () => {
+
   });
 });
