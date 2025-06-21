@@ -3,18 +3,21 @@ import { vi, describe, expect, it, beforeEach } from 'vitest';
 import InputForm from '../InputForm';
 
 vi.mock('../../api/dataService', () => ({
-  getUniqJobTitle: vi.fn(() => (
-    Promise.resolve({ value: ['Data Scientist', 'Data Engineer'] })
-  )),
-  retrainModel: vi.fn(() => (
-    Promise.resolve({ result: 'success', message: 'Retrain model successfully.'})
-  )),  
+  getUniqJobTitle: vi.fn(),
+  retrainModel: vi.fn(),  
 }));
 
+import { getUniqJobTitle, retrainModel } from '../../api/dataService';
 
 describe("InputForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    getUniqJobTitle
+    .mockResolvedValue({ value: ['Data Scientist', 'Data Engineer']});
+
+    retrainModel
+    .mockResolvedValue({ result: 'success', message: 'Retrain model successfully.'});
   });
 
   const baseProps = {
@@ -85,8 +88,10 @@ describe("InputForm", () => {
     const eduSelect = screen.getByLabelText(/Education level/);
     const jobSelect = await screen.findByLabelText(/Job title/);
     const yearSelect = screen.getByLabelText(/Years of experience/);
-    const submitBtn = screen.getByRole('button', { name: /Predict Salary/});
     const checkbox = document.querySelector('input[type=checkbox]');
+
+    const submitBtn = screen.getByRole('button', { name: /Predict Salary/});
+
 
     // age input invalid
     fireEvent.change(ageSelect, { target: { value: '' } });
@@ -103,32 +108,34 @@ describe("InputForm", () => {
     })
   });
 
-  it('shows modal and return submit when age - yearE < 18', async () => {
+  it('triggers modal and return submit when age - yearE < 18', async () => {
     render(<InputForm {...baseProps} />);
 
+    const formContainer = document.querySelector('form#InputForm');
     const ageSelect = screen.getByLabelText(/Age/);
     const genderSelect = screen.getByLabelText(/Gender/);
     const eduSelect = screen.getByLabelText(/Education level/);
     const jobSelect = await screen.findByLabelText(/Job title/);
     const yearSelect = screen.getByLabelText(/Years of experience/);
-    const submitBtn = screen.getByRole('button', { name: /Predict Salary/});
     const checkbox = document.querySelector('input[type=checkbox]');
-    const modalText = 'The result of Age - Years of experience must not less than 18.';
 
-    // age - yearE input invalid
-    fireEvent.change(ageSelect, { target: { value: '18' } });
-    fireEvent.change(yearSelect, { target: { value: '7' } });
+    const modalTrigger = document.querySelector('button#ageYearModalTrigger');
+    modalTrigger.click = vi.fn();
+
     fireEvent.change(genderSelect, { target: { value: 'male' } });
     fireEvent.change(eduSelect, { target: { value: 'Master' } });
     fireEvent.change(jobSelect, { target: { value: 'Data Scientist' } });
     fireEvent.click(checkbox);
 
-    fireEvent.click(submitBtn);
+    // age - yearE input invalid
+    fireEvent.change(ageSelect, { target: { value: '18' } });
+    fireEvent.change(yearSelect, { target: { value: '7' } });
+
     await waitFor(() => {
-      // expect(yearSelect).toBe('');
-      expect(screen.getByText('Choose years of experience')).toBeInTheDocument();
-      expect(screen.getByText(modalText)).toBeInTheDocument();
-      expect(baseProps.handleInputFormSubmit).not.toHaveBeenCalled();
+      expect(yearSelect.value).toBe('');
+      expect(modalTrigger.click).toHaveBeenCalled();
+      expect(formContainer).toHaveClass('was-validated');
+      expect(baseProps.setPredictResult).toHaveBeenCalledWith(false);
     })
   });
 
@@ -155,7 +162,39 @@ describe("InputForm", () => {
     });
   });
 
-  it('shows error when retrainModal fails', () => {
+
+  it('shows error when retrainModal fails', async () => {
+    retrainModel.mockRejectedValue(new Error('Retrain model failed'));
+    render(<InputForm {...baseProps} dataAdded={true} />);
+    const retrainBtn = await screen.findByText('Retrain Model');
+    fireEvent.click(retrainBtn);
+
+    await waitFor(() => {
+      expect(baseProps.setLoadingFunc).toHaveBeenCalledWith(true);
+      expect(baseProps.setErrFunc).toHaveBeenCalledWith('Retrain model failed');
+      expect(baseProps.addToast).toHaveBeenCalledWith("Retrain model failed!", "danger");
+      expect(baseProps.setLoadingFunc).toHaveBeenCalledWith(false);
+    });
+  });
+
+  it('console err message when job option fetching fail', async () => {
+    getUniqJobTitle.mockRejectedValue(new Error('api failed'));
+    render(<InputForm {...baseProps} />);
+    const logEvent = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+    await waitFor(() => {
+      expect(logEvent).toHaveBeenCalledWith(expect.any(Error))
+    })
+  });
+
+  it('correctly disabled retrain and predict button when loading', async () => {
+    render(<InputForm {...baseProps} dataAdded={true} loadingFunc={true} />);
+    const submitBtn = screen.getByRole('button', { name: /Predict Salary/});
+    const retrainBtn = await screen.findByText('Retrain Model');
+
+    expect(submitBtn).toHaveClass('disabled');
+    expect(retrainBtn).toHaveClass('disabled');
+
 
   });
 });
