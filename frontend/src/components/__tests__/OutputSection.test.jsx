@@ -14,6 +14,15 @@ vi.mock('../../api/dataService', () => ({
   addData: vi.fn(),
 }));
 
+vi.mock('../MyCarousel', () => ({
+  default: () => (
+    <div data-testid="MyCarousel">
+      <img alt='carouselImg1' />
+      <img alt='carouselImg2' />
+    </div>
+  )
+}));
+
 const baseProps = {
   dataFromForm: {
     age: 27,
@@ -24,7 +33,7 @@ const baseProps = {
   },
   predictData: {
     value: 120000,
-    model_name: 'randomForest',
+    model_name: 'randomForestRegressor',
     use_polynomial: true,
     params: {
       mae: 3000,
@@ -40,7 +49,57 @@ const baseProps = {
   setDataAdded: vi.fn(),
 };
 
-it('pass', () => {
-  render(<OutputSection {...baseProps} />);
-  expect(screen.getByRole('textbox')).toBeInTheDocument();
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+describe('OutputSection', () => {
+  it('render output components when see detail is false', async () => {
+    render(<OutputSection {...baseProps} />);
+    expect(document.querySelector('input#predict-input')).toBeInTheDocument();
+    expect(screen.getByText(/Model/)).toBeInTheDocument();
+    expect(screen.getByText(/MAE/)).toBeInTheDocument();
+
+    const seeDetailBtn = screen.getByText('see detail');
+    expect(seeDetailBtn).toBeInTheDocument();
+    expect(seeDetailBtn).toHaveClass('btn-outline-secondary');
+
+    expect(await screen.findByTestId('MyCarousel')).toBeInTheDocument();
+    expect(await screen.findByAltText('carouselImg1')).toBeInTheDocument();
+    expect(await screen.findByAltText('carouselImg2')).toBeInTheDocument();
+
+    // should not show when see detail is false
+    expect(screen.queryByRole('slider')).not.toBeInTheDocument();
+    expect(seeDetailBtn).not.toHaveClass('btn-secondary');
+    expect(screen.queryByText(/Model Name/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Mean Absolute Error/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Mean Square Error/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/#Train dataset/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/#Test dataset/)).not.toBeInTheDocument();
+    expect(screen.queryByText('Reset Database')).not.toBeInTheDocument();
+    expect(screen.queryByAltText('Salary Histogram Plot')).not.toBeInTheDocument();
+    expect(screen.queryByAltText('Salary Box Plot')).not.toBeInTheDocument();
+  });
+
+  it('render output components when see detail is true', async () => {
+    render(<OutputSection {...baseProps} showDetail={true} />);
+    expect(screen.getByRole('slider')).toBeInTheDocument();
+
+    const seeDetailBtn = screen.getByText('see detail');
+    expect(seeDetailBtn).toBeInTheDocument();
+    expect(seeDetailBtn).toHaveClass('btn-secondary');
+
+    expect(screen.getByText(/Model Name/)).toBeInTheDocument();
+    expect(screen.getByText(/Mean Absolute Error/)).toBeInTheDocument();
+    expect(screen.getByText(/Mean Square Error/)).toBeInTheDocument();
+    expect(screen.getByText(/#Train dataset/)).toBeInTheDocument();
+    expect(screen.getByText(/#Test dataset/)).toBeInTheDocument();
+    expect(screen.getByText('Reset Database')).toBeInTheDocument();
+    expect(await screen.findByAltText('Salary Histogram Plot')).toBeInTheDocument();
+    expect(await screen.findByAltText('Salary Box Plot')).toBeInTheDocument();
+  });
+  // it('return if predictData is null', () => {
+  //   render(<OutputSection {...baseProps} predictData={null} />);
+  
+  // });
 });

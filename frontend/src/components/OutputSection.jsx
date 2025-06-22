@@ -12,9 +12,7 @@ import LoadingResult from "./LoadingResult";
 const OutputSection = ({
   dataFromForm,
   predictData,
-  // setPredictResult,
   setErrFunc,
-  // setLoadingFunc,
   addToast,
   showDetail,
   setShowDetail,
@@ -30,8 +28,6 @@ const OutputSection = ({
   const [salaryInputSame, setSalaryInputSame] = useState(true);
 
   const [rangeValue, setRangeValue] = useState(0);
-
-
 
   // show predict salary, updates when predictData changes
   useEffect(() => {
@@ -320,7 +316,7 @@ const OutputSection = ({
       <div className="col d-flex justify-content-center px-0 ">
         <MyCarousel
           images={[img1URL, img2URL]}
-          alts={["Salary Axvline Plot", "Salary Box Plot"]}
+          alts={["Salary Histogram Plot", "Salary Box Plot"]}
         >
         </MyCarousel>
 
