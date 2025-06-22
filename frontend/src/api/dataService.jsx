@@ -40,8 +40,7 @@ const fetchSalaryBoxPlot = async (salary) => {
     { responseType: "blob" },
   );
 
-  const imgURL = URL.createObjectURL(res.data);
-  return imgURL;
+  return URL.createObjectURL(res.data);
 };
 
 const retrainModel = async (data) => {

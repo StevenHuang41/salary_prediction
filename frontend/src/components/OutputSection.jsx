@@ -145,7 +145,7 @@ const OutputSection = ({
   };
 
   // handel add data btn click
-  const handleAddData = async (e) => {
+  const handleAddData = async () => {
     // e.preventDefault();
     // e.stopPropagation();
     setErrFunc(null);

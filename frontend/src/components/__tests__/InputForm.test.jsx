@@ -163,7 +163,7 @@ describe("InputForm", () => {
   });
 
 
-  it('shows error when retrainModal fails', async () => {
+  it('shows error when retrainModel fails', async () => {
     retrainModel.mockRejectedValue(new Error('Retrain model failed'));
     render(<InputForm {...baseProps} dataAdded={true} />);
     const retrainBtn = await screen.findByText('Retrain Model');
