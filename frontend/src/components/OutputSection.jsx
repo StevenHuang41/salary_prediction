@@ -53,7 +53,7 @@ const OutputSection = ({
   useEffect(() => {
     // set retrain btn disability: if predictSalary is valid
     const valid = isNumber(predictSalary);
-    const previousSalary = predictData.value.toFixed(2);
+    const previousSalary = predictData?.value.toFixed(2);
     const changeSalary = (+(predictSalary.replace(/,/g, ""))).toFixed(2);
     setSalaryInputSame(valid && (previousSalary === changeSalary));
     
@@ -88,7 +88,7 @@ const OutputSection = ({
 
     }, 100);
     return () => clearTimeout(timeout);
-  }, [predictSalary, predictData.value]);
+  }, [predictSalary, predictData]);
   
 
   if (!predictData) return ; //////////////////////////////////////////

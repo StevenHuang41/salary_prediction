@@ -2,11 +2,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi, describe, expect, it, beforeEach } from 'vitest';
 import OutputSection from '../OutputSection';
 import userEvent from '@testing-library/user-event';
-// import {
-//   fetchSalaryBoxPlot,
-//   fetchSalaryHistPlot,
-//   resetModel
-// } from '../../api/dataService';
 
 vi.mock('../../api/dataService', () => ({
   fetchSalaryHistPlot: vi.fn(),
@@ -15,7 +10,12 @@ vi.mock('../../api/dataService', () => ({
   addData: vi.fn(),
 }));
 
-import { addData, resetModel } from '../../api/dataService';
+import {
+  fetchSalaryHistPlot,
+  fetchSalaryBoxPlot,
+  resetModel,
+  addData,
+} from '../../api/dataService';
 
 vi.mock('../MyCarousel', () => ({
   default: () => (
@@ -57,6 +57,10 @@ beforeEach(() => {
 });
 
 
+const clearInputAndExpectEmpty = async (input) => {
+  await userEvent.clear(input);
+  await waitFor(() => expect(input.value).toBe(''));
+};
 
 describe('OutputSection', () => {
   it('render output components when see detail is false', async () => {
@@ -104,10 +108,11 @@ describe('OutputSection', () => {
     expect(await screen.findByAltText('Salary Box Plot')).toBeInTheDocument();
   });
 
-  const clearInputAndExpectEmpty = async (input) => {
-    await userEvent.clear(input);
-    await waitFor(() => expect(input.value).toBe(''));
-  };
+  it('does not update predict input when predictData is null', () => {
+    render(<OutputSection {...baseProps} predictData={null}/>)
+    expect(document.querySelector('input#predict-input')).not.toBeInTheDocument();
+  });
+
 
   it(
     'render output components when see detail is true and change predict input',
@@ -310,4 +315,41 @@ describe('OutputSection', () => {
     })
   });
 
+  it('catch error when fetchSalaryHistPlot fail', async () => {
+    fetchSalaryHistPlot.mockRejectedValue(new Error('hist plot error'));
+    fetchSalaryBoxPlot.mockResolvedValue('test-url');
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const predictInput = document.querySelector('input#predict-input');
+    
+    clearInputAndExpectEmpty(predictInput);
+    await userEvent.type(predictInput, '123456');
+
+    await waitFor(() => {
+      expect(logSpy).toHaveBeenCalledWith(expect.any(Error));
+      expect(logSpy.mock.calls[0][0].message).toBe('hist plot error');
+    });
+
+    logSpy.mockRestore();
+  });
+
+  it('catch error when fetchSalaryBoxPlot fail', async () => {
+    fetchSalaryHistPlot.mockResolvedValue('test-url');
+    fetchSalaryBoxPlot.mockRejectedValue(new Error('box plot error'));
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const predictInput = document.querySelector('input#predict-input');
+    
+    clearInputAndExpectEmpty(predictInput);
+    await userEvent.type(predictInput, '123456');
+
+    await waitFor(() => {
+      expect(logSpy).toHaveBeenCalledWith(expect.any(Error));
+      expect(logSpy.mock.calls[0][0].message).toBe('box plot error');
+    });
+
+    logSpy.mockRestore();
+  });
 });
