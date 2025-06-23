@@ -123,7 +123,6 @@ const OutputSection = ({
   
   // handle reset database
   const handleReset = async() => {
-    // setLoadingFunc(true);
     setErrFunc(null);
     addToast("Reset database ...", "secondary")
     try {
@@ -135,9 +134,7 @@ const OutputSection = ({
     } catch (err) {
       setErrFunc(err.message);
       addToast("Reset database failed", "danger")
-    } finally {
-      // setLoadingFunc(false);
-    }
+    } 
   };
 
   // handel add data btn click
@@ -161,9 +158,7 @@ const OutputSection = ({
       addToast("Data added successfully!", "success");
     } catch (err) {
       setErrFunc(err.message);
-    } finally {
-      // setLoadingFunc(false);
-    }
+    } 
   };
 
 
@@ -288,13 +283,15 @@ const OutputSection = ({
             ${showDetail ? `btn-secondary` : `btn-outline-secondary`}
           `}
           onClick={() => {
+            if (showDetail) {
+              setRangeValue(predictData.value);
+              setPredictSalary(
+                (predictData.value).toLocaleString('en-US', {
+                  maximumFractionDigits: 2
+                })
+              );
+            }
             setShowDetail(!showDetail);
-            setRangeValue(predictData.value);
-            setPredictSalary(
-              (predictData.value).toLocaleString('en-US', {
-                maximumFractionDigits: 2
-              })
-            );
           }}
         >
           see detail

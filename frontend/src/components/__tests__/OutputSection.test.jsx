@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { vi, describe, expect, it, beforeEach, afterEach } from 'vitest';
+import { vi, describe, expect, it, beforeEach } from 'vitest';
 import OutputSection from '../OutputSection';
+import userEvent from '@testing-library/user-event';
 // import {
 //   fetchSalaryBoxPlot,
 //   fetchSalaryHistPlot,
@@ -13,6 +14,8 @@ vi.mock('../../api/dataService', () => ({
   resetModel: vi.fn(),
   addData: vi.fn(),
 }));
+
+import { addData, resetModel } from '../../api/dataService';
 
 vi.mock('../MyCarousel', () => ({
   default: () => (
@@ -52,6 +55,8 @@ const baseProps = {
 beforeEach(() => {
   vi.clearAllMocks();
 });
+
+
 
 describe('OutputSection', () => {
   it('render output components when see detail is false', async () => {
@@ -98,8 +103,175 @@ describe('OutputSection', () => {
     expect(await screen.findByAltText('Salary Histogram Plot')).toBeInTheDocument();
     expect(await screen.findByAltText('Salary Box Plot')).toBeInTheDocument();
   });
-  // it('return if predictData is null', () => {
-  //   render(<OutputSection {...baseProps} predictData={null} />);
-  
-  // });
+
+  const clearInputAndExpectEmpty = async (input) => {
+    await userEvent.clear(input);
+    await waitFor(() => expect(input.value).toBe(''));
+  };
+
+  it(
+    'render output components when see detail is true and change predict input',
+    async () => {
+      render(<OutputSection {...baseProps} showDetail={true} />);
+
+      const predictInput = document.querySelector('input#predict-input');
+
+      // clear input 
+      clearInputAndExpectEmpty(predictInput);
+      // input is not a valid number ('')
+      expect(screen.getByText('Return Input')).toBeInTheDocument();
+      expect(screen.queryByText('Add Data')).not.toBeInTheDocument();
+
+      await userEvent.type(predictInput, '123');
+      // input is a valid number ('123')
+      expect(screen.getByText('Return Input')).toBeInTheDocument();
+      expect(screen.getByText('Add Data')).toBeInTheDocument();
+    }
+  );
+
+
+  it('update predictSalary when input change via textbox', async () => {
+    render(<OutputSection {...baseProps} />);
+    const predictInput = document.querySelector('input#predict-input');
+
+    // clear textbox
+    clearInputAndExpectEmpty(predictInput);
+
+    await userEvent.type(predictInput, '12345');
+    expect(predictInput.value).toBe('12345');
+  });
+
+  it('update predictSalary and rangeValue via textbox (showDetail)', async () => {
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const predictInput = document.querySelector('input#predict-input');
+
+    // clear textbox
+    clearInputAndExpectEmpty(predictInput);
+
+    await userEvent.type(predictInput, '119000');
+    expect(predictInput.value).toBe('119000');
+    expect(screen.getByRole('slider').value).toBe('119000');
+    
+    // clear textbox
+    clearInputAndExpectEmpty(predictInput);
+
+    await userEvent.type(predictInput, '12345');
+    expect(predictInput.value).toBe('12345');
+    expect(screen.getByRole('slider').value).toBe('117000');
+
+    // clear textbox
+    clearInputAndExpectEmpty(predictInput);
+
+    await userEvent.type(predictInput, '999999');
+    expect(predictInput.value).toBe('999999');
+    expect(screen.getByRole('slider').value).toBe('123000');
+  });
+
+  it('change predict input value (en-US) when toggle rangeBar', async () => {
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+
+    const predictInput = document.querySelector('input#predict-input');
+    const rangeBar = screen.getByRole('slider');
+
+    fireEvent.change(rangeBar, { target: { value: '121000' } });
+    expect(rangeBar).toHaveValue('121000');
+    expect(predictInput).toHaveValue('121,000');
+  });
+
+  it('undo the value of predict input by clicking Return Input btn', async () => {
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const predictInput = document.querySelector('input#predict-input');
+    
+    // change input to ''
+    clearInputAndExpectEmpty(predictInput);
+
+    const returnInputBtn = screen.getByText('Return Input');
+    expect(returnInputBtn).toBeInTheDocument();
+
+    await userEvent.click(returnInputBtn);
+    expect(predictInput.value).toBe('120,000');
+
+    expect(screen.queryByText('Return Input')).not.toBeInTheDocument();
+  })
+
+  it('undo the predict input when closing see detail btn', async () => {
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const predictInput = document.querySelector('input#predict-input');
+    const seeDetailBtn = screen.getByText('see detail');
+
+    // change input to ''
+    clearInputAndExpectEmpty(predictInput);
+
+    await userEvent.click(seeDetailBtn);
+    await waitFor(() => {
+      expect(predictInput.value).toBe('120,000');
+    })
+  });
+
+  it('reset database by clicking Reset Database btn (resolve)', async () => {
+    resetModel.mockResolvedValue({
+      data: {
+        status: 'sucess',
+        message: 'Reset Database successfully.',
+      }
+    })
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const resetDatabaseBtn = screen.getByText('Reset Database');
+    await userEvent.click(resetDatabaseBtn);
+    await waitFor(() => {
+      expect(baseProps.setErrFunc).toHaveBeenCalled();
+      expect(baseProps.addToast).toHaveBeenCalled(1);
+
+      expect(baseProps.addToast)
+      .toHaveBeenCalledWith("Reset database ...", "secondary");
+
+      expect(resetModel).toHaveBeenCalled();
+      expect(baseProps.setDataAdded).toHaveBeenCalledWith(true);
+      expect(baseProps.addToast).toHaveBeenCalled(2);
+
+      expect(baseProps.addToast)
+      .toHaveBeenCalledWith("Reset database successfully", "success");
+    })
+  });
+
+  it('reset database by clicking Reset Database btn (reject)', async () => {
+    resetModel.mockRejectedValue({
+      data: {
+        status: 'fail',
+        message: 'Reset Database failed.',
+      }
+    });
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const resetDatabaseBtn = screen.getByText('Reset Database');
+    await userEvent.click(resetDatabaseBtn);
+    await waitFor(() => {
+      expect(baseProps.setErrFunc).toHaveBeenCalled(1);
+      expect(baseProps.addToast).toHaveBeenCalled(1);
+
+      expect(baseProps.addToast)
+      .toHaveBeenCalledWith("Reset database ...", "secondary");
+
+      expect(resetModel).toHaveBeenCalled();
+      expect(baseProps.setDataAdded).not.toHaveBeenCalledWith(true);
+      expect(baseProps.addToast).toHaveBeenCalled(1);
+
+      expect(baseProps.setErrFunc).toHaveBeenCalled(2);
+      expect(baseProps.addToast)
+      .toHaveBeenCalledWith("Reset database failed", "danger");
+    });
+  });
+
+  it('add data to database by clicking Add Data btn (resolve)', async () => {
+    addData.mockResolvedValue({
+      data: {
+        status: 'sucess',
+        message: 'Add data to database.'
+      }
+    });
+
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const addDataBtn = screen.getByText('Add Data');
+    expect()
+
+  });
 });
