@@ -150,8 +150,8 @@ const OutputSection = ({
     // console.log(newData);
 
     try {
-      const res = await addData(newData);
-      console.log(res.message);
+      await addData(newData);
+      // console.log(res.message);
 
       setDataAdded(true);
 

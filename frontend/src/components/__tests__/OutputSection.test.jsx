@@ -245,7 +245,7 @@ describe('OutputSection', () => {
     const resetDatabaseBtn = screen.getByText('Reset Database');
     await userEvent.click(resetDatabaseBtn);
     await waitFor(() => {
-      expect(baseProps.setErrFunc).toHaveBeenCalled(1);
+      expect(baseProps.setErrFunc).toHaveBeenCalled(null);
       expect(baseProps.addToast).toHaveBeenCalled(1);
 
       expect(baseProps.addToast)
@@ -268,10 +268,46 @@ describe('OutputSection', () => {
         message: 'Add data to database.'
       }
     });
-
     render(<OutputSection {...baseProps} showDetail={true}/>);
-    const addDataBtn = screen.getByText('Add Data');
-    expect()
+    const predictInput = document.querySelector('input#predict-input');
+    // // change input to ''
+    clearInputAndExpectEmpty(predictInput);
+    await userEvent.type(predictInput, '123,456');
 
+    const addDataBtn = screen.getByText('Add Data');
+    await userEvent.click(addDataBtn);
+    await waitFor(() => {
+      expect(baseProps.setErrFunc).toHaveBeenCalled(null);
+      expect(addData).toHaveBeenCalled();
+      expect(baseProps.setDataAdded).toHaveBeenCalled();
+      expect(baseProps.addToast)
+      .toHaveBeenCalledWith("Data added successfully!", "success");
+    })
   });
+
+  it('add data to database by clicking Add Data btn (reject)', async () => {
+    addData.mockRejectedValue({
+      data: {
+        status: 'fail',
+        message: 'Data does not add to Database.'
+      }
+    });
+    render(<OutputSection {...baseProps} showDetail={true}/>);
+    const predictInput = document.querySelector('input#predict-input');
+    // // change input to ''
+    clearInputAndExpectEmpty(predictInput);
+    await userEvent.type(predictInput, '123,456');
+
+    const addDataBtn = screen.getByText('Add Data');
+    await userEvent.click(addDataBtn);
+    await waitFor(() => {
+      expect(baseProps.setErrFunc).toHaveBeenCalledWith(null);
+      expect(addData).toHaveBeenCalled();
+      expect(baseProps.setDataAdded).not.toHaveBeenCalled();
+      expect(baseProps.addToast)
+      .not.toHaveBeenCalledWith("Data added successfully!", "success");
+      expect(baseProps.setErrFunc).toHaveBeenCalled(2);
+    })
+  });
+
 });
