@@ -91,7 +91,6 @@ describe('HomePage', () => {
     const submitBtn = screen.getByText('Predict Salary');
     await userEvent.click(submitBtn);
 
-    screen.debug();
     expect(screen.queryByText(/predictSalary fail, backend error./))
     .toBeInTheDocument();
 

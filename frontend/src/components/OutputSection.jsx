@@ -21,8 +21,8 @@ const OutputSection = ({
 
   const [predictSalary, setPredictSalary] = useState('');
 
-  const [img1URL, setImg1URL] = useState('');
-  const [img2URL, setImg2URL] = useState('');
+  const [img1URL, setImg1URL] = useState(null);
+  const [img2URL, setImg2URL] = useState(null);
 
   const [isValidInput, setIsValidInput] = useState(true);
   const [salaryInputSame, setSalaryInputSame] = useState(true);
@@ -303,7 +303,7 @@ const OutputSection = ({
 
     {/* Carousel */}
     {!showDetail && <>
-    {img1URL === '' ?
+    {img1URL === null ?
     <LoadingResult
       loadingText={`Loading carousel images`}
       setStyle={{fontSize: "2em", height: "15vh"}}

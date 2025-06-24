@@ -20,8 +20,8 @@ import {
 vi.mock('../MyCarousel', () => ({
   default: () => (
     <div data-testid="MyCarousel">
-      <img alt='carouselImg1' />
-      <img alt='carouselImg2' />
+      <img src={null} alt='carouselImg1' />
+      <img src={null} alt='carouselImg2' />
     </div>
   )
 }));
@@ -215,10 +215,8 @@ describe('OutputSection', () => {
 
   it('reset database by clicking Reset Database btn (resolve)', async () => {
     resetModel.mockResolvedValue({
-      data: {
-        status: 'sucess',
-        message: 'Reset Database successfully.',
-      }
+      status: 'sucess',
+      message: 'Reset Database successfully.',
     })
     render(<OutputSection {...baseProps} showDetail={true}/>);
     const resetDatabaseBtn = screen.getByText('Reset Database');
@@ -241,10 +239,8 @@ describe('OutputSection', () => {
 
   it('reset database by clicking Reset Database btn (reject)', async () => {
     resetModel.mockRejectedValue({
-      data: {
-        status: 'fail',
-        message: 'Reset Database failed.',
-      }
+      status: 'fail',
+      message: 'Reset Database failed.',
     });
     render(<OutputSection {...baseProps} showDetail={true}/>);
     const resetDatabaseBtn = screen.getByText('Reset Database');
