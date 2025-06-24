@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { vi, describe, expect, it, beforeEach } from 'vitest';
 import HomePage from '../HomePage';
 
@@ -98,5 +98,5 @@ describe('HomePage', () => {
     expect(screen.queryByText('Loading ...')).not.toBeInTheDocument();
   });
 
-  
+
 });
