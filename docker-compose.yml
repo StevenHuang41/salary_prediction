@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    image: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - share-data:/backend/best_performance
+    tty: true
+    stdin_open: true
+
+volumes:
+  share-data:

@@ -1,4 +1,5 @@
 from .data_preprocessing import preprocess_data
+from .data_cleansing import clean_directory
 
 import os
 import shutil
@@ -316,12 +317,13 @@ def model_select(X_train, y_train, X_test, y_test, store_file) -> str:
     best_model_name = min(models_storage.keys(),
                           key=lambda x: models_storage[x]['mae'])
 
-    # if best_performance dir exist, remove it
+    # if best_performance dir is not empty, clear it
     best_performance_dir = os.path.join(os.getcwd(), f'{store_file}')
     try :
-        if os.path.exists(best_performance_dir):
-            shutil.rmtree(best_performance_dir)
-    except FileNotFoundError:
+        if os.listdir(best_performance_dir) != []:
+            # shutil.rmtree(store_file)
+            clean_directory(store_file)
+    except :
         pass 
 
     # create best_performance dir

@@ -1,4 +1,4 @@
-from .data_cleansing import cleaning_data
+from .data_cleansing import cleaning_data, clean_directory
 from .data_spliting import spliting_data
 from .data_preprocessing import preprocess_data
 from .data_training import model_select
@@ -25,18 +25,23 @@ def predict_salary(
 
     if restart:
         try :
-            shutil.rmtree(f'{store_file}')
+            # shutil.rmtree(f'{store_file}')
+            clean_directory(store_file)
         except FileNotFoundError:
             pass
 
-    if not os.path.exists(best_performance_dir):
+    try :
+        best_performance_dir_list = os.listdir(best_performance_dir)
+    except Exception:
+        best_performance_dir_list = []
+
+    if best_performance_dir_list == []:
         # missing best performance, process model selection
         model_name, model = model_select(
             X_train, y_train, X_test, y_test, best_performance_dir
         )
 
     else :
-        best_performance_dir_list = os.listdir(best_performance_dir)
         model_name = best_performance_dir_list[0].split('.')[0]
 
         model_postfix = '.keras' if 'NN' in model_name else '.joblib'

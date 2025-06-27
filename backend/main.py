@@ -57,9 +57,9 @@ class SalaryInput(BaseModel):
 from database.database import (
     init_database, create_index, query_2_df, insert_record
 )
-root_dir_path = os.getcwd().split('/backend')[0]
-backend_dir_path = os.path.join(root_dir_path, 'backend')
-database_dir_path = os.path.join(backend_dir_path, 'database')
+# root_dir_path = os.getcwd().split('/backend')[0]
+# backend_dir_path = os.path.join(root_dir_path, 'backend')
+database_dir_path = os.path.join(os.getcwd(), 'database')
 db_file_path = os.path.join(database_dir_path, 'salary_prediction.db')
 init_database(db_file_path)
 create_index('job_title', 'idx_job_title',
@@ -199,3 +199,13 @@ if __name__ == "__main__":
 
 ## TODO: learn how to use pydantic and typing and use in my_package
 ## TODO: setup splite database
+
+"""
+{
+  "age": 30,
+  "gender": "male",
+  "education_level": "master",
+  "job_title": "Data Scientist",
+  "years_of_experience": 3
+}
+"""

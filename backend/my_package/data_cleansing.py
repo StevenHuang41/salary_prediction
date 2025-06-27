@@ -1,3 +1,5 @@
+import os
+import shutil
 import pandas as pd
 import numpy as np
 
@@ -129,6 +131,19 @@ def cleaning_data(df: pd.DataFrame,
     # print("... Finishing Cleansing Process ...", end='\n\n')
 
     return df
+
+
+## remove every file in a dir
+def clean_directory(dir_path: str) -> None:
+    for file in os.listdir(dir_path):
+        file_path = os.path.join(dir_path, file)
+        try :
+            if not os.path.isdir(file_path):
+                os.remove(file_path)
+            else :
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print(f"Failed to delete {file_path}, {e}")
 
 
 if __name__ == "__main__":
