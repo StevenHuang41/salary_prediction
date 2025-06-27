@@ -10,5 +10,23 @@ services:
     tty: true
     stdin_open: true
 
+  frontend_test:
+    build: ./frontend
+    image: frontend_test
+    command: ["npm", "run", "test"]
+    depends_on:
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+    image: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+      - frontend_test
+
+
 volumes:
   share-data:
