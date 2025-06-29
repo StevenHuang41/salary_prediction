@@ -10,7 +10,6 @@ uv.lock
 
 t.ipynb
 images/
-best_performance/
 
 *.pyc
 *.pyo

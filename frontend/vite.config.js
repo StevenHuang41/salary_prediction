@@ -7,6 +7,7 @@ export default defineConfig({
     host: true, // same as 0.0.0.0
     // host: '192.168.1.3',
     port: 3000,
+    strictPort: true
   },
   test: {
     environment: 'jsdom',

@@ -6,16 +6,16 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - share-data:/backend/best_performance
+      - ./best_performance:/backend/best_performance
     tty: true
     stdin_open: true
+    depends_on:
+      - frontend
 
   frontend_test:
     build: ./frontend
     image: frontend_test
     command: ["npm", "run", "test"]
-    depends_on:
-      - backend
 
   frontend:
     build:
@@ -24,9 +24,4 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
       - frontend_test
-
-
-volumes:
-  share-data:

@@ -340,6 +340,10 @@ const OutputSection = ({
       </div>
       </>}
 
+      {/* <div className="col">
+        "{import.meta.env.VITE_IP_ADDRESS}"
+      </div> */}
+
       <div className="col">
         Mean Square Error: {(predictData.params.mse).toFixed(2)}
       </div>

@@ -110,13 +110,13 @@ model_configurations = [
         'name': 'randomForestRegressor_model',
         'estimator': RandomForestRegressor(n_jobs=-1),
         'search_space': {
-            'n_estimators': Integer(50, 100),
+            'n_estimators': Integer(20, 80),
             'criterion': Categorical(['squared_error', 'absolute_error']),
             'max_depth': Integer(5, 15),
             'min_samples_split': Integer(2, 10),
             'min_samples_leaf': Integer(1, 10),
         },
-        'iter': 10,
+        'iter': 8,
     },
     {
         'name': 'XGBRFRegressor_model',

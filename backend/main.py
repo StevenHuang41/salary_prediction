@@ -4,9 +4,6 @@ from pydantic import BaseModel
 from typing import Optional
 import pandas as pd
 import os
-import shutil
-import numpy as np
-import sqlite3
 
 from my_package.data_cleansing import cleaning_data
 from my_package.data_extract_func import get_uniq_job_title
@@ -15,18 +12,34 @@ from my_package.data_visualization import (
     salary_hist_image, salary_box_image
 )
 
+try :
+    with open('.env.local', 'r') as f:
+        for line in f:
+            if 'http' in line:
+                local_ip_address = line.strip()
+                break
+except :
+    local_ip_address = 'http://127.0.0.1'
+finally :
+    local_ip_address_port = local_ip_address + ':3000'
+
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://192.168.1.3:3000",
-        "http://localhost:3000"
+        f"{local_ip_address_port}",
+        "http://localhost:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+print(f"CORS allow IP:")
+print(f"  http://localhost:3000")
+print(f"  {local_ip_address_port}")
+
 
 class RowData(BaseModel):
     age: int
