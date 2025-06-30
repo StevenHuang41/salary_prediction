@@ -1,18 +1,28 @@
+.dockerignore
 Dockerfile
-__pycache__
+.gitignore
+
+.venv/
+
+__pycache__/
 .DS_Store
+
 README.md
 
-pyprojects.toml
-uv.lock
-.venv
-.python-version
+bayesianOptimization_NN_model/
+best_performance/
+images/
 
 t.ipynb
-images/
 
 *.pyc
 *.pyo
 *.pyd
 .env
 .git
+
+# database/
+database/*
+!database/database.py
+!database/Salary_Data.csv
+!database/salary_prediction.db

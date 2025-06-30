@@ -2,9 +2,8 @@
 
 .venv/
 
-# best_performance/
+best_performance/
 bayesianOptimization_NN_model/
-
 images/
 
 t.ipynb

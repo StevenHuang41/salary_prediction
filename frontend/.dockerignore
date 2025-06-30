@@ -1,7 +1,9 @@
-Dockerfile
 .dockerignore
+Dockerfile
 .gitignore
 
 README.md
-build
-node_modules
+
+build/
+coverage/
+node_modules/
