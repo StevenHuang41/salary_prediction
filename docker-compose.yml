@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./best_performance:/backend/best_performance
+      - ./backend/best_performance:/backend/best_performance
     tty: true
     stdin_open: true
 
