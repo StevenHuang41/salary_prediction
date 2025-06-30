@@ -1,9 +1,9 @@
-import api from "./axiosInstance";
+import { api0, api1 } from "./axiosInstance";
 
 
 const getUniqJobTitle = async () => {
   try {
-    const res = await api.get('/get_uniq_job_title');
+    const res = await api1.get('/get_uniq_job_title');
     return res.data;
   } catch (err) {
     console.error("Error fetching data:", err.message);
@@ -12,7 +12,7 @@ const getUniqJobTitle = async () => {
 
 const predictSalary = async (formData) => {
   try {
-    const res = await api.post('/predict', formData);
+    const res = await api0.post('/predict', formData);
     return res.data;
   } catch (err) {
     console.error("Error predicting salary:", err.message);
@@ -22,7 +22,7 @@ const predictSalary = async (formData) => {
 const fetchSalaryHistPlot = async (salary) => {
   if (salary === '') return ;
 
-  const res = await api.post(
+  const res = await api1.post(
     "/salary_avxline_plot",
     { salary },
     { responseType: "blob" },
@@ -34,7 +34,7 @@ const fetchSalaryHistPlot = async (salary) => {
 const fetchSalaryBoxPlot = async (salary) => {
   if (salary === '') return ;
   
-  const res = await api.post(
+  const res = await api1.post(
     "/salary_boxplot",
     { salary },
     { responseType: "blob" },
@@ -44,17 +44,17 @@ const fetchSalaryBoxPlot = async (salary) => {
 };
 
 const retrainModel = async (data) => {
-  const res = await api.post('/retrain_model', data);
+  const res = await api0.post('/retrain_model', data);
   return res.data;
 };
 
 const resetModel = async () => {
-  const res = await api.post('/reset_model');
+  const res = await api0.post('/reset_model');
   return res.data;
 };
 
 const addData = async (data) => {
-  const res = await api.post('/add_data', data);
+  const res = await api0.post('/add_data', data);
   return res.data;
 }
 

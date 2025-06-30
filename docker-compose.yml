@@ -1,14 +1,22 @@
 services:
-  backend:
+  training:
     build:
       context: ./backend
-    image: backend
+    image: backend_training
     ports:
       - "8000:8000"
     volumes:
       - ./backend/best_performance:/backend/best_performance
     tty: true
     stdin_open: true
+
+  backend:
+    build:
+      context: ./backend
+    image: backend
+    ports:
+      - "8001:8001"
+    command: ["uv", "run", "main.py", "8001"]
 
   frontend_test:
     build: ./frontend

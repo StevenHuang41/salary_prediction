@@ -206,8 +206,12 @@ async def get_salary_boxplot(data: SalaryInput):
 
 if __name__ == "__main__":
     import uvicorn
+    import sys
 
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    if sys.argv[1] == "8000":
+        uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    else :
+        uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
 
 
 ## TODO: learn how to use pydantic and typing and use in my_package
