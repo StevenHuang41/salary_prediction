@@ -9,8 +9,6 @@ services:
       - ./best_performance:/backend/best_performance
     tty: true
     stdin_open: true
-    depends_on:
-      - frontend
 
   frontend_test:
     build: ./frontend

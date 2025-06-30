@@ -1,14 +1,14 @@
-FROM python:3.12-slim
+FROM python:3.12.3-slim-bullseye
 
 WORKDIR /backend
 
 RUN pip install --upgrade pip 
 # RUN pip install --no-cache-dir uv
 
-RUN apt-get update 
-RUN apt-get install -y libgomp1 
-RUN apt-get install -y libsqlite3-dev 
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y libgomp1 libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
 # COPY pyproject.toml uv.lock ./
@@ -26,4 +26,4 @@ EXPOSE 8000
 CMD ["uvicorn", "main:app", "--host", \
     "0.0.0.0", "--port", "8000"]
 # CMD ["uv", "run", "main.py"]
-# CMD ["python", "main.py"]
+# CMD ["python", "-u", "main.py"]
