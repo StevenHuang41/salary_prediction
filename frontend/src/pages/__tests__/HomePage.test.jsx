@@ -97,6 +97,4 @@ describe('HomePage', () => {
 
     expect(screen.queryByText('Loading ...')).not.toBeInTheDocument();
   });
-
-
 });
