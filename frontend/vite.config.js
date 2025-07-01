@@ -13,5 +13,16 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/setupTests.js',
     globals: true,
+    coverage: {
+      exclude: [
+        'build/**',
+        'node_modules/**',
+        'src/index.js',
+        'src/main.jsx',
+        'src/reportWebVitals.js',
+        'eslint.config.js',
+        'vite.config.js',
+      ]
+    }
   }
 })

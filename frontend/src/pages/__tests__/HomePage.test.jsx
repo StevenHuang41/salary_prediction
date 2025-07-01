@@ -45,8 +45,6 @@ vi.mock('../../components/Toast', () => ({
   )
 }));
 
-// import OutputSection from '../../components/OutputSection';
-
 vi.mock('../../api/dataService', () => ({
   predictSalary: vi.fn()
 }));
@@ -67,20 +65,23 @@ describe('HomePage', () => {
     expect(screen.getByTestId('MyToast')).toBeInTheDocument();
   });
 
-  it('show loading when form submitted', async () => {
-    predictSalary.mockImplementation(async () => {
-      await new Promise(res => setTimeout(res, 10));
-      return {};
-    });
+  it(
+    'show loading when form submitted, and disappear after loading',
+    async () => {
+      predictSalary.mockImplementation(async () => {
+        await new Promise(res => setTimeout(res, 10));
+        return {};
+      });
 
-    render(<HomePage />);
-    const submitBtn = screen.getByText('Predict Salary');
-    await userEvent.click(submitBtn);
+      render(<HomePage />);
+      const submitBtn = screen.getByText('Predict Salary');
+      await userEvent.click(submitBtn);
 
-    expect(await screen.findByText('Loading ...')).toBeInTheDocument();
-    expect(await screen.findByText('OutputSection')).toBeInTheDocument();
-    expect(screen.queryByText('Loading ...')).not.toBeInTheDocument();
-  });
+      expect(await screen.findByText('Loading ...')).toBeInTheDocument();
+      expect(await screen.findByText('OutputSection')).toBeInTheDocument();
+      expect(screen.queryByText('Loading ...')).not.toBeInTheDocument();
+    }
+  );
 
   it('show loading err when predictSalary has error', async () => {
     predictSalary.mockImplementation(async () => {
