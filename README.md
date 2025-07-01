@@ -86,14 +86,17 @@ backend/
     cd salary_prediction
     ```  
 
+---
+
 2. Start the app with `setup`
     ```sh
     ./setup -b
     ```  
-    see './setup -h' for further imformations  
+    see './setup --help' for further imformations  
     checkout [without docker setup](#overview)
 
-3. Access frontend page via browser
+3. Access frontend page via browser  
+example:
 ![setup ip information](./readme_images/setup_ip_image)  
     ```https
     http://[local IP address]:3000/
@@ -102,6 +105,7 @@ backend/
 
     you can now start entering informations and predict your salary!
     
+
 
 <!-- *italics*
 
