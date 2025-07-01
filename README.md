@@ -71,31 +71,41 @@ backend/
 
 ## Installation
 
-1. Clone the repo:  
-    **ssh:**  
-    ```sh
-    git clone git@github.com:StevenHuang41/salary_prediction.git
-    ```  
-    **http:**  
-    ```sh
-    git clone https://github.com/StevenHuang41/salary_prediction.git
-    ```  
-    ---
-    then do  
-    ```sh
-    cd salary_prediction
-    ```  
+### 1. Clone the repo:  
+
+```sh
+# ssh
+git clone git@github.com:StevenHuang41/salary_prediction.git
+```
+
+Alternatively,  
+
+```sh
+# http  
+git clone https://github.com/StevenHuang41/salary_prediction.git
+``` 
+then do,  
+```sh
+cd salary_prediction
+```  
 
 ---
 
-2. Start the app with `setup`
-    ```sh
-    ./setup -b
-    ```  
-    see './setup --help' for further imformations  
-    checkout [without docker setup](#overview)
+### 2. frontend Installation:
+```sh
+cd frontend
+npm install
+```  
 
-3. Access frontend page via browser  
+---
+
+### 3. backend Installation:
+```sh
+cd backend
+pip install -r requirements.txt
+```  
+
+<!-- 3. Access frontend page via browser  
 example:
 ![setup ip information](./readme_images/setup_ip_image)  
     ```https
@@ -104,8 +114,14 @@ example:
     change `[local IP address]` to the value shown in terminal  
 
     you can now start entering informations and predict your salary!
-    
+     -->
 
+<!-- 2. Start the app with `setup`
+    ```sh
+    ./setup -b
+    ```  
+    see './setup --help' for further imformations  
+    checkout [without docker setup](#overview) -->
 
 <!-- *italics*
 
