@@ -1,7 +1,10 @@
-# Salary Prediction
+# 📈 Salary Prediction
 
-A full stack web application that predicts your salary
-based on user input using machine learning.
+A full-stack web application that predicts your salary
+based on user input using machine learning. Includes retrianing,
+data visualization, and dynamic prediction tuning.
+
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 <!-- ## Motivation -->
 
@@ -82,17 +85,17 @@ backend/
 
 ## Installation
 
-### 1. Clone the repo:  
+### • Clone the repo:  
 
+ssh:
 ```sh
-# ssh:
 git clone git@github.com:StevenHuang41/salary_prediction.git
 ```
 
-Alternatively,  
+Alternatively, you can also do  
 
+http:
 ```sh
-# http:
 git clone https://github.com/StevenHuang41/salary_prediction.git
 ``` 
 then do,  
@@ -106,43 +109,43 @@ cd salary_prediction
 
 1. [Manual Installation](#2-frontend-installation) (without docker)
 
-2. [Docker](#docker) (Recommended)
+2. [Docker Installation & Setup](#docker) (Recommended)
 
 ---
 
-### 2. frontend Installation:
-```sh
-cd frontend
-npm install
-cd ..
-```  
+### • Manual Installation
 
----
+- #### Frontend Installation:
+    ```sh
+    cd frontend
+    npm install
+    cd ..
+    ```  
 
-### 3. backend Installation:
-```sh
-cd backend
-pip install -r requirements.txt
-```  
+- #### Backend Installation:
+    ```sh
+    cd backend
+    pip install -r requirements.txt
+    ```  
 
-Alternatively, install uv first
-```sh
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+    Alternatively, install uv first
+    ```sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
 
-then do,
+    then do,
 
-```sh
-cd backend
-uv sync --locked # faster than pip install
-cd ..
-```
+    ```sh
+    cd backend
+    uv sync --locked # faster than pip install
+    cd ..
+    ```
 
 ## Usage 
 
 ### 1. Setup 
 
-use `setup` to create .env.local files
+use `setup` to get __local IP address__ and create `.env.local` files
 ```sh
 ./setup
 ```
@@ -206,7 +209,7 @@ open 4 terminals, and run each command respectively.
 
 ---
 
-### Docker 
+### • Docker Installation & Setup
 
 Docker handles packages installation & setup, which is much easier than manual installation.
 
@@ -301,13 +304,10 @@ click **Reset Database** button, clean the database from added data
 
 ## License
 
-This project is licensed under the ... License.
+This project is licensed under the MIT License.  
 See the [LICENSE](LICENSE) file for details.
 
 ## Credits
 
-Thanks to all contributors!
+Thanks to all contributors!  
 See the [contributors list](https://github.com/StevenHuang41/salary_prediction/graphs/contributors)
-<!-- 
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. -->
