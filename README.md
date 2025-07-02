@@ -13,6 +13,7 @@ based on user input using machine learning.
     - [frontend](#frontend)
     - [backend](#backend)
 - [Installation](#installation)
+    - [Installation & Setup Methods](#installation--setup-methods)
 
 ## Features
 
@@ -38,10 +39,12 @@ based on user input using machine learning.
 ```sh
 .
 ├── README.md
+├── docker-compose.yml
+├── setup
 ├── frontend/
 ├── backend/
-├── docker-compose.yml
-└── setup
+├── readme_images/
+└── .gitignore
 ```
 
 ### Frontend
@@ -57,7 +60,8 @@ frontend/
 ├── index.html
 ├── src/
 ├── public/
-└── node_modules/
+├── .gitignore
+└── .dockerignore
 ```
 
 ### Backend
@@ -71,7 +75,9 @@ backend/
 ├── pyproject.toml
 ├── requirements.txt
 ├── my_package/
-└── database/
+├── database/
+├── .gitignore
+└── .dockerignore
 ```
 
 ## Installation
@@ -228,8 +234,13 @@ wait until all servers are successfully built
 
 - **Training:** <http://localhost:8000/docs>
 
-expected result:
+expected result:  
+- frontend:
 ![browser frontend](./readme_images/browser_frontend.png)
+
+- backend:
+![browser backend](./readme_images/browser_backend.png)
+
 
 
 ---
@@ -243,19 +254,60 @@ replace `[local IP address]` with your local machine [IP address](#1-setup)
 expected result:
 ![mobile frontend](./readme_images/mobile_frontend.png)
 
-<!-- ## Technologies
 
-- **Back-end**: Django, Django REST Framework, SQLite
-- **Front-end**: React, Redux, Axios
-  
+### 4. App Instructions
+
+after entering informations, press the **Predict** Salary button
+![instruction1](./readme_images/instruction1.png)
+
+click **see detail** button for further functions
+![instruction2](./readme_images/instruction2.png)
+
+change predict value by keyborad
+![instruction3](./readme_images/instruction3.png)
+
+alternatively, change predict value by range bar
+![instruction5](./readme_images/instruction5.png)
+
+click **Add Data** button
+![instruction4](./readme_images/instruction4.png)
+
+click **Retrain Model** button to retrain model based on changed predict value
+![instruction6](./readme_images/instruction6.png)
+
+result of retraining model, (predict value larger)
+![instruction7](./readme_images/instruction7.png)
+
+click **Reset Database** button, clean the database from added data
+![instruction8](./readme_images/instruction8.png)
+
+
 ## Contribution
 
 1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -am 'Add some feature'`).
-4. Push to the branch (`git push origin feature-branch`).
+2. Create a new branch
+    ```sh
+    git switch -c feature-branch
+    ```
+3. Commit your changes
+    ```sh
+    git commit -m "Add some feature"
+    ```
+4. Push to the branch
+    ```sh
+    git push origin feature-branch
+    ```
 5. Create a new Pull Request.
 
 ## License
+
+This project is licensed under the ... License.
+See the [LICENSE](LICENSE) file for details.
+
+## Credits
+
+Thanks to all contributors!
+See the [contributors list](https://github.com/StevenHuang41/salary_prediction/graphs/contributors)
+<!-- 
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. -->
