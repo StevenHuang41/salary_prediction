@@ -4,39 +4,44 @@ A full-stack web application that predicts your salary
 based on user input using machine learning. Includes retrianing,
 data visualization, and dynamic prediction tuning.
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+<!-- [![GitHub stars](https://img.shields.io/github/stars/StevenHuang41/salary_prediction)](https://github.com/StevenHuang41/salary_prediction/stargazers) -->
 
-<!-- ## Motivation -->
+## 🔎 Overview
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Installation](#️-installation)
+    - [Manual Installation](#-️-manual-installation)
+    - [Docker Installation & Setup](#--docker-installation--setup)
+- [Usage](#-usage)
+    - [Local machine](#3-️-local-machine-access)
+    - [Mobile](#4--mobile)
+    - [App Instructions](#5--app-instructions)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Credits](#-credits)
 
-## Overview
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structurej)
-    - [root](#root)
-    - [frontend](#frontend)
-    - [backend](#backend)
-- [Installation](#installation)
-    - [Installation & Setup Methods](#installation--setup-methods)
+## ✨ Features
 
-## Features
-
-- Intuitive web interface
+- Interactive frontend with clean UI
 - Real-time salary predictions
-- Iteractive data management & Model retraining
+- Editable prediction values and retraining
 - Automated model selection & Hyperparameter Optimization
-- Dynamic prediction adjustment
+- SQLite data persistence
 - Data visualization
+- Dockerized development & deployment
 
-
-## Tech Stack
+## 🛠 Tech Stack
 
 **Frontend:** React / Vite  
-**Backend:** python / fastAPI / bash  
+**Backend:** python / fastAPI   
 **Database:** sqlite3 / pandas  
 **ML:** scikit-learn / tensorflow   
-**Other:** docker / git
+**Other:** docker / git / bash  
 
-## Project Structure
+## 📁 Project Structure
+
 ### root
 
 ```sh
@@ -83,29 +88,23 @@ backend/
 └── .dockerignore
 ```
 
-## Installation
+## ⚙️ Installation
 
-### • Clone the repo:  
+### • 🔐 Clone the repo:  
 
-ssh:
 ```sh
+# SSH:
 git clone git@github.com:StevenHuang41/salary_prediction.git
-```
 
-Alternatively, you can also do  
-
-http:
-```sh
+# or HTTPS:
 git clone https://github.com/StevenHuang41/salary_prediction.git
-``` 
-then do,  
-```sh
+
 cd salary_prediction
 ```  
 
 ---
 
-### Installation & Setup Methods:
+### • 🧱 Installation & Setup Methods:
 
 1. [Manual Installation](#2-frontend-installation) (without docker)
 
@@ -113,7 +112,7 @@ cd salary_prediction
 
 ---
 
-### • Manual Installation
+### • 🕹️ Manual Installation
 
 - #### Frontend Installation:
     ```sh
@@ -141,7 +140,7 @@ cd salary_prediction
     cd ..
     ```
 
-## Usage 
+## 🚀 Usage 
 
 ### 1. Setup 
 
@@ -209,7 +208,7 @@ open 4 terminals, and run each command respectively.
 
 ---
 
-### • Docker Installation & Setup
+### • 🐳 Docker Installation & Setup
 
 Docker handles packages installation & setup, which is much easier than manual installation.
 
@@ -227,9 +226,7 @@ wait until all servers are successfully built
 
 ---
 
-### 3. Access
-
-#### **Browser**
+### 3. 🖥️ Local Machine Access
 
 - **Frontend:** <http://localhost:3000>
 
@@ -237,55 +234,52 @@ wait until all servers are successfully built
 
 - **Training:** <http://localhost:8000/docs>
 
-expected result:  
+**UI preview:**
+
 - frontend:
 ![browser frontend](./readme_images/browser_frontend.png)
 
 - backend:
 ![browser backend](./readme_images/browser_backend.png)
 
-
-
 ---
 
-#### **Mobile**
+### 4. 📱 Mobile
 
-enter `http://[local IP address]:3000/` in your mobile browser
+Enter `http://[local IP address]:3000/` in your mobile browser
 
-replace `[local IP address]` with your local machine [IP address](#1-setup)
+Replace `[local IP address]` with your local machine [IP address](#1-setup)
 
-expected result:
+**UI preview:**
 ![mobile frontend](./readme_images/mobile_frontend.png)
 
 
-### 4. App Instructions
+### 5. 📝 App Instructions
 
-after entering informations, press the **Predict** Salary button
+- Fill out the form -> click **Predict Salary** button
 ![instruction1](./readme_images/instruction1.png)
 
-click **see detail** button for further functions
+- Click **see detail** button for extended options
 ![instruction2](./readme_images/instruction2.png)
 
-change predict value by keyborad
+- Change predict value using keyborad or slider
 ![instruction3](./readme_images/instruction3.png)
-
-alternatively, change predict value by range bar
 ![instruction5](./readme_images/instruction5.png)
 
-click **Add Data** button
+- Click **Add Data** button to store changed prediction 
 ![instruction4](./readme_images/instruction4.png)
 
-click **Retrain Model** button to retrain model based on changed predict value
+- Click **Retrain Model** button to train on new records
 ![instruction6](./readme_images/instruction6.png)
 
-result of retraining model, (predict value larger)
+- After retraining (prediction changes)
 ![instruction7](./readme_images/instruction7.png)
 
-click **Reset Database** button, clean the database from added data
+- Click **Reset Database** button to clear added data
 ![instruction8](./readme_images/instruction8.png)
 
 
-## Contribution
+## 🤝 Contributing
 
 1. Fork the repository.
 2. Create a new branch
@@ -302,12 +296,11 @@ click **Reset Database** button, clean the database from added data
     ```
 5. Create a new Pull Request.
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License.  
-See the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](./LICENSE).  
 
-## Credits
+## 👏 Credits
 
 Thanks to all contributors!  
 See the [contributors list](https://github.com/StevenHuang41/salary_prediction/graphs/contributors)
