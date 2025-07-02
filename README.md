@@ -5,20 +5,24 @@ based on user input using machine learning.
 
 <!-- ## Motivation -->
 
-## Features
-
-- User-friendly web interface
-- Real-time salary predictions
-- Data visualization
-- Automatical model selection
-
 ## Overview
-1. [Tech Stack](#tech-stack)
-2. [Project Structure](#project-structurej)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structurej)
     - [root](#root)
     - [frontend](#frontend)
     - [backend](#backend)
-3. [Installation](#installation)
+- [Installation](#installation)
+
+## Features
+
+- Intuitive web interface
+- Real-time salary predictions
+- Iteractive data management & Model retraining
+- Automated model selection & Hyperparameter Optimization
+- Dynamic prediction adjustment
+- Data visualization
+
 
 ## Tech Stack
 
@@ -65,6 +69,7 @@ backend/
 ├── main.py
 ├── uv.lock
 ├── pyproject.toml
+├── requirements.txt
 ├── my_package/
 └── database/
 ```
@@ -74,14 +79,14 @@ backend/
 ### 1. Clone the repo:  
 
 ```sh
-# ssh
+# ssh:
 git clone git@github.com:StevenHuang41/salary_prediction.git
 ```
 
 Alternatively,  
 
 ```sh
-# http  
+# http:
 git clone https://github.com/StevenHuang41/salary_prediction.git
 ``` 
 then do,  
@@ -91,10 +96,19 @@ cd salary_prediction
 
 ---
 
+### Installation & Setup Methods:
+
+1. [Manual Installation](#2-frontend-installation) (without docker)
+
+2. [Docker](#docker) (Recommended)
+
+---
+
 ### 2. frontend Installation:
 ```sh
 cd frontend
 npm install
+cd ..
 ```  
 
 ---
@@ -105,121 +119,143 @@ cd backend
 pip install -r requirements.txt
 ```  
 
-<!-- 3. Access frontend page via browser  
-example:
-![setup ip information](./readme_images/setup_ip_image)  
-    ```https
-    http://[local IP address]:3000/
-    ```  
-    change `[local IP address]` to the value shown in terminal  
-
-    you can now start entering informations and predict your salary!
-     -->
-
-<!-- 2. Start the app with `setup`
-    ```sh
-    ./setup -b
-    ```  
-    see './setup --help' for further imformations  
-    checkout [without docker setup](#overview) -->
-
-<!-- *italics*
-
-***bold and italics***
-
-~~crossed off~~
-
-<mark>highlight</mark>
-
-X<sup>2</sup>
-
-H<sub>2</sub>O
-
-This is `const c = 10`
-
-```bash
-docker build -t backend .
-docker run -it backend
+Alternatively, install uv first
+```sh
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-    print('like code')
-    print('just indent')
+then do,
 
-[link](https://google.com)
+```sh
+cd backend
+uv sync --locked # faster than pip install
+cd ..
+```
 
-<https://google.com>
+## Usage 
 
-![logo](./backend/images/features_heatmap.png)
+### 1. Setup 
 
+use `setup` to create .env.local files
+```sh
+./setup
+```
+expected result:
+![setup image](./readme_images/setup_image.png)
 
-> block
-> code
->> syntax
->>> can
->>> have
->>>> multiple.
->>>>
->>>> layer
+### 2. Start server
 
-divide
+open 4 terminals, and run each command respectively.
 
-___
+- **frontend test**
 
-line1
+    ```sh
+    cd frontend
+    npm test
+    ```
 
-divide
+    expected result:  
+    ![frontend test](./readme_images/frontend_test.png)
 
----
+- **frontend server**
 
-line2
+    ```sh
+    cd frontend
+    npm run dev
+    ```
 
-divide
+    expected result:  
+    ![frontend server](./readme_images/frontend_server.png)
 
-***
+- **Backend server**
 
-line3
+    for basic api request
 
-1. item 1
-2. item 2
-3. item 3
+    ```sh
+    cd backend
+    python main.py 8001
+    ```
+    Alternatively,
+    ```sh
+    cd backend
+    uv run main.py 8001
+    ```
 
----
+    expected result:  
+    ![backend server](./readme_images/backend_server.png)
 
-1. item 1
-1. item 2
-1. item 3
+- **backend training server**
 
----
-
-* p1
-* p2
-* p3
-
----
-
-+ p1
-+ p2
-+ p3
-
----
-
-- p1
-    + a
-    + b
-        * c
-            1. d
-            1. e
-- p2
-- p3
-
-| col1  | col2    |
-| :---: | ------: |
-| this  | is      |
-| an    | example |
-| table | with    |
-| two   | columns |
+    ```sh
+    cd backend
+    python main.py 8000
+    ```
+    Alternatively,
+    ```sh
+    cd backend
+    uv run main.py 8000
+    ```
+    expected result:  
+    ![training server](./readme_images/training_server.png)
 
 ---
 
-- [ ] checkbox
-- [x] checked -->
+### Docker 
+
+Docker handles packages installation & setup, which is much easier than manual installation.
+
+```sh
+cd salary_prediction
+./setup --build
+```
+
+see `./setup --help` for further imformations  
+
+expected result:
+![setup build](./readme_images/setup_build.png)
+
+wait until all servers are successfully built
+
+---
+
+### 3. Access
+
+#### **Browser**
+
+- **Frontend:** <http://localhost:3000>
+
+- **Backend:** <http://localhost:8001/docs>
+
+- **Training:** <http://localhost:8000/docs>
+
+expected result:
+![browser frontend](./readme_images/browser_frontend.png)
+
+
+---
+
+#### **Mobile**
+
+enter `http://[local IP address]:3000/` in your mobile browser
+
+replace `[local IP address]` with your local machine [IP address](#1-setup)
+
+expected result:
+![mobile frontend](./readme_images/mobile_frontend.png)
+
+<!-- ## Technologies
+
+- **Back-end**: Django, Django REST Framework, SQLite
+- **Front-end**: React, Redux, Axios
+  
+## Contribution
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`git commit -am 'Add some feature'`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Create a new Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. -->

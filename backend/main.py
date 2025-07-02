@@ -208,10 +208,15 @@ if __name__ == "__main__":
     import uvicorn
     import sys
 
-    if sys.argv[1] == "8000":
-        uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    try :
+        n_port = sys.argv[1]
+    except Exception:
+        n_port = ''
+
+    if n_port:
+        uvicorn.run("main:app", host="0.0.0.0", port=int(n_port), reload=True)
     else :
-        uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
+        uvicorn.run("main:app", host="0.0.0.0", port=8888, reload=True)
 
 
 ## TODO: learn how to use pydantic and typing and use in my_package
