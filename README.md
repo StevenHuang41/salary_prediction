@@ -12,7 +12,7 @@ data visualization, and dynamic prediction tuning.
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
 - [Installation](#️-installation)
-    - [Manual Installation](#-️-manual-installation)
+    - [Manual Installation](#1-️-manual-installation)
     - [Docker Installation & Setup](#--docker-installation--setup)
 - [Usage](#-usage)
     - [Local machine](#3-️-local-machine-access)
@@ -112,7 +112,7 @@ cd salary_prediction
 
 ---
 
-### • 🕹️ Manual Installation
+### 1. 🕹️ Manual Installation
 
 - #### Frontend Installation:
     ```sh
@@ -125,90 +125,83 @@ cd salary_prediction
     ```sh
     cd backend
     pip install -r requirements.txt
-    ```  
 
-    Alternatively, install uv first
-    ```sh
+    # or use uv to install packages (install uv first)
+    # faster than pip install
     curl -LsSf https://astral.sh/uv/install.sh | sh
-    ```
-
-    then do,
-
-    ```sh
-    cd backend
-    uv sync --locked # faster than pip install
+    uv sync --locked 
     cd ..
     ```
 
-## 🚀 Usage 
+- #### Setup
 
-### 1. Setup 
-
-use `setup` to get __local IP address__ and create `.env.local` files
-```sh
-./setup
-```
-expected result:
-![setup image](./readme_images/setup_image.png)
-
-### 2. Start server
-
-open 4 terminals, and run each command respectively.
-
-- **frontend test**
-
+    use `setup` to get __local IP address__ and create `.env.local` files
     ```sh
-    cd frontend
-    npm test
+    ./setup
     ```
+    **Expected result:**
+    ![setup image](./readme_images/setup_image.png)
 
-    expected result:  
-    ![frontend test](./readme_images/frontend_test.png)
+- #### Start server
 
-- **frontend server**
+    open 4 terminals, and run each command respectively.
 
-    ```sh
-    cd frontend
-    npm run dev
-    ```
+    - **Frontend test**
 
-    expected result:  
-    ![frontend server](./readme_images/frontend_server.png)
+        ```sh
+        cd frontend
+        npm test
+        ```
 
-- **Backend server**
+        **Expected result:**  
+        ![frontend test](./readme_images/frontend_test.png)
 
-    for basic api request
+    ---
 
-    ```sh
-    cd backend
-    python main.py 8001
-    ```
-    Alternatively,
-    ```sh
-    cd backend
-    uv run main.py 8001
-    ```
+    - **Frontend server**
 
-    expected result:  
-    ![backend server](./readme_images/backend_server.png)
+        ```sh
+        cd frontend
+        npm run dev
+        ```
 
-- **backend training server**
+        expected result:  
+        ![frontend server](./readme_images/frontend_server.png)
 
-    ```sh
-    cd backend
-    python main.py 8000
-    ```
-    Alternatively,
-    ```sh
-    cd backend
-    uv run main.py 8000
-    ```
-    expected result:  
-    ![training server](./readme_images/training_server.png)
+    ---
+
+    - **Backend server**
+
+        for basic api request
+
+        ```sh
+        cd backend
+        python main.py 8001
+
+        # or use uv to run
+        uv run main.py 8001
+        ```
+
+        expected result:  
+        ![backend server](./readme_images/backend_server.png)
+
+    ---
+
+    - **Backend training server**
+
+        ```sh
+        cd backend
+        python main.py 8000
+
+        # or use uv to run 
+        uv run main.py 8000
+        ```
+        expected result:  
+        ![training server](./readme_images/training_server.png)
 
 ---
 
-### • 🐳 Docker Installation & Setup
+### 2. 🐳 Docker Installation & Setup
 
 Docker handles packages installation & setup, which is much easier than manual installation.
 
@@ -219,14 +212,15 @@ cd salary_prediction
 
 see `./setup --help` for further imformations  
 
-expected result:
+**Expected result:**
 ![setup build](./readme_images/setup_build.png)
 
 wait until all servers are successfully built
 
----
 
-### 3. 🖥️ Local Machine Access
+## 🚀 Usage 
+
+### 🖥️ Local Machine Access
 
 - **Frontend:** <http://localhost:3000>
 
@@ -244,39 +238,39 @@ wait until all servers are successfully built
 
 ---
 
-### 4. 📱 Mobile
+### 📱 Mobile
 
-Enter `http://[local IP address]:3000/` in your mobile browser
-
-Replace `[local IP address]` with your local machine [IP address](#1-setup)
+- Enter `http://[local IP address]:3000/` in your mobile browser
+    Replace `[local IP address]` with your local machine [IP address](#1-setup)
 
 **UI preview:**
 ![mobile frontend](./readme_images/mobile_frontend.png)
 
 
-### 5. 📝 App Instructions
+### 📝 App Instructions
 
 - Fill out the form -> click **Predict Salary** button
-![instruction1](./readme_images/instruction1.png)
+![instruction1](./readme_images/instruction1.gif)
 
 - Click **see detail** button for extended options
-![instruction2](./readme_images/instruction2.png)
+![instruction2](./readme_images/instruction2.gif)
 
 - Change predict value using keyborad or slider
-![instruction3](./readme_images/instruction3.png)
-![instruction5](./readme_images/instruction5.png)
+![instruction3](./readme_images/instruction3.gif)
+<!-- ![instruction5](./readme_images/instruction5.png) -->
 
 - Click **Add Data** button to store changed prediction 
-![instruction4](./readme_images/instruction4.png)
+![instruction4](./readme_images/instruction4.gif)
 
 - Click **Retrain Model** button to train on new records
-![instruction6](./readme_images/instruction6.png)
+![instruction6](./readme_images/instruction5.gif)
 
 - After retraining (prediction changes)
-![instruction7](./readme_images/instruction7.png)
+![instruction7](./readme_images/instruction6.png)
 
-- Click **Reset Database** button to clear added data
-![instruction8](./readme_images/instruction8.png)
+- Click **Reset Database** button to clear added data in database, and click
+**Retrain Model** button again to retrain model with original data.
+![instruction8](./readme_images/instruction7.gif)
 
 
 ## 🤝 Contributing
