@@ -91,6 +91,15 @@ backend/
 
 ## ⚙️ Installation
 
+### • 🧩 Prerequisites
+
+- **Python 3.8 or newer** is required.
+    - check python version with: `python --version` or `python3 --version`
+
+- (Optional) **[uv](https://github.com/astral-sh/uv/)** for faster python packages installation.
+
+- (Optional) **[Docker](https://www.docker.com/)** for containerized setup.
+
 ### • 🔐 Clone the repo:  
 
 ```sh
@@ -125,11 +134,15 @@ cd salary_prediction
 - #### Backend Installation:
     ```sh
     cd backend
+
+    # make sure you are in a python virtual environment
     pip install -r requirements.txt
 
-    # or use uv to install packages (install uv first)
-    # faster than pip install
+    cd ..
+
+    # or use uv to install packages (install uv first) faster than pip install
     curl -LsSf https://astral.sh/uv/install.sh | sh
+    cd backend
     uv sync --locked 
     cd ..
     ```
@@ -143,7 +156,7 @@ cd salary_prediction
     **Expected result:**
     ![setup image](./readme_images/setup_image.png)
 
-- #### Start server
+- #### Start Servers
 
     open 4 terminals, and run each command respectively.
 
@@ -211,7 +224,7 @@ cd salary_prediction
 ./setup --build
 ```
 
-see `./setup --help` for further imformations  
+see `./setup --help` for further setup shell script imformations  
 
 **Expected result:**
 ![setup build](./readme_images/setup_build.png)
@@ -258,7 +271,6 @@ wait until all servers are successfully built
 
 - Change predict value using keyborad or slider
 ![instruction3](./readme_images/instruction3.gif)
-<!-- ![instruction5](./readme_images/instruction5.png) -->
 
 - Click **Add Data** button to store changed prediction 
 ![instruction4](./readme_images/instruction4.gif)
