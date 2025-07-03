@@ -221,7 +221,7 @@ Docker handles packages installation & setup, which is much easier than manual i
 
 ```sh
 cd salary_prediction
-./setup --build
+./setup build
 ```
 
 see `./setup --help` for further setup shell script imformations  
