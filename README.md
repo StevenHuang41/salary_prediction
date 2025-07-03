@@ -106,9 +106,9 @@ cd salary_prediction
 
 ### • 🧱 Installation & Setup Methods:
 
-1. [Manual Installation](#2-frontend-installation) (without docker)
+- [Manual Installation](#1-️-manual-installation) (without docker)
 
-2. [Docker Installation & Setup](#docker) (Recommended)
+- [Docker Installation & Setup](#2--docker-installation--setup) (Recommended)
 
 ---
 
@@ -241,7 +241,7 @@ wait until all servers are successfully built
 ### 📱 Mobile
 
 - Enter `http://[local IP address]:3000/` in your mobile browser
-    Replace `[local IP address]` with your local machine [IP address](#1-setup)
+    Replace `[local IP address]` with your local machine [IP address](#setup)
 
 **UI preview:**
 ![mobile frontend](./readme_images/mobile_frontend.png)
