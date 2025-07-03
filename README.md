@@ -4,8 +4,9 @@ A full-stack web application that predicts your salary
 based on user input using machine learning. Includes retrianing,
 data visualization, and dynamic prediction tuning.
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 <!-- [![GitHub stars](https://img.shields.io/github/stars/StevenHuang41/salary_prediction)](https://github.com/StevenHuang41/salary_prediction/stargazers) -->
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+![number of visitors](https://visitor-badge.laobi.icu/badge?page_id=StevenHuange41.salary_prediction)
 
 ## 🔎 Overview
 - [Features](#-features)
@@ -272,6 +273,10 @@ wait until all servers are successfully built
 **Retrain Model** button again to retrain model with original data.
 ![instruction8](./readme_images/instruction7.gif)
 
+## 📋 TODO
+
+- Allow input of job title by keyborad (accept unknown jobs).
+- A chatbot for user asking questions.
 
 ## 🤝 Contributing
 
