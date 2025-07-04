@@ -293,19 +293,24 @@ wait until all servers are successfully built
 ## 🤝 Contributing
 
 1. Fork the repository.
-2. Create a new branch
-    ```sh
-    git switch -c feature-branch
-    ```
-3. Commit your changes
-    ```sh
-    git commit -m "Add some feature"
-    ```
-4. Push to the branch
-    ```sh
-    git push origin feature-branch
-    ```
-5. Create a new Pull Request.
+2. Clone your fork to your local machine.
+   ```sh
+   git clone https://github.com/[your-username/repo-name].git
+   cd [repo-name]
+   ```
+3. Create a new branch
+   ```sh
+   git switch -c feature-branch
+   ```
+4. Commit your changes
+   ```sh
+   git commit -m "Add some feature"
+   ```
+5. Push to the branch
+   ```sh
+   git push origin feature-branch
+   ```
+6. Create a new Pull Request.
 
 ## 📄 License
 
