@@ -93,12 +93,21 @@ backend/
 
 ### • 🧩 Prerequisites
 
-- **Python 3.8 or newer** is required.
-    - check python version with: `python --version` or `python3 --version`
+- **Python:** >=3.8
+
+- **Node.js:** >=20.9.0 (LTS recommended)
+
+- **npm:** >=10.0.0
 
 - (Optional) **[uv](https://github.com/astral-sh/uv/)** for faster python packages installation.
 
 - (Optional) **[Docker](https://www.docker.com/)** for containerized setup.
+
+Check version with:
+```sh
+[tool] --version
+```
+Replace `[tool]` with `python`, `node`, `npm`, etc.
 
 ### • 🔐 Clone the repo:  
 
@@ -278,7 +287,7 @@ wait until all servers are successfully built
 - Click **Retrain Model** button to train on new records
 ![instruction6](./readme_images/instruction5.gif)
 
-- After retraining (prediction changes)
+- After retraining, prediction value changes, and the number of records in Train and Test dataset change
 ![instruction7](./readme_images/instruction6.png)
 
 - Click **Reset Database** button to clear added data in database, and click
@@ -318,5 +327,9 @@ This project is licensed under the [MIT License](./LICENSE).
 
 ## 👏 Credits
 
-Thanks to all contributors!  
+Thanks to all contributors!
+
+[<img src="https://github.com/StevenHuang41.png" width="50"/>](https://github.com/StevenHuang41)  [<img src="https://github.com/evelynhuang22.png" width="50"/>](https://github.com/evelynhuang22) 
+
+
 See the [contributors list](https://github.com/StevenHuang41/salary_prediction/graphs/contributors)
