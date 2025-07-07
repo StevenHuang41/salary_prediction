@@ -1,20 +1,21 @@
 # 📈 Salary Prediction
 
-A full-stack web application that predicts your salary
-based on user input using machine learning. Includes retrianing,
-data visualization, and dynamic prediction tuning.
+A self-hosted full-stack web application that predicts your salary
+based on user input using machine learning models. Includes dynamc retraining, interactive data visualization, and modular architecture built for sclability.
 
 <!-- [![GitHub stars](https://img.shields.io/github/stars/StevenHuang41/salary_prediction)](https://github.com/StevenHuang41/salary_prediction/stargazers) -->
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 ![number of visitors](https://visitor-badge.laobi.icu/badge?page_id=StevenHuange41.salary_prediction)
 
+
 ## 🔎 Overview
+
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
-- [Installation](#️-installation)
-    - [Manual Installation](#1-️-manual-installation)
-    - [Docker Installation & Setup](#2--docker-installation--setup)
+- [Installation & Setup](#️-installation--setup)
+    - [Manual](#1-️-manual)
+    - [Docker](#2--docker)
 - [Usage](#-usage)
     - [Local machine](#️-local-machine-access)
     - [Mobile](#-mobile)
@@ -25,21 +26,27 @@ data visualization, and dynamic prediction tuning.
 
 ## ✨ Features
 
-- Interactive frontend with clean UI
-- Real-time salary predictions
-- Editable prediction values and retraining
-- Automated model selection & Hyperparameter Optimization
-- SQLite data persistence
-- Data visualization
-- Dockerized development & deployment
+- **Interactive frontend** with clean UI
+- **Real-time** salary predictions
+- **Editable** prediction values and retraining
+- **Data preprocessing**——cleaning, encoding, and feature engineering
+- **Automated model selection**
+- **Hyperparameter Optimization**
+    - `BayesSearchCV` for scikit-learn models
+    - `Keras Tuner` for MLP neural network
+- **Data persistence**——SQLite 
+- **Data visualization**——matplotlib and seaborn libraies
+- **Containerized development**——Docker
 
 ## 🛠 Tech Stack
 
-**Frontend:** React / Vite  
-**Backend:** python / fastAPI   
-**Database:** sqlite3 / pandas  
-**ML:** scikit-learn / tensorflow   
-**Other:** docker / git / bash  
+| Layer | Tools |
+| :---: | :--- |
+| **Frontend:** | React / Vite / Vitest / Bootstrap|
+| **Backend:** | Python / FastAPI / uvicorn |
+| **Database:** | Sqlite3 / Pandas |
+| **ML:** | scikit-learn / Tensorflow / Keras Tuner / BayesSearchCV |
+| **Other:** | Docker / Git / Bash / uv|
 
 ## 📁 Project Structure
 
@@ -89,7 +96,7 @@ backend/
 └── .dockerignore
 ```
 
-## ⚙️ Installation
+## ⚙️ Installation & Setup
 
 ### • 🧩 Prerequisites
 
@@ -131,7 +138,7 @@ cd salary_prediction
 
 ---
 
-### 1. 🕹️ Manual Installation
+### 1. 🕹️ Manual
 
 - #### Frontend Installation:
     ```sh
@@ -144,7 +151,7 @@ cd salary_prediction
     ```sh
     cd backend
 
-    # make sure you are in a python virtual environment
+    # make sure you activated a virtual environment
     pip install -r requirements.txt
 
     cd ..
@@ -224,7 +231,7 @@ cd salary_prediction
 
 ---
 
-### 2. 🐳 Docker Installation & Setup
+### 2. 🐳 Docker
 
 Docker handles packages installation & setup, which is much easier than manual installation.
 
@@ -232,13 +239,14 @@ Docker handles packages installation & setup, which is much easier than manual i
 cd salary_prediction
 ./setup build
 ```
+`./setup build` will create .env.local and run `docker compose up --build`, which automatically installs packages, creates environment and runs the app.
 
 see `./setup --help` for further setup shell script imformations  
 
 **Expected result:**
 ![setup build](./readme_images/setup_build.png)
 
-wait until all servers are successfully built
+wait until all servers are successfully built, and then click the URL in the next section
 
 
 ## 🚀 Usage 
