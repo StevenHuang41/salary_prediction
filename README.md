@@ -132,9 +132,9 @@ cd salary_prediction
 
 ### • 🧱 Installation & Setup Methods:
 
-- [Manual Installation](#1-️-manual-installation) (without docker)
+- [Manual Installation](#1-️-manual)
 
-- [Docker Installation & Setup](#2--docker-installation--setup) (Recommended)
+- [Docker Installation & Setup](#2--docker) (Recommended)
 
 ---
 
